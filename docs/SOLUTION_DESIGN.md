@@ -27,7 +27,7 @@ PWA so it runs full-screen on iPhone/iPad.
                           ▲  static assets (HTML/JS/CSS)
                           │
                   ┌───────┴────────┐
-                  │  Static host /  │  ← GitHub Pages (initial)
+                  │  Static host /  │  ← GitHub Pages (confirmed)
                   │      CDN        │     Cloudflare/Vercel/Azure SWA (alt)
                   └───────┬────────┘
                           │ build on push
@@ -47,7 +47,7 @@ PWA so it runs full-screen on iPhone/iPad.
 | Icons | **lucide-react** | Common default in Claude-generated components. |
 | Routing | **react-router** | Maps each tool to a URL; enables the nav shell. |
 | PWA | **vite-plugin-pwa** (Workbox) | Manifest + service worker with minimal config. |
-| Hosting | **GitHub Pages** (initial) | Free, simplest, tied to the repo we already need. |
+| Hosting | **GitHub Pages** (confirmed) | Free, simplest, tied to the repo; build runs entirely on GitHub — no Azure needed. |
 | CI/CD | **GitHub Actions** | Build on push, deploy to Pages; no extra accounts. |
 
 > Exact dependency set (e.g. shadcn/ui, Radix, framer-motion) will be confirmed
@@ -104,7 +104,9 @@ Porting steps per artifact:
 
 ## 6. Build & Deployment
 
-**Initial: GitHub Pages**
+**Confirmed host: GitHub Pages** (decision 2026-06-21)
+- The entire build + deploy runs on GitHub's infrastructure — **no Azure is
+  involved in hosting**.
 - A GitHub Actions workflow (`.github/workflows/deploy.yml`) runs on push to the
   default branch: `npm ci` → `npm run build` → deploy `dist/` to Pages.
 - Vite `base` is set to the repo path for project Pages (or `/` for a custom
@@ -137,6 +139,14 @@ device/App Store) an Apple Developer account. **React Native is intentionally
 avoided** because it would require rewriting the UI.
 
 ## 8. Cloud-Session & Azure Integration
+
+> **Status: DEFERRED / OPTIONAL (decided 2026-06-21).** Hosting on GitHub Pages
+> needs **no Azure** — build and deploy run entirely on GitHub. The Azure
+> integration below is unrelated to hosting; it exists only to let Claude Code
+> manage **Azure resources** from cloud sessions, and is relevant only if we
+> later adopt **Azure Static Web Apps** or other Azure services. The `AZURE_*`
+> secrets and subscription reactivation are **not required** for the current
+> plan; the SessionStart hook stays in the repo as a harmless no-op until then.
 
 This repo also contains infrastructure to let Claude Code operate from ephemeral
 cloud-container sessions (Claude Code on the web, including iPad/iPhone):
@@ -175,6 +185,7 @@ manage Azure resources (e.g. if Azure Static Web Apps is later chosen as host).
 | 2026-06-21 | Deliver mobile experience as a PWA first; Capacitor later if needed. | Reuses 100% of code, zero cost, no App Store friction. |
 | 2026-06-21 | Avoid React Native. | Would require rewriting the UI; no reuse of existing JSX. |
 | 2026-06-21 | Keep Azure service-principal auth for cloud sessions, independent of host choice. | Lets Claude Code work from the web/iPad without subscription-wide privileges. |
+| 2026-06-21 | Confirm **GitHub Pages** as the host; **defer Azure** (secrets + subscription reactivation) as optional/future. | GitHub Actions builds and Pages serves the static site with no Azure dependency; Azure only needed if Azure Static Web Apps/resources are adopted later. |
 
 ## 11. Open Items
 
