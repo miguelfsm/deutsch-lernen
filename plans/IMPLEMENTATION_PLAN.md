@@ -132,7 +132,7 @@ commit gate (green tests + clean lint + clean typecheck).
 - Offline-first beyond app-shell precache.
 
 ## Progress log
-- [ ] Phase 1 — scaffold & tooling
+- [x] Phase 1 — scaffold & tooling
 - [ ] Phase 2 — port tools + shell
 - [ ] Phase 3 — TypeScript migration
 - [ ] Phase 4 — GitHub Pages deploy
