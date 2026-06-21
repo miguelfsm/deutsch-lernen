@@ -133,7 +133,7 @@ commit gate (green tests + clean lint + clean typecheck).
 
 ## Progress log
 - [x] Phase 1 — scaffold & tooling
-- [ ] Phase 2 — port tools + shell
+- [x] Phase 2 — port tools + shell
 - [ ] Phase 3 — TypeScript migration
 - [ ] Phase 4 — GitHub Pages deploy
 - [ ] Phase 5 — PWA

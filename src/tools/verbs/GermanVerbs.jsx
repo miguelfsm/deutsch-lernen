@@ -1,0 +1,285 @@
+import { useState } from "react";
+import { verbData } from "./data.js";
+import { getStem, getHighlightParts } from "./highlight.js";
+
+// ─── CONSTANTS ───────────────────────────────────────────────────────────────
+const BLUE   = "#1d6ef5";
+const RED    = "#e03e2d";
+
+const TYPE_META = {
+  regular:   { bg: "#d1fae5", fg: "#065f46", dot: "#10b981", label: "Regular"   },
+  irregular: { bg: "#fee2e2", fg: "#991b1b", dot: "#ef4444", label: "Irregular" },
+  modal:     { bg: "#ede9fe", fg: "#5b21b6", dot: "#8b5cf6", label: "Modal"     },
+};
+
+// ─── COMPONENT ───────────────────────────────────────────────────────────────
+export default function GermanVerbs() {
+  const [selected, setSelected] = useState(verbData[0]);
+  const meta = TYPE_META[selected.type];
+
+  return (
+    <div style={{
+      fontFamily: "'Georgia', 'Times New Roman', serif",
+      maxWidth: 520,
+      margin: "0 auto",
+      padding: "20px 16px 40px",
+      background: "#faf9f7",
+      minHeight: "100vh",
+    }}>
+
+      {/* ── Header ── */}
+      <div style={{ textAlign: "center", marginBottom: 22 }}>
+        <div style={{ fontSize: 11, letterSpacing: 4, color: "#9ca3af", textTransform: "uppercase", marginBottom: 6 }}>
+          Präsens · Present Tense
+        </div>
+        <h1 style={{
+          margin: 0,
+          fontSize: 26,
+          fontWeight: 700,
+          color: "#1c1917",
+          letterSpacing: "-0.5px",
+        }}>
+          German Verb Conjugator
+        </h1>
+      </div>
+
+      {/* ── Legend (above pills so colours are meaningful at a glance) ── */}
+      <div style={{
+        display: "flex",
+        gap: 0,
+        justifyContent: "center",
+        flexWrap: "wrap",
+        marginBottom: 16,
+        background: "#f0ede8",
+        borderRadius: 99,
+        padding: "6px 14px",
+        width: "fit-content",
+        margin: "0 auto 18px",
+        fontFamily: "'Arial', sans-serif",
+      }}>
+        {Object.entries(TYPE_META).map(([type, m], i) => (
+          <div key={type} style={{
+            display: "flex", alignItems: "center", gap: 6,
+            padding: "0 12px",
+            borderRight: i < 2 ? "1px solid #d6d1c8" : "none",
+          }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: m.dot, flexShrink: 0 }} />
+            <span style={{ fontSize: 11, color: "#78716c", textTransform: "uppercase", letterSpacing: 0.8 }}>
+              {m.label}
+            </span>
+          </div>
+        ))}
+        <div style={{ width: "100%", height: 1, background: "#d6d1c8", margin: "5px 0" }} />
+        {[
+          { color: BLUE, label: "Regular ending" },
+          { color: RED,  label: "Stem change" },
+        ].map(({ color, label }, i) => (
+          <div key={label} style={{
+            display: "flex", alignItems: "center", gap: 6,
+            padding: "0 12px",
+            borderRight: i < 1 ? "1px solid #d6d1c8" : "none",
+          }}>
+            <div style={{ width: 18, height: 3, borderRadius: 2, background: color, flexShrink: 0 }} />
+            <span style={{ fontSize: 11, color: "#78716c", letterSpacing: 0.3 }}>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Verb pills ── */}
+      <div style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 6,
+        justifyContent: "center",
+        marginBottom: 24,
+      }}>
+        {verbData.map(v => {
+          const active = v.infinitive === selected.infinitive;
+          const m = TYPE_META[v.type];
+          return (
+            <button
+              key={v.infinitive}
+              onClick={() => setSelected(v)}
+              style={{
+                padding: "5px 12px",
+                borderRadius: 99,
+                border: active ? `2px solid ${m.dot}` : "2px solid transparent",
+                background: m.bg,
+                color: m.fg,
+                fontSize: 13,
+                fontFamily: "'Georgia', serif",
+                fontWeight: active ? 800 : 400,
+                cursor: "pointer",
+                transition: "all 0.12s",
+                opacity: active ? 1 : 0.5,
+                outline: active ? `3px solid ${m.dot}` : "none",
+                outlineOffset: 1,
+              }}
+            >
+              {v.infinitive}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Card ── */}
+      <div style={{
+        background: "#ffffff",
+        border: "1px solid #e7e5e0",
+        borderRadius: 16,
+        overflow: "hidden",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+      }}>
+
+        {/* Card header */}
+        <div style={{
+          padding: "18px 22px 16px",
+          borderBottom: "1px solid #f0ede8",
+          background: "#fdfcfb",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 12,
+        }}>
+          <div>
+            <div style={{
+              fontSize: 28,
+              fontWeight: 700,
+              color: "#1c1917",
+              letterSpacing: "-1px",
+              lineHeight: 1,
+            }}>
+              {selected.infinitive}
+            </div>
+            <div style={{
+              fontSize: 14,
+              color: "#78716c",
+              marginTop: 5,
+              fontStyle: "italic",
+            }}>
+              {selected.english}
+            </div>
+          </div>
+          <span style={{
+            padding: "4px 12px",
+            borderRadius: 99,
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+            background: meta.bg,
+            color: meta.fg,
+            whiteSpace: "nowrap",
+            marginTop: 4,
+            fontFamily: "'Arial', sans-serif",
+          }}>
+            {meta.label}
+          </span>
+        </div>
+
+        {/* Stem reference row */}
+        <div style={{
+          padding: "8px 22px",
+          background: "#f9f7f4",
+          borderBottom: "1px solid #f0ede8",
+          fontSize: 12,
+          color: "#9ca3af",
+          fontFamily: "'Arial', sans-serif",
+          letterSpacing: 0.3,
+        }}>
+          Stem: <strong style={{ color: "#78716c" }}>{getStem(selected.infinitive)}-</strong>
+        </div>
+
+        {/* Conjugation rows */}
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr style={{ background: "#f9f7f4" }}>
+              <th style={{
+                padding: "8px 22px",
+                textAlign: "left",
+                fontSize: 10,
+                color: "#a8a29e",
+                fontWeight: 700,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                fontFamily: "'Arial', sans-serif",
+                width: "38%",
+              }}>Pronoun</th>
+              <th style={{
+                padding: "8px 22px",
+                textAlign: "left",
+                fontSize: 10,
+                color: "#a8a29e",
+                fontWeight: 700,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                fontFamily: "'Arial', sans-serif",
+              }}>Conjugated Form</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selected.conjugations.map((c, i) => {
+              const { unchanged, changed } = getHighlightParts(selected.infinitive, c.form, selected.customStem);
+              const hlColor = c.stemChange ? RED : BLUE;
+              const isEven = i % 2 === 0;
+              return (
+                <tr
+                  key={c.pronoun}
+                  style={{
+                    borderTop: "1px solid #f0ede8",
+                    background: isEven ? "#ffffff" : "#fdfcfb",
+                  }}
+                >
+                  <td style={{
+                    padding: "13px 22px",
+                    fontSize: 14,
+                    color: "#9ca3af",
+                    fontStyle: "italic",
+                    fontFamily: "'Arial', sans-serif",
+                  }}>
+                    {c.pronoun}
+                  </td>
+                  <td style={{
+                    padding: "13px 22px",
+                    fontSize: 20,
+                    color: "#1c1917",
+                    fontWeight: 600,
+                    letterSpacing: "-0.3px",
+                  }}>
+                    <span>{unchanged}</span>
+                    {changed && (
+                      <span style={{
+                        color: hlColor,
+                        fontWeight: 800,
+                        borderBottom: `2px solid ${hlColor}33`,
+                        paddingBottom: 1,
+                      }}>
+                        {changed}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+        {/* Note */}
+        <div style={{
+          padding: "12px 22px",
+          background: "#faf9f7",
+          borderTop: "1px solid #f0ede8",
+          fontSize: 13,
+          color: "#78716c",
+          lineHeight: 1.6,
+          fontFamily: "'Arial', sans-serif",
+        }}>
+          <span style={{ marginRight: 6 }}>💡</span>
+          {selected.note}
+        </div>
+      </div>
+
+
+    </div>
+  );
+}
