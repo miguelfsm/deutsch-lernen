@@ -57,8 +57,6 @@ These are how Miguel wants the system built — apply them to every change:
 
 ## Commands
 
-> Filled in during Phase 1; `typecheck` added in Phase 3.
-
 ```
 npm install        # install deps
 npm run dev        # local dev server
@@ -66,8 +64,21 @@ npm run build      # static build to dist/
 npm run preview    # preview the production build
 npm test           # run the test suite (Vitest)
 npm run lint       # ESLint
-npm run typecheck  # tsc --noEmit (after Phase 3)
+npm run typecheck  # tsc --noEmit
 ```
+
+## Common tasks
+
+- **Add a learning tool:** create `src/tools/<tool>/` (a component + co-located
+  `data.ts`), add one entry to `src/tools/registry.ts`, and add its element to
+  `ELEMENTS` in `src/App.tsx`. Nav link and Home card appear automatically from
+  the registry. The Adjectives/Phrases-style "category → cards" tools can reuse
+  `src/components/CategoryCardsTool.tsx`.
+- **Add/edit content** (more verbs, nouns, phrases…): edit the relevant
+  `src/tools/<tool>/data.ts`; the data is typed, so `npm run typecheck` catches
+  shape mistakes.
+- **Change the app icon:** edit `public/icon.svg`, then regenerate the PWA
+  rasters with `node scripts/gen-icons.mjs`.
 
 ## Cloud sessions & Azure
 
