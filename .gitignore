@@ -1,2 +1,10 @@
 .DS_Store
 .claude/settings.local.json
+
+# Local reference staging — original Claude artifact exports (not shipped)
+claude exported files/
+
+# Node / build
+node_modules/
+dist/
+*.local
