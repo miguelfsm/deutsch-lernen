@@ -3,7 +3,23 @@
 // so the useful structure here is: meaning + opposite (when one exists) +
 // an example sentence. Grouped by category, same pattern as german-phrases.jsx.
 
-export const categories = [
+export interface AdjectiveItem {
+  word: string
+  meaning: string
+  opposite?: { word: string; meaning: string }
+  example: string
+  translation: string
+  note?: string
+}
+
+export interface AdjectiveCategory {
+  id: string
+  label: string
+  color: { bg: string; fg: string; dot: string }
+  items: AdjectiveItem[]
+}
+
+export const categories: AdjectiveCategory[] = [
   {
     id: "gegensaetze",
     label: "Gegensätze",

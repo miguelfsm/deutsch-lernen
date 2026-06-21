@@ -3,7 +3,22 @@
 // question words, prepositions/contractions, particles, and conversational
 // strategies. Each entry gets a meaning + an example sentence in context.
 
-export const categories = [
+export interface PhraseItem {
+  phrase: string
+  meaning: string
+  example: string
+  translation: string
+  note?: string
+}
+
+export interface PhraseCategory {
+  id: string
+  label: string
+  color: { bg: string; fg: string; dot: string }
+  items: PhraseItem[]
+}
+
+export const categories: PhraseCategory[] = [
   {
     id: "wfragen",
     label: "W-Fragen",

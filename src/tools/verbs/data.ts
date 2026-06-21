@@ -1,7 +1,24 @@
 // ─── DATA ────────────────────────────────────────────────────────────────────
 // stemChange: true  → vowel/stem changes (red)
 // stemChange: false → regular ending added (blue)
-export const verbData = [
+export interface Conjugation {
+  pronoun: string
+  form: string
+  stemChange: boolean
+}
+
+export type VerbType = 'regular' | 'irregular' | 'modal'
+
+export interface Verb {
+  infinitive: string
+  english: string
+  type: VerbType
+  note: string
+  customStem?: string
+  conjugations: Conjugation[]
+}
+
+export const verbData: Verb[] = [
   {
     infinitive: "sein", english: "to be", type: "irregular",
     note: "Fully suppletive — every form is unpredictable. Memorise each one individually.",

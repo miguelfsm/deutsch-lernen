@@ -2,9 +2,9 @@ import { useState } from "react";
 import { categories } from "./data.js";
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
-export default function GermanPhrases() {
+export default function GermanAdjectives() {
   const [activeCat, setActiveCat] = useState(categories[0].id);
-  const current = categories.find(c => c.id === activeCat);
+  const current = categories.find((c) => c.id === activeCat) ?? categories[0];
 
   return (
     <div style={{
@@ -19,7 +19,7 @@ export default function GermanPhrases() {
       {/* ── Header ── */}
       <div style={{ textAlign: "center", marginBottom: 22 }}>
         <div style={{ fontSize: 11, letterSpacing: 4, color: "#9ca3af", textTransform: "uppercase", marginBottom: 6 }}>
-          Redemittel · Useful Phrases
+          Adjektive · Describing Words
         </div>
         <h1 style={{
           margin: 0,
@@ -28,7 +28,7 @@ export default function GermanPhrases() {
           color: "#1c1917",
           letterSpacing: "-0.5px",
         }}>
-          Connectors & Strategies
+          Adjectives & Opposites
         </h1>
       </div>
 
@@ -68,11 +68,11 @@ export default function GermanPhrases() {
         })}
       </div>
 
-      {/* ── Phrase cards ── */}
+      {/* ── Adjective cards ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {current.items.map((item, i) => (
           <div
-            key={item.phrase + i}
+            key={item.word + i}
             style={{
               background: "#ffffff",
               border: "1px solid #e7e5e0",
@@ -81,7 +81,7 @@ export default function GermanPhrases() {
               boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
             }}
           >
-            {/* Top row: phrase + meaning */}
+            {/* Top row: word + meaning */}
             <div style={{
               padding: "14px 20px 10px",
               borderBottom: "1px solid #f0ede8",
@@ -98,7 +98,7 @@ export default function GermanPhrases() {
                 color: "#1c1917",
                 letterSpacing: "-0.3px",
               }}>
-                {item.phrase}
+                {item.word}
               </span>
               <span style={{
                 fontSize: 13,
@@ -113,6 +113,25 @@ export default function GermanPhrases() {
                 {item.meaning}
               </span>
             </div>
+
+            {/* Opposite row */}
+            {item.opposite && (
+              <div style={{
+                padding: "8px 20px",
+                fontFamily: "'Arial', sans-serif",
+                fontSize: 13,
+                color: "#78716c",
+                background: "#faf9f7",
+                borderBottom: "1px solid #f0ede8",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}>
+                <span style={{ color: "#c4b9a8" }}>↔</span>
+                <strong style={{ color: "#44403c" }}>{item.opposite.word}</strong>
+                <span style={{ fontStyle: "italic" }}>({item.opposite.meaning})</span>
+              </div>
+            )}
 
             {/* Example */}
             <div style={{

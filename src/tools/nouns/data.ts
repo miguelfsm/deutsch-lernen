@@ -1,6 +1,17 @@
 // ─── DATA ────────────────────────────────────────────────────────────────────
 // plural: "—" = kein Plural (uncountable / no standard plural form)
-export const nounData = [
+export type Article = 'der' | 'die' | 'das'
+
+export interface Noun {
+  singular: string
+  english: string
+  article: Article
+  plural: string
+  category: string
+  note: string
+}
+
+export const nounData: Noun[] = [
 
   // ── Familie ────────────────────────────────────────────────────────────────
   {

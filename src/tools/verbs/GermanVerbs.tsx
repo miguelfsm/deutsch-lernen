@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { verbData } from "./data.js";
+import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const BLUE   = "#1d6ef5";
 const RED    = "#e03e2d";
 
-const TYPE_META = {
+const TYPE_META: Record<VerbType, { bg: string; fg: string; dot: string; label: string }> = {
   regular:   { bg: "#d1fae5", fg: "#065f46", dot: "#10b981", label: "Regular"   },
   irregular: { bg: "#fee2e2", fg: "#991b1b", dot: "#ef4444", label: "Irregular" },
   modal:     { bg: "#ede9fe", fg: "#5b21b6", dot: "#8b5cf6", label: "Modal"     },
@@ -14,7 +14,7 @@ const TYPE_META = {
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 export default function GermanVerbs() {
-  const [selected, setSelected] = useState(verbData[0]);
+  const [selected, setSelected] = useState<Verb>(verbData[0]);
   const meta = TYPE_META[selected.type];
 
   return (

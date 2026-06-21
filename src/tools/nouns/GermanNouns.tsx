@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { nounData } from "./data.js";
+import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
@@ -7,7 +7,7 @@ const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "K�
 
 const RED = "#e03e2d";
 
-const ARTICLE_META = {
+const ARTICLE_META: Record<Article, { bg: string; fg: string; dot: string; label: string }> = {
   der: { bg: "#dbeafe", fg: "#1e40af", dot: "#3b82f6", label: "Masculine" },
   die: { bg: "#fee2e2", fg: "#991b1b", dot: "#ef4444", label: "Feminine"  },
   das: { bg: "#d1fae5", fg: "#065f46", dot: "#10b981", label: "Neuter"    },
@@ -15,15 +15,15 @@ const ARTICLE_META = {
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 export default function GermanNouns() {
-  const [selected,  setSelected]  = useState(nounData[0]);
-  const [category,  setCategory]  = useState("Familie");
+  const [selected, setSelected] = useState<Noun>(nounData[0]);
+  const [category, setCategory] = useState<string>("Familie");
 
   const visibleNouns = nounData.filter(n => n.category === category);
   const meta         = ARTICLE_META[selected.article];
   const noPlural     = selected.plural === "—";
   const { unchanged, changed } = getPluralParts(selected.singular, selected.plural);
 
-  function selectCategory(cat) {
+  function selectCategory(cat: string) {
     setCategory(cat);
     const first = nounData.find(n => n.category === cat);
     if (first) setSelected(first);

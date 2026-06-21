@@ -1,6 +1,13 @@
 // Single source of truth for the tool list — consumed by both the nav bar and
 // the home page so the set of tools is defined in exactly one place.
-export const tools = [
+export interface Tool {
+  path: string
+  label: string
+  english: string
+  blurb: string
+}
+
+export const tools: Tool[] = [
   {
     path: '/verben',
     label: 'Verben',
