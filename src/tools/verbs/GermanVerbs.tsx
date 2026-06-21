@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Header from "../../components/Header";
 import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
 
@@ -28,20 +29,7 @@ export default function GermanVerbs() {
     }}>
 
       {/* ── Header ── */}
-      <div style={{ textAlign: "center", marginBottom: 22 }}>
-        <div style={{ fontSize: 11, letterSpacing: 4, color: "#9ca3af", textTransform: "uppercase", marginBottom: 6 }}>
-          Präsens · Present Tense
-        </div>
-        <h1 style={{
-          margin: 0,
-          fontSize: 26,
-          fontWeight: 700,
-          color: "#1c1917",
-          letterSpacing: "-0.5px",
-        }}>
-          German Verb Conjugator
-        </h1>
-      </div>
+      <Header eyebrow="Präsens · Present Tense" title="German Verb Conjugator" />
 
       {/* ── Legend (above pills so colours are meaningful at a glance) ── */}
       <div style={{

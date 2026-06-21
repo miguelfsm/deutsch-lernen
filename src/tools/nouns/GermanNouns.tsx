@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Header from "../../components/Header";
 import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
 
@@ -40,20 +41,7 @@ export default function GermanNouns() {
     }}>
 
       {/* ── Header ── */}
-      <div style={{ textAlign: "center", marginBottom: 22 }}>
-        <div style={{ fontSize: 11, letterSpacing: 4, color: "#9ca3af", textTransform: "uppercase", marginBottom: 6 }}>
-          Nomen · Singular & Plural
-        </div>
-        <h1 style={{
-          margin: 0,
-          fontSize: 26,
-          fontWeight: 700,
-          color: "#1c1917",
-          letterSpacing: "-0.5px",
-        }}>
-          German Noun Reference
-        </h1>
-      </div>
+      <Header eyebrow="Nomen · Singular & Plural" title="German Noun Reference" />
 
       {/* ── Legend ── */}
       <div style={{

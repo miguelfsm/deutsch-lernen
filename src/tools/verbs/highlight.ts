@@ -1,17 +1,16 @@
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
+import { splitSharedPrefix } from '../../lib/highlight'
+
 export function getStem(infinitive: string): string {
-  return infinitive.slice(0, -2); // remove trailing "-en"
+  return infinitive.slice(0, -2) // remove trailing "-en"
 }
 
-// Returns the longest prefix shared between stem and the conjugated form,
-// plus whatever comes after it (the "changed" part).
+// Split a conjugated form into the part shared with its stem (unchanged) and
+// the part that differs (highlighted). Separable verbs pass a custom stem.
 export function getHighlightParts(
   infinitive: string,
   form: string,
   customStem?: string,
 ): { unchanged: string; changed: string } {
-  const stem = customStem || getStem(infinitive);
-  let i = 0;
-  while (i < stem.length && i < form.length && stem[i] === form[i]) i++;
-  return { unchanged: form.slice(0, i), changed: form.slice(i) };
+  const stem = customStem || getStem(infinitive)
+  return splitSharedPrefix(stem, form)
 }

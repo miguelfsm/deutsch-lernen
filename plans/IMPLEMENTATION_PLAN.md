@@ -137,4 +137,8 @@ commit gate (green tests + clean lint + clean typecheck).
 - [x] Phase 3 — TypeScript migration
 - [x] Phase 4 — GitHub Pages deploy
 - [x] Phase 5 — PWA
-- [ ] Phase 6 — refactor & unify
+- [x] Phase 6 — refactor & unify
+
+> Note: the verb/noun detail (table) views were deliberately **not** merged —
+> their remaining resemblance is incidental, not shared functionality, so forcing
+> a merge would add risk without removing real duplication (DRY-by-functionality).
