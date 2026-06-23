@@ -32,4 +32,10 @@ export const tools: Tool[] = [
     english: 'Phrases',
     blurb: 'Question words, connectors and conversation strategies.',
   },
+  {
+    path: '/satzbau',
+    label: 'Satzbau',
+    english: 'Sentence structure',
+    blurb: 'Word order, verb position and separable-verb patterns.',
+  },
 ]

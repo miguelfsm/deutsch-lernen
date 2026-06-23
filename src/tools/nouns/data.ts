@@ -1039,4 +1039,21 @@ export const nounData: Noun[] = [
     category: "Mengen & Einheiten",
     note: "No change in plural. Almost always paired directly with a number and no article: 100 Gramm Speck, 250 Gramm Mehl.",
   },
+
+  // ── Aus dem Unterricht / from class notes ────────────────────────────────────
+  {
+    singular: "Sitzungszimmer", english: "conference / meeting room", article: "das", plural: "Sitzungszimmer",
+    category: "Arbeit",
+    note: "From das Zimmer, so the gender is das (not die — die Sitzungszimmer is the plural). No change in the plural. Common in Switzerland; everyday alternative: der Besprechungsraum.",
+  },
+  {
+    singular: "Bild",          english: "picture / image",         article: "das", plural: "Bilder",
+    category: "Alltag",
+    note: "-er ending, no umlaut: das Bild → die Bilder. Same plural pattern as Kind → Kinder.",
+  },
+  {
+    singular: "Sonnenaufgang", english: "sunrise",                 article: "der", plural: "Sonnenaufgänge",
+    category: "Geografie",
+    note: "Umlaut + -e plural: a → ä. Opposite: der Sonnenuntergang (sunset). Compound of die Sonne + der Aufgang — the last part (Aufgang, masc.) fixes the gender.",
+  },
 ];

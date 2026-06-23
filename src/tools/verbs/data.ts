@@ -744,4 +744,56 @@ export const verbData: Verb[] = [
       { pronoun: "sie/Sie",  form: "frühstücken", stemChange: false },
     ],
   },
+
+  // ── Aus dem Unterricht / from class notes ──────────────────────────────────
+  {
+    infinitive: "anfangen", english: "to begin / to start", type: "irregular",
+    customStem: "fang",
+    note: "Separable AND stem-changing: 'an-' detaches and a → ä in du/er. Der Kurs fängt um neun an (the class starts at nine).",
+    conjugations: [
+      { pronoun: "ich",      form: "fange",  stemChange: false },
+      { pronoun: "du",       form: "fängst", stemChange: true  },
+      { pronoun: "er/sie/es",form: "fängt",  stemChange: true  },
+      { pronoun: "wir",      form: "fangen", stemChange: false },
+      { pronoun: "ihr",      form: "fangt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "fangen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "schlafen", english: "to sleep", type: "irregular",
+    note: "Stem change a → ä in du/er forms: du schläfst, er schläft. Wie lange schläfst du am Wochenende?",
+    conjugations: [
+      { pronoun: "ich",      form: "schlafe",  stemChange: false },
+      { pronoun: "du",       form: "schläfst", stemChange: true  },
+      { pronoun: "er/sie/es",form: "schläft",  stemChange: true  },
+      { pronoun: "wir",      form: "schlafen", stemChange: false },
+      { pronoun: "ihr",      form: "schlaft",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "schlafen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "abkühlen", english: "to cool off / to cool down", type: "regular",
+    customStem: "kühl",
+    note: "Separable verb — 'ab-' detaches: Die Suppe kühlt schnell ab. Base verb kühlen is regular; reflexive sich abkühlen = to cool oneself down.",
+    conjugations: [
+      { pronoun: "ich",      form: "kühle",  stemChange: false },
+      { pronoun: "du",       form: "kühlst", stemChange: false },
+      { pronoun: "er/sie/es",form: "kühlt",  stemChange: false },
+      { pronoun: "wir",      form: "kühlen", stemChange: false },
+      { pronoun: "ihr",      form: "kühlt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "kühlen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "chatten", english: "to chat (online)", type: "regular",
+    note: "Regular loanword. The stem ends in -tt, so an -e- is inserted before -st/-t: du chattest, er chattet (same rule as arbeiten).",
+    conjugations: [
+      { pronoun: "ich",      form: "chatte",   stemChange: false },
+      { pronoun: "du",       form: "chattest", stemChange: false },
+      { pronoun: "er/sie/es",form: "chattet",  stemChange: false },
+      { pronoun: "wir",      form: "chatten",  stemChange: false },
+      { pronoun: "ihr",      form: "chattet",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "chatten",  stemChange: false },
+    ],
+  },
 ];

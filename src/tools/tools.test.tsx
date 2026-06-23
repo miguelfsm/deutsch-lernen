@@ -4,6 +4,7 @@ import GermanVerbs from './verbs/GermanVerbs.jsx'
 import GermanNouns from './nouns/GermanNouns.jsx'
 import GermanAdjectives from './adjectives/GermanAdjectives.jsx'
 import GermanPhrases from './phrases/GermanPhrases.jsx'
+import GermanSatzbau from './satzbau/GermanSatzbau.jsx'
 
 // High-ROI: each tool mounts and shows its first item. These guard the data
 // imports and the verbatim port, not styling details.
@@ -34,6 +35,13 @@ describe('learning tools render their first item', () => {
     render(<GermanPhrases />)
     expect(
       screen.getByRole('heading', { name: /Connectors & Strategies/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('Satzbau renders', () => {
+    render(<GermanSatzbau />)
+    expect(
+      screen.getByRole('heading', { name: /Word Order & Patterns/i }),
     ).toBeInTheDocument()
   })
 })
