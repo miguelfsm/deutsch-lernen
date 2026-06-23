@@ -84,6 +84,18 @@ export const categories: AdjectiveCategory[] = [
         example: "Die gesamte Wohnung kostet 1200 Franken.", translation: "The whole apartment costs 1200 francs.",
         note: "Often used attributively before a noun (die gesamte Wohnung) rather than alone — declension comes later.",
       },
+      {
+        word: "komisch", meaning: "funny / strange",
+        opposite: { word: "normal", meaning: "normal" },
+        example: "Das ist komisch.", translation: "That's funny / strange.",
+        note: "Carries both senses — 'amusing' and 'odd/weird' — context decides which. For 'funny ha-ha' you can also say lustig.",
+      },
+      {
+        word: "gleich", meaning: "same / equal",
+        opposite: { word: "verschieden", meaning: "different" },
+        example: "Wir haben die gleiche Tasche.", translation: "We have the same bag.",
+        note: "As an adverb gleich also means 'in a moment / shortly': Ich komme gleich. With clock time, es ist gleich zehn = 'it's almost ten.'",
+      },
     ],
   },
 ];

@@ -4,12 +4,18 @@ import userEvent from '@testing-library/user-event'
 import App from './App.jsx'
 
 describe('App shell', () => {
-  it('renders the home page listing all four tools', () => {
+  it('renders the home page listing all tools', () => {
     render(<App />)
     expect(
       screen.getByRole('heading', { level: 1, name: /deutsch lernen/i }),
     ).toBeInTheDocument()
-    for (const label of ['Verben', 'Nomen', 'Adjektive', 'Redemittel']) {
+    for (const label of [
+      'Verben',
+      'Nomen',
+      'Adjektive',
+      'Redemittel',
+      'Satzbau',
+    ]) {
       expect(screen.getAllByText(label).length).toBeGreaterThan(0)
     }
   })

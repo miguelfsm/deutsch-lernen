@@ -64,6 +64,7 @@ export const categories: PhraseCategory[] = [
       { phrase: "denn", meaning: "(softening particle in questions) / because", example: "Was kostet das denn?", translation: "So what does that cost, then?", note: "In questions, denn softens the tone — adds a conversational 'so...' feel rather than a hard interrogation." },
       { phrase: "ach", meaning: "oh / ah", example: "Ach so!", translation: "Oh I see!" },
       { phrase: "genau", meaning: "exactly", example: "Ja, genau.", translation: "Yes, exactly." },
+      { phrase: "genug", meaning: "enough", example: "Das ist genug, danke.", translation: "That's enough, thanks.", note: "Comes after the verb/noun it limits: Ich habe genug Geld (I have enough money), Das reicht / das ist genug (that's enough)." },
     ],
   },
   {
@@ -80,6 +81,7 @@ export const categories: PhraseCategory[] = [
       { phrase: "Also, ...", meaning: "So, ... / Well, ...", example: "Also, ich brauche eine Wohnung.", translation: "So, I need an apartment." },
       { phrase: "Oh, ...", meaning: "Oh, ...", example: "Oh, das ist schön!", translation: "Oh, that's nice!" },
       { phrase: "Ah ja, danke.", meaning: "Oh I see, thanks.", example: "— Es ist an der Marktstrasse. — Ah ja, danke.", translation: "— It's on Marktstrasse. — Oh I see, thanks." },
+      { phrase: "noch einmal", meaning: "once more / again", example: "Können Sie das bitte noch einmal sagen?", translation: "Could you say that once more, please?", note: "Key repair strategy when you miss something: noch einmal (or colloquial noch mal). Pair with langsamer, bitte — 'more slowly, please.'" },
     ],
   },
   {
@@ -140,6 +142,17 @@ export const categories: PhraseCategory[] = [
       { phrase: "Durst haben", meaning: "to be thirsty", example: "Ich habe Durst.", translation: "I'm thirsty.", note: "Same pattern as Hunger haben." },
       { phrase: "Zeit haben", meaning: "to have time", example: "Ich habe keine Zeit.", translation: "I don't have time.", note: "Negated with keine, since Zeit is a noun — see the Negation category." },
       { phrase: "Angst haben", meaning: "to be afraid", example: "Hab keine Angst!", translation: "Don't be afraid!" },
+    ],
+  },
+  {
+    id: "zeitangaben",
+    label: "Zeitangaben (Wann?)",
+    color: { bg: "#e0e7ff", fg: "#3730a3", dot: "#6366f1" },
+    items: [
+      { phrase: "am + Tag", meaning: "on (a day / part of day)", example: "Am Montag habe ich Deutsch.", translation: "On Monday I have German.", note: "an + dem → am. Used for days and parts of the day: am Montag, am Morgen, am Wochenende." },
+      { phrase: "um + Uhrzeit", meaning: "at (a clock time)", example: "Um zehn Uhr fängt der Kurs an.", translation: "The class starts at ten o'clock.", note: "um is the clock-time preposition: um 7 Uhr, um halb neun." },
+      { phrase: "von … bis …", meaning: "from … to / until …", example: "Ich arbeite von neun bis fünf.", translation: "I work from nine to five.", note: "Also for ranges of days: von Montag bis Freitag (Monday to Friday)." },
+      { phrase: "am Wochenende", meaning: "on the weekend", example: "Am Wochenende schlafe ich lange.", translation: "On the weekend I sleep in.", note: "am Samstag + am Sonntag = am Wochenende. German uses am here, not 'in'." },
     ],
   },
 ];
