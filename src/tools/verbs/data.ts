@@ -796,4 +796,16 @@ export const verbData: Verb[] = [
       { pronoun: "sie/Sie",  form: "chatten",  stemChange: false },
     ],
   },
+  {
+    infinitive: "kochen", english: "to cook", type: "regular",
+    note: "Fully regular: stem koch- + -e / -st / -t / -en. Ich koche heute Abend (I'm cooking tonight).",
+    conjugations: [
+      { pronoun: "ich",      form: "koche",  stemChange: false },
+      { pronoun: "du",       form: "kochst", stemChange: false },
+      { pronoun: "er/sie/es",form: "kocht",  stemChange: false },
+      { pronoun: "wir",      form: "kochen", stemChange: false },
+      { pronoun: "ihr",      form: "kocht",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "kochen", stemChange: false },
+    ],
+  },
 ];

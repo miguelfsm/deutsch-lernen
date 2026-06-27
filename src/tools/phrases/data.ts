@@ -155,4 +155,32 @@ export const categories: PhraseCategory[] = [
       { phrase: "am Wochenende", meaning: "on the weekend", example: "Am Wochenende schlafe ich lange.", translation: "On the weekend I sleep in.", note: "am Samstag + am Sonntag = am Wochenende. German uses am here, not 'in'." },
     ],
   },
+  {
+    id: "uhrzeit",
+    label: "Uhrzeit (Wie spät?)",
+    color: { bg: "#fae8ff", fg: "#86198f", dot: "#d946ef" },
+    items: [
+      { phrase: "Wie spät ist es?", meaning: "What time is it?", example: "Wie spät ist es jetzt? — Es ist zehn Uhr.", translation: "What time is it now? — It's ten o'clock.", note: "Also: Wie viel Uhr ist es? Answer with Es ist …" },
+      { phrase: "schon", meaning: "already", example: "Es ist schon zehn Uhr!", translation: "It's already ten o'clock!", note: "schon signals it's later than expected — the opposite feeling to erst." },
+      { phrase: "erst", meaning: "only / not until", example: "Es ist erst acht Uhr.", translation: "It's only eight o'clock.", note: "erst plays the time down (earlier than expected): erst acht. Also 'not until': Ich komme erst um zehn." },
+      { phrase: "Oh je!", meaning: "Oh no! / Oh dear!", example: "Oh je, ich bin spät dran!", translation: "Oh no, I'm running late!", note: "Mild dismay; also spelled Oje!. spät dran sein = to be running late." },
+      { phrase: "Noch so lange!", meaning: "Still so long to go!", example: "Noch so lange bis zur Pause!", translation: "Still so long until the break!", note: "noch = still / yet. (Heard as 'nach so lange' in class — the word is noch.)" },
+    ],
+  },
+  {
+    id: "aufgaben",
+    label: "Aufgaben · Anweisungen",
+    color: { bg: "#e7e5e4", fg: "#44403c", dot: "#78716c" },
+    items: [
+      { phrase: "Was passt?", meaning: "What fits? / Which matches?", example: "Was passt? Ordnen Sie zu.", translation: "What matches? Match them up.", note: "Classic matching-exercise prompt; usually paired with Ordnen Sie zu." },
+      { phrase: "Ordnen Sie zu.", meaning: "Match / assign.", example: "Ordnen Sie die Bilder den Wörtern zu.", translation: "Match the pictures to the words.", note: "From zuordnen (separable) — the prefix zu goes to the end. du-form: Ordne zu." },
+      { phrase: "Ergänzen Sie.", meaning: "Complete / fill in.", example: "Ergänzen Sie die Sätze.", translation: "Complete the sentences.", note: "du-form: Ergänze." },
+      { phrase: "Kreuzen Sie an.", meaning: "Tick / check (a box).", example: "Kreuzen Sie an: richtig oder falsch?", translation: "Tick the box: true or false?", note: "From ankreuzen (separable). du-form: Kreuz an." },
+      { phrase: "Markieren Sie.", meaning: "Mark / highlight.", example: "Markieren Sie das richtige Wort.", translation: "Mark the correct word.", note: "du-form: Markiere." },
+      { phrase: "Hören Sie.", meaning: "Listen.", example: "Hören Sie und wiederholen Sie.", translation: "Listen and repeat.", note: "du-form: Hör(e)." },
+      { phrase: "Lesen Sie.", meaning: "Read.", example: "Lesen Sie den Text.", translation: "Read the text.", note: "du-form: Lies (stem change e → ie)." },
+      { phrase: "Schreiben Sie.", meaning: "Write.", example: "Schreiben Sie die Antwort.", translation: "Write the answer.", note: "du-form: Schreib(e)." },
+      { phrase: "Richtig oder falsch?", meaning: "True or false?", example: "Richtig oder falsch? Kreuzen Sie an.", translation: "True or false? Tick the box.", note: "Common comprehension-check prompt." },
+    ],
+  },
 ];
