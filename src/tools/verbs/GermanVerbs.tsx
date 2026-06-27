@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "../../components/Header";
 import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
+import { filterVerbs } from "./filter.js";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const BLUE   = "#1d6ef5";
@@ -16,7 +17,10 @@ const TYPE_META: Record<VerbType, { bg: string; fg: string; dot: string; label: 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 export default function GermanVerbs() {
   const [selected, setSelected] = useState<Verb>(verbData[0]);
+  const [query, setQuery] = useState("");
   const meta = TYPE_META[selected.type];
+
+  const visibleVerbs = filterVerbs(verbData, query);
 
   return (
     <div style={{
@@ -73,6 +77,31 @@ export default function GermanVerbs() {
         ))}
       </div>
 
+      {/* ── Search box ── */}
+      <input
+        type="text"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        placeholder="Verb suchen…"
+        aria-label="Verb suchen"
+        style={{
+          display: "block",
+          width: "100%",
+          maxWidth: 280,
+          margin: "0 auto 14px",
+          padding: "8px 14px",
+          borderRadius: 99,
+          border: "1.5px solid #e7e5e0",
+          background: "#ffffff",
+          fontFamily: "'Arial', sans-serif",
+          fontSize: 13,
+          color: "#1c1917",
+          textAlign: "center",
+          outline: "none",
+          boxSizing: "border-box",
+        }}
+      />
+
       {/* ── Verb pills ── */}
       <div style={{
         display: "flex",
@@ -81,7 +110,7 @@ export default function GermanVerbs() {
         justifyContent: "center",
         marginBottom: 24,
       }}>
-        {verbData.map(v => {
+        {visibleVerbs.map(v => {
           const active = v.infinitive === selected.infinitive;
           const m = TYPE_META[v.type];
           return (
@@ -108,6 +137,16 @@ export default function GermanVerbs() {
             </button>
           );
         })}
+        {visibleVerbs.length === 0 && (
+          <span style={{
+            fontFamily: "'Arial', sans-serif",
+            fontSize: 13,
+            color: "#9ca3af",
+            fontStyle: "italic",
+          }}>
+            Keine Treffer für „{query.trim()}“
+          </span>
+        )}
       </div>
 
       {/* ── Card ── */}

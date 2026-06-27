@@ -155,4 +155,17 @@ export const categories: PhraseCategory[] = [
       { phrase: "am Wochenende", meaning: "on the weekend", example: "Am Wochenende schlafe ich lange.", translation: "On the weekend I sleep in.", note: "am Samstag + am Sonntag = am Wochenende. German uses am here, not 'in'." },
     ],
   },
+  {
+    id: "uhrzeit",
+    label: "Uhrzeit (Wie spät?)",
+    color: { bg: "#fae8ff", fg: "#86198f", dot: "#d946ef" },
+    items: [
+      { phrase: "Wie spät ist es?", meaning: "What time is it?", example: "Wie spät ist es jetzt? — Es ist zehn Uhr.", translation: "What time is it now? — It's ten o'clock.", note: "Also: Wie viel Uhr ist es? Answer with Es ist …" },
+      { phrase: "schon", meaning: "already", example: "Es ist schon zehn Uhr!", translation: "It's already ten o'clock!", note: "schon signals it's later than expected — the opposite feeling to erst." },
+      { phrase: "erst", meaning: "only / not until", example: "Es ist erst acht Uhr.", translation: "It's only eight o'clock.", note: "erst plays the time down (earlier than expected): erst acht. Also 'not until': Ich komme erst um zehn." },
+      { phrase: "Oh je!", meaning: "Oh no! / Oh dear!", example: "Oh je, ich bin spät dran!", translation: "Oh no, I'm running late!", note: "Mild dismay; also spelled Oje!. spät dran sein = to be running late." },
+      { phrase: "Noch so lange!", meaning: "Still so long to go!", example: "Noch so lange bis zur Pause!", translation: "Still so long until the break!", note: "noch = still / yet. (Heard as 'nach so lange' in class — the word is noch.)" },
+      { phrase: "Was passt?", meaning: "What fits? / Which matches?", example: "Was passt? Ordne zu.", translation: "What matches? Match them up.", note: "A textbook exercise instruction (not specific to telling time) — grouped here because it came up in this lesson." },
+    ],
+  },
 ];
