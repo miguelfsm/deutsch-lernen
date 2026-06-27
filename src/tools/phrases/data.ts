@@ -165,7 +165,6 @@ export const categories: PhraseCategory[] = [
       { phrase: "erst", meaning: "only / not until", example: "Es ist erst acht Uhr.", translation: "It's only eight o'clock.", note: "erst plays the time down (earlier than expected): erst acht. Also 'not until': Ich komme erst um zehn." },
       { phrase: "Oh je!", meaning: "Oh no! / Oh dear!", example: "Oh je, ich bin spät dran!", translation: "Oh no, I'm running late!", note: "Mild dismay; also spelled Oje!. spät dran sein = to be running late." },
       { phrase: "Noch so lange!", meaning: "Still so long to go!", example: "Noch so lange bis zur Pause!", translation: "Still so long until the break!", note: "noch = still / yet. (Heard as 'nach so lange' in class — the word is noch.)" },
-      { phrase: "Was passt?", meaning: "What fits? / Which matches?", example: "Was passt? Ordne zu.", translation: "What matches? Match them up.", note: "A textbook exercise instruction (not specific to telling time) — grouped here because it came up in this lesson." },
     ],
   },
 ];
