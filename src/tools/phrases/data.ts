@@ -167,4 +167,20 @@ export const categories: PhraseCategory[] = [
       { phrase: "Noch so lange!", meaning: "Still so long to go!", example: "Noch so lange bis zur Pause!", translation: "Still so long until the break!", note: "noch = still / yet. (Heard as 'nach so lange' in class — the word is noch.)" },
     ],
   },
+  {
+    id: "aufgaben",
+    label: "Aufgaben · Anweisungen",
+    color: { bg: "#e7e5e4", fg: "#44403c", dot: "#78716c" },
+    items: [
+      { phrase: "Was passt?", meaning: "What fits? / Which matches?", example: "Was passt? Ordnen Sie zu.", translation: "What matches? Match them up.", note: "Classic matching-exercise prompt; usually paired with Ordnen Sie zu." },
+      { phrase: "Ordnen Sie zu.", meaning: "Match / assign.", example: "Ordnen Sie die Bilder den Wörtern zu.", translation: "Match the pictures to the words.", note: "From zuordnen (separable) — the prefix zu goes to the end. du-form: Ordne zu." },
+      { phrase: "Ergänzen Sie.", meaning: "Complete / fill in.", example: "Ergänzen Sie die Sätze.", translation: "Complete the sentences.", note: "du-form: Ergänze." },
+      { phrase: "Kreuzen Sie an.", meaning: "Tick / check (a box).", example: "Kreuzen Sie an: richtig oder falsch?", translation: "Tick the box: true or false?", note: "From ankreuzen (separable). du-form: Kreuz an." },
+      { phrase: "Markieren Sie.", meaning: "Mark / highlight.", example: "Markieren Sie das richtige Wort.", translation: "Mark the correct word.", note: "du-form: Markiere." },
+      { phrase: "Hören Sie.", meaning: "Listen.", example: "Hören Sie und wiederholen Sie.", translation: "Listen and repeat.", note: "du-form: Hör(e)." },
+      { phrase: "Lesen Sie.", meaning: "Read.", example: "Lesen Sie den Text.", translation: "Read the text.", note: "du-form: Lies (stem change e → ie)." },
+      { phrase: "Schreiben Sie.", meaning: "Write.", example: "Schreiben Sie die Antwort.", translation: "Write the answer.", note: "du-form: Schreib(e)." },
+      { phrase: "Richtig oder falsch?", meaning: "True or false?", example: "Richtig oder falsch? Kreuzen Sie an.", translation: "True or false? Tick the box.", note: "Common comprehension-check prompt." },
+    ],
+  },
 ];
