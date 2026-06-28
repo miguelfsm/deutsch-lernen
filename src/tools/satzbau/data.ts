@@ -105,4 +105,32 @@ export const categories: SatzbauCategory[] = [
       },
     ],
   },
+  {
+    id: "tekamolo",
+    label: "Zeit vor Ort",
+    color: { bg: "#fef3c7", fg: "#92400e", dot: "#f59e0b" },
+    items: [
+      {
+        pattern: "Zeit vor Ort",
+        meaning: "time before place",
+        example: "Er ist von acht bis zwölf Uhr im Kurs.",
+        translation: "He's at the course from eight to twelve.",
+        note: "When a sentence has both a time phrase and a place phrase, time comes first, place comes last — never the other way around.",
+      },
+      {
+        pattern: "Zwei Zeitangaben: allgemein vor genau",
+        meaning: "general time before specific time",
+        example: "Er geht am Abend um zehn Uhr ins Bett.",
+        translation: "He goes to bed in the evening at ten o'clock.",
+        note: "With two time expressions, the more general one (am Abend) comes before the more specific one (um zehn Uhr), and the place phrase (ins Bett) still comes last.",
+      },
+      {
+        pattern: "Nicht: Ort vor Zeit",
+        meaning: "common mistake to avoid",
+        example: "Er sieht noch ein bisschen zu Hause fern.",
+        translation: "He watches a bit of TV at home still.",
+        note: "Separable prefix (fern) still goes last, but notice the place phrase 'zu Hause' comes before it, after the time word 'noch ein bisschen' — fernsehen is separable, so the prefix is always the final word regardless of TeKaMoLo order.",
+      },
+    ],
+  },
 ]
