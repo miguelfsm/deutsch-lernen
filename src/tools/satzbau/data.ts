@@ -111,6 +111,13 @@ export const categories: SatzbauCategory[] = [
     color: { bg: "#fef3c7", fg: "#92400e", dot: "#f59e0b" },
     items: [
       {
+        pattern: "TeKaMoLo",
+        meaning: "the ordering rule itself",
+        example: "Temporal → Kausal → Modal → Lokal.",
+        translation: "time → reason → manner → place.",
+        note: "Mnemonic for the order of adverbials: Temporal (wann?), Kausal (warum?), Modal (wie?), Lokal (wo/wohin?). At A1 you mostly meet Temporal and Lokal, so the practical takeaway is simply: time before place.",
+      },
+      {
         pattern: "Zeit vor Ort",
         meaning: "time before place",
         example: "Er ist von acht bis zwölf Uhr im Kurs.",
