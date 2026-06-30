@@ -65,6 +65,9 @@ export const categories: PhraseCategory[] = [
       { phrase: "ach", meaning: "oh / ah", example: "Ach so!", translation: "Oh I see!" },
       { phrase: "genau", meaning: "exactly", example: "Ja, genau.", translation: "Yes, exactly." },
       { phrase: "genug", meaning: "enough", example: "Das ist genug, danke.", translation: "That's enough, thanks.", note: "Comes after the verb/noun it limits: Ich habe genug Geld (I have enough money), Das reicht / das ist genug (that's enough)." },
+      { phrase: "und", meaning: "and", example: "Brot und Butter.", translation: "Bread and butter.", note: "The most frequent word in German. Coordinating — joins words or clauses with no change to word order." },
+      { phrase: "oder", meaning: "or", example: "Tee oder Kaffee?", translation: "Tea or coffee?", note: "Coordinating like und (no word-order change). Different from the tag question '…, oder?'." },
+      { phrase: "weil", meaning: "because", example: "Ich bleibe zu Hause, weil ich müde bin.", translation: "I'm staying home because I'm tired.", note: "Subordinating: sends the conjugated verb to the END of its clause (… weil ich müde bin). Contrast denn (= because, but keeps normal order)." },
     ],
   },
   {
@@ -153,6 +156,10 @@ export const categories: PhraseCategory[] = [
       { phrase: "um + Uhrzeit", meaning: "at (a clock time)", example: "Um zehn Uhr fängt der Kurs an.", translation: "The class starts at ten o'clock.", note: "um is the clock-time preposition: um 7 Uhr, um halb neun." },
       { phrase: "von … bis …", meaning: "from … to / until …", example: "Ich arbeite von neun bis fünf.", translation: "I work from nine to five.", note: "Also for ranges of days: von Montag bis Freitag (Monday to Friday)." },
       { phrase: "am Wochenende", meaning: "on the weekend", example: "Am Wochenende schlafe ich lange.", translation: "On the weekend I sleep in.", note: "am Samstag + am Sonntag = am Wochenende. German uses am here, not 'in'." },
+      { phrase: "jetzt", meaning: "now", example: "Wie spät ist es jetzt?", translation: "What time is it now?" },
+      { phrase: "heute", meaning: "today", example: "Heute koche ich.", translation: "Today I'm cooking.", note: "Fronted → verb second (V2): Heute koche ich. Family: gestern / heute / morgen." },
+      { phrase: "morgen", meaning: "tomorrow", example: "Morgen habe ich frei.", translation: "Tomorrow I'm off.", note: "Lowercase morgen = tomorrow; capitalised der Morgen = the morning." },
+      { phrase: "gestern", meaning: "yesterday", example: "Gestern war ich im Kino.", translation: "Yesterday I was at the cinema." },
     ],
   },
   {
@@ -181,6 +188,20 @@ export const categories: PhraseCategory[] = [
       { phrase: "Lesen Sie.", meaning: "Read.", example: "Lesen Sie den Text.", translation: "Read the text.", note: "du-form: Lies (stem change e → ie)." },
       { phrase: "Schreiben Sie.", meaning: "Write.", example: "Schreiben Sie die Antwort.", translation: "Write the answer.", note: "du-form: Schreib(e)." },
       { phrase: "Richtig oder falsch?", meaning: "True or false?", example: "Richtig oder falsch? Kreuzen Sie an.", translation: "True or false? Tick the box.", note: "Common comprehension-check prompt." },
+    ],
+  },
+  {
+    id: "adverbien",
+    label: "Adverbien (Häufigkeit & Grad)",
+    color: { bg: "#e0f2fe", fg: "#075985", dot: "#0ea5e9" },
+    items: [
+      { phrase: "sehr", meaning: "very", example: "Das ist sehr gut.", translation: "That's very good.", note: "Intensifier before adjectives/adverbs: sehr gut, sehr schnell. (Not used with verbs — there you'd use a different word.)" },
+      { phrase: "nur", meaning: "only / just", example: "Ich habe nur fünf Franken.", translation: "I only have five francs.", note: "General 'only'. For clock time German prefers erst: Es ist erst acht (see Uhrzeit)." },
+      { phrase: "immer", meaning: "always", example: "Er kommt immer zu spät.", translation: "He's always late.", note: "Frequency scale: immer > oft > manchmal > selten > nie." },
+      { phrase: "oft", meaning: "often", example: "Ich koche oft.", translation: "I cook often." },
+      { phrase: "manchmal", meaning: "sometimes", example: "Manchmal spiele ich Fußball.", translation: "Sometimes I play football.", note: "Fronted → verb second (V2): Manchmal spiele ich …" },
+      { phrase: "wieder", meaning: "again", example: "Er ruft wieder an.", translation: "He's calling again.", note: "schon wieder = yet again (often with a touch of annoyance)." },
+      { phrase: "natürlich", meaning: "of course / naturally", example: "Natürlich! Kein Problem.", translation: "Of course! No problem." },
     ],
   },
 ];

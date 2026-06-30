@@ -4,7 +4,7 @@ import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
-const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Mengen & Einheiten"];
+const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten"];
 
 // Amber for the plural-change highlight — deliberately distinct from the
 // feminine "die" red so the plural ending is obvious at a glance.

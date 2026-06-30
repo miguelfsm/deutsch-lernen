@@ -808,4 +808,102 @@ export const verbData: Verb[] = [
       { pronoun: "sie/Sie",  form: "kochen", stemChange: false },
     ],
   },
+
+  // ── Hochfrequenz / high-frequency additions ────────────────────────────────
+  {
+    infinitive: "geben", english: "to give", type: "irregular",
+    note: "Vowel change e → i in du/er: du gibst, er gibt. Most useful in es gibt = there is / there are (+ accusative).",
+    conjugations: [
+      { pronoun: "ich",      form: "gebe",  stemChange: false },
+      { pronoun: "du",       form: "gibst", stemChange: true  },
+      { pronoun: "er/sie/es",form: "gibt",  stemChange: true  },
+      { pronoun: "wir",      form: "geben", stemChange: false },
+      { pronoun: "ihr",      form: "gebt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "geben", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "fahren", english: "to drive / to go (by vehicle)", type: "irregular",
+    note: "Stem change a → ä in du/er: du fährst, er fährt. Ich fahre mit dem Bus (I go by bus).",
+    conjugations: [
+      { pronoun: "ich",      form: "fahre",  stemChange: false },
+      { pronoun: "du",       form: "fährst", stemChange: true  },
+      { pronoun: "er/sie/es",form: "fährt",  stemChange: true  },
+      { pronoun: "wir",      form: "fahren", stemChange: false },
+      { pronoun: "ihr",      form: "fahrt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "fahren", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "lesen", english: "to read", type: "irregular",
+    note: "Vowel change e → ie in du/er: du liest, er liest. The stem -s merges with the -st ending, so both forms are 'liest'.",
+    conjugations: [
+      { pronoun: "ich",      form: "lese",  stemChange: false },
+      { pronoun: "du",       form: "liest", stemChange: true  },
+      { pronoun: "er/sie/es",form: "liest", stemChange: true  },
+      { pronoun: "wir",      form: "lesen", stemChange: false },
+      { pronoun: "ihr",      form: "lest",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "lesen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "fragen", english: "to ask", type: "regular",
+    note: "Fully regular. The natural counterpart to antworten: Ich frage, du antwortest.",
+    conjugations: [
+      { pronoun: "ich",      form: "frage",  stemChange: false },
+      { pronoun: "du",       form: "fragst", stemChange: false },
+      { pronoun: "er/sie/es",form: "fragt",  stemChange: false },
+      { pronoun: "wir",      form: "fragen", stemChange: false },
+      { pronoun: "ihr",      form: "fragt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "fragen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "verstehen", english: "to understand", type: "regular",
+    note: "Inseparable prefix ver- (never detaches); regular endings on the -steh- stem. Ich verstehe nicht = I don't understand.",
+    conjugations: [
+      { pronoun: "ich",      form: "verstehe",  stemChange: false },
+      { pronoun: "du",       form: "verstehst", stemChange: false },
+      { pronoun: "er/sie/es",form: "versteht",  stemChange: false },
+      { pronoun: "wir",      form: "verstehen", stemChange: false },
+      { pronoun: "ihr",      form: "versteht",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "verstehen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "lernen", english: "to learn", type: "regular",
+    note: "Fully regular. Ich lerne Deutsch (I'm learning German).",
+    conjugations: [
+      { pronoun: "ich",      form: "lerne",  stemChange: false },
+      { pronoun: "du",       form: "lernst", stemChange: false },
+      { pronoun: "er/sie/es",form: "lernt",  stemChange: false },
+      { pronoun: "wir",      form: "lernen", stemChange: false },
+      { pronoun: "ihr",      form: "lernt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "lernen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "helfen", english: "to help", type: "irregular",
+    note: "Stem change e → i in du/er: du hilfst, er hilft. Takes the dative: Ich helfe dir.",
+    conjugations: [
+      { pronoun: "ich",      form: "helfe",  stemChange: false },
+      { pronoun: "du",       form: "hilfst", stemChange: true  },
+      { pronoun: "er/sie/es",form: "hilft",  stemChange: true  },
+      { pronoun: "wir",      form: "helfen", stemChange: false },
+      { pronoun: "ihr",      form: "helft",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "helfen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "kennen", english: "to know (be familiar with)", type: "regular",
+    note: "Regular. kennen = to know a person/place (Ich kenne Berlin); wissen = to know a fact (Ich weiß das).",
+    conjugations: [
+      { pronoun: "ich",      form: "kenne",  stemChange: false },
+      { pronoun: "du",       form: "kennst", stemChange: false },
+      { pronoun: "er/sie/es",form: "kennt",  stemChange: false },
+      { pronoun: "wir",      form: "kennen", stemChange: false },
+      { pronoun: "ihr",      form: "kennt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "kennen", stemChange: false },
+    ],
+  },
 ];
