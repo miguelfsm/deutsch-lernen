@@ -7,8 +7,9 @@ import { getPluralParts } from "./highlight.js";
 const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten"];
 
 // Amber for the plural-change highlight — deliberately distinct from the
-// feminine "die" red so the plural ending is obvious at a glance.
-const AMBER = "#d97706";
+// feminine "die" red so the plural ending is obvious at a glance. Matches the
+// brighter amber used elsewhere in the app (Präpositionen / TeKaMoLo dots).
+const AMBER = "#f59e0b";
 
 const ARTICLE_META: Record<Article, { bg: string; fg: string; dot: string; label: string }> = {
   der: { bg: "#dbeafe", fg: "#1e40af", dot: "#3b82f6", label: "Masculine" },
