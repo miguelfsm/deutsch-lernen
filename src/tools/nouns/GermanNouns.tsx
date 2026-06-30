@@ -6,7 +6,9 @@ import { getPluralParts } from "./highlight.js";
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Mengen & Einheiten"];
 
-const RED = "#e03e2d";
+// Amber for the plural-change highlight — deliberately distinct from the
+// feminine "die" red so the plural ending is obvious at a glance.
+const AMBER = "#d97706";
 
 const ARTICLE_META: Record<Article, { bg: string; fg: string; dot: string; label: string }> = {
   der: { bg: "#dbeafe", fg: "#1e40af", dot: "#3b82f6", label: "Masculine" },
@@ -71,7 +73,7 @@ export default function GermanNouns() {
         ))}
         <div style={{ width: "100%", height: 1, background: "#d6d1c8", margin: "5px 0" }} />
         <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 12px" }}>
-          <div style={{ width: 18, height: 3, borderRadius: 2, background: RED, flexShrink: 0 }} />
+          <div style={{ width: 18, height: 3, borderRadius: 2, background: AMBER, flexShrink: 0 }} />
           <span style={{ fontSize: 11, color: "#78716c", letterSpacing: 0.3 }}>Plural change</span>
         </div>
       </div>
@@ -333,9 +335,9 @@ export default function GermanNouns() {
                     <span>{unchanged}</span>
                     {changed && (
                       <span style={{
-                        color: RED,
+                        color: AMBER,
                         fontWeight: 800,
-                        borderBottom: `2px solid ${RED}33`,
+                        borderBottom: `2px solid ${AMBER}33`,
                         paddingBottom: 1,
                       }}>
                         {changed}
