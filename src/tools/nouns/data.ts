@@ -1056,4 +1056,61 @@ export const nounData: Noun[] = [
     category: "Geografie",
     note: "Umlaut + -e plural: a → ä. Opposite: der Sonnenuntergang (sunset). Compound of die Sonne + der Aufgang — the last part (Aufgang, masc.) fixes the gender.",
   },
+
+  // ── Zeit ─────────────────────────────────────────────────────────────────────
+  {
+    singular: "Tag",       english: "day",                  article: "der", plural: "Tage",
+    category: "Zeit",
+    note: "Parts of the day are mostly masculine: der Morgen, der Mittag, der Abend — but die Nacht. Guten Tag!",
+  },
+  {
+    singular: "Woche",     english: "week",                 article: "die", plural: "Wochen",
+    category: "Zeit",
+    note: "Regular -n plural. diese Woche = this week, nächste Woche = next week.",
+  },
+  {
+    singular: "Monat",     english: "month",                article: "der", plural: "Monate",
+    category: "Zeit",
+    note: "-e plural, no umlaut. im Monat / dieser Monat.",
+  },
+  {
+    singular: "Jahr",      english: "year",                 article: "das", plural: "Jahre",
+    category: "Zeit",
+    note: "-e plural. dieses Jahr = this year; Ich bin … Jahre alt.",
+  },
+  {
+    singular: "Stunde",    english: "hour",                 article: "die", plural: "Stunden",
+    category: "Zeit",
+    note: "-n plural. eine Stunde = an hour. Don't confuse with die Uhr (clock / o'clock).",
+  },
+  {
+    singular: "Minute",    english: "minute",               article: "die", plural: "Minuten",
+    category: "Zeit",
+    note: "-n plural. fünf Minuten. Same pattern as Stunde, Woche.",
+  },
+  {
+    singular: "Morgen",    english: "morning",              article: "der", plural: "Morgen",
+    category: "Zeit",
+    note: "No change in the plural (der Morgen → die Morgen). am Morgen = in the morning. Note: lowercase morgen = tomorrow.",
+  },
+  {
+    singular: "Abend",     english: "evening",              article: "der", plural: "Abende",
+    category: "Zeit",
+    note: "-e plural. am Abend = in the evening; Guten Abend!",
+  },
+  {
+    singular: "Nacht",     english: "night",                article: "die", plural: "Nächte",
+    category: "Zeit",
+    note: "Umlaut + -e: a → ä. Feminine, unlike the masculine parts of the day. Gute Nacht!",
+  },
+  {
+    singular: "Uhr",       english: "clock / o'clock",      article: "die", plural: "Uhren",
+    category: "Zeit",
+    note: "-en plural. die Uhr = clock/watch; also 'o'clock': um drei Uhr. Wie viel Uhr ist es?",
+  },
+  {
+    singular: "Zeit",      english: "time",                 article: "die", plural: "Zeiten",
+    category: "Zeit",
+    note: "-en plural, but often uncountable: Ich habe keine Zeit. See the phrase 'Zeit haben'.",
+  },
 ];

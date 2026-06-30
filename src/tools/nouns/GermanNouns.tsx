@@ -4,7 +4,7 @@ import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
-const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Mengen & Einheiten"];
+const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten"];
 
 const RED = "#e03e2d";
 
