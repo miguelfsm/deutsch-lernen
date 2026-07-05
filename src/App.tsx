@@ -7,6 +7,7 @@ import GermanNouns from './tools/nouns/GermanNouns.jsx'
 import GermanAdjectives from './tools/adjectives/GermanAdjectives.jsx'
 import GermanPhrases from './tools/phrases/GermanPhrases.jsx'
 import GermanSatzbau from './tools/satzbau/GermanSatzbau.jsx'
+import GlobalSearch from './components/GlobalSearch.jsx'
 
 // Route path → tool component. Kept beside the registry so adding a tool is a
 // two-line change (registry entry + element) and touches no existing tool.
@@ -66,6 +67,21 @@ function NavBar() {
             {t.label}
           </NavLink>
         ))}
+        <NavLink
+          to="/suchen"
+          aria-label="Suchen"
+          style={({ isActive }) => ({
+            fontFamily: "'Arial', sans-serif",
+            fontSize: 13,
+            textDecoration: 'none',
+            padding: '5px 12px',
+            borderRadius: 99,
+            color: isActive ? '#faf9f7' : '#57534e',
+            background: isActive ? '#1c1917' : '#e7e5e0',
+          })}
+        >
+          🔍 Suchen
+        </NavLink>
       </div>
     </nav>
   )
@@ -77,6 +93,7 @@ export default function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/suchen" element={<GlobalSearch />} />
         {tools.map((t) => (
           <Route key={t.path} path={t.path} element={ELEMENTS[t.path]} />
         ))}

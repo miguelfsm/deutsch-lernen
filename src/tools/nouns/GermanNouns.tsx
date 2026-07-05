@@ -4,6 +4,8 @@ import SpeakButton from "../../components/SpeakButton";
 import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
 import { font, color } from "../../lib/theme";
+import { useDeepSelect } from "../../lib/useDeepSelect";
+import { nounSlug } from "../../lib/catalog/slug";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten"];
@@ -21,8 +23,11 @@ const ARTICLE_META: Record<Article, { bg: string; fg: string; dot: string; label
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 export default function GermanNouns() {
-  const [selected, setSelected] = useState<Noun>(nounData[0]);
-  const [category, setCategory] = useState<string>("Familie");
+  // Deep-select seeds both the noun and its category from `?sel=category/singular`,
+  // falling back to the default. A noun's identity is (singular, category).
+  const deepSelected = useDeepSelect(nounData, (n) => nounSlug(n.singular, n.category));
+  const [selected, setSelected] = useState<Noun>(() => deepSelected ?? nounData[0]);
+  const [category, setCategory] = useState<string>(() => deepSelected?.category ?? "Familie");
 
   const visibleNouns = nounData.filter(n => n.category === category);
   const meta         = ARTICLE_META[selected.article];
