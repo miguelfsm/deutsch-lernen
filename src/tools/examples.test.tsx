@@ -1,9 +1,15 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import type { ReactElement } from 'react'
 import GermanVerbs from './verbs/GermanVerbs.jsx'
 import GermanNouns from './nouns/GermanNouns.jsx'
 import { verbData } from './verbs/data.js'
 import { nounData } from './nouns/data.js'
+
+// Tools read `?sel=` via useSearchParams, so they need a Router in tests.
+const renderInRouter = (ui: ReactElement) =>
+  render(<MemoryRouter>{ui}</MemoryRouter>)
 
 // Feature B — every verb & noun ships an A1 example sentence + translation.
 //
@@ -37,7 +43,7 @@ describe('example block renders with a 🔊 button', () => {
     expect(first.example).toBeTruthy()
     expect(first.translation).toBeTruthy()
 
-    render(<GermanVerbs />)
+    renderInRouter(<GermanVerbs />)
     expect(screen.getByText(first.example!)).toBeInTheDocument()
     expect(screen.getByText(first.translation!)).toBeInTheDocument()
     expect(
@@ -50,7 +56,7 @@ describe('example block renders with a 🔊 button', () => {
     expect(first.example).toBeTruthy()
     expect(first.translation).toBeTruthy()
 
-    render(<GermanNouns />)
+    renderInRouter(<GermanNouns />)
     expect(screen.getByText(first.example!)).toBeInTheDocument()
     expect(screen.getByText(first.translation!)).toBeInTheDocument()
     expect(

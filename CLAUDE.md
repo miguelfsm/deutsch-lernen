@@ -81,7 +81,13 @@ npm run typecheck  # tsc --noEmit
   `data.ts`), add one entry to `src/tools/registry.ts`, and add its element to
   `ELEMENTS` in `src/App.tsx`. Nav link and Home card appear automatically from
   the registry. The Adjectives/Phrases-style "category → cards" tools can reuse
-  `src/components/CategoryCardsTool.tsx`.
+  `src/components/CategoryCardsTool.tsx`. To make the tool **searchable /
+  linkable / drillable**, also add a pure `catalog.ts` exporting
+  `xxxCatalog(): CatalogEntry[]` and **one import + one spread** in
+  `src/lib/catalog/index.ts` — search, practice and cross-linking then need zero
+  edits. Keep `term` in original German case (case is meaning: `essen` ≠ `Essen`)
+  and build the `slug` with the helpers in `src/lib/catalog/slug.ts`; wire
+  deep-select from `?sel=` with `useDeepSelect` (lazy `useState` seed).
 - **Add/edit content** (more verbs, nouns, phrases…): edit the relevant
   `src/tools/<tool>/data.ts`; the data is typed, so `npm run typecheck` catches
   shape mistakes.

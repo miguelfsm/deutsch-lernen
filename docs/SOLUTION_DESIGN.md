@@ -70,11 +70,14 @@ DeutschLernen/
 │   ├── App.tsx                # nav shell + route definitions
 │   ├── components/            # shared UI (Header, Pill, Card, Note) — Phase 6
 │   ├── tools/                 # one folder per learning tool
-│   │   ├── verbs/      { GermanVerbs.tsx, data.ts }
-│   │   ├── nouns/      { GermanNouns.tsx, data.ts }
-│   │   ├── adjectives/ { GermanAdjectives.tsx, data.ts }
-│   │   └── phrases/    { GermanPhrases.tsx, data.ts }
-│   └── lib/                   # shared helpers (theme, highlight) — Phase 6
+│   │   ├── verbs/      { GermanVerbs.tsx, data.ts, catalog.ts }
+│   │   ├── nouns/      { GermanNouns.tsx, data.ts, catalog.ts }
+│   │   ├── adjectives/ { GermanAdjectives.tsx, data.ts, catalog.ts }
+│   │   ├── phrases/    { GermanPhrases.tsx, data.ts, catalog.ts }
+│   │   └── satzbau/    { GermanSatzbau.tsx, data.ts, catalog.ts }
+│   └── lib/                   # shared helpers (theme, highlight, speak,
+│       │                     #   useDeepSelect)
+│       └── catalog/           # CatalogEntry type + static index + search + slug
 ├── index.html
 ├── vite.config.ts
 ├── tsconfig.json
@@ -190,6 +193,9 @@ manage Azure resources (e.g. if Azure Static Web Apps is later chosen as host).
 | 2026-06-21 | Keep Azure service-principal auth for cloud sessions, independent of host choice. | Lets Claude Code work from the web/iPad without subscription-wide privileges. |
 | 2026-06-21 | Confirm **GitHub Pages** as the host; **defer Azure** (secrets + subscription reactivation) as optional/future. | GitHub Actions builds and Pages serves the static site with no Azure dependency; Azure only needed if Azure Static Web Apps/resources are adopted later. |
 | 2026-07-05 | Pronunciation audio via the browser **Web Speech API** behind a single `src/lib/speak.ts` seam (`isSpeechSupported`, `speak`, `pickGermanVoice`); `SpeakButton` and all call sites depend on `speak()`, never on `speechSynthesis` directly. | No npm package/network/key; offline where an OS German voice exists. The `speak()` seam is the only module touching the API, so Feature G (Piper offline neural TTS) is a swap here alone. German voice is detected lazily at click (iOS returns `[]` from `getVoices()` until a gesture) and a negative is never cached. |
+| 2026-07-05 | **Catalog foundation** (`src/lib/catalog/`) as **static explicit concatenation** of per-tool `catalog.ts` adapters — `export const catalog = [...verbsCatalog(), ...]` — **not** a register-on-import mutable registry. | A mutable `sources[]` populated by side-effecting imports has three real hazards: tree-shaking/lazy routes can silently drop an unimported adapter; Vite HMR double-registers; Vitest module isolation makes the result order-dependent/flaky. A plain array has none, is trivially testable, and is more YAGNI. One explicit import+spread per tool is an acceptable, visible cost. |
+| 2026-07-05 | **Identity keeps German case** (`CatalogEntry.term` original-case; `slug` lowercased/umlaut-folded and URL-safe). Nouns identified by **(singular, category)** → slug encodes the category (`familie/bild`); verbs unique by infinitive. Case-folding happens **only** in search matching. | Capitalisation is meaning in German (`essen` verb vs `Essen` noun); folding it in identity would collapse distinct items. The `slug` is the deep-select key, distinct from the display term, so `?sel=` stays unambiguous. |
+| 2026-07-05 | **Deep-select routing** via `useDeepSelect(items, toSlug, param='sel')` seeded through **lazy initial `useState`**, not a mount `useEffect`. Global search (`/suchen`) is the foundation's first consumer. | Lazy seeding avoids StrictMode's double-invoke fighting the user's first click. Search is the safe first consumer (matches headwords, unaffected by inflection), validating the registry before the morphology-risky cross-linking (Feature D). |
 
 ## 11. Open Items
 

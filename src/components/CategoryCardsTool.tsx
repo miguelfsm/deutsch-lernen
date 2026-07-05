@@ -2,6 +2,8 @@ import { useState, type ReactNode } from 'react'
 import Header from './Header'
 import SpeakButton from './SpeakButton'
 import { font, color } from '../lib/theme'
+import { useDeepSelect } from '../lib/useDeepSelect'
+import { cardSlug } from '../lib/catalog/slug'
 
 // Shared "category pills → list of cards" layout. Both the Adjectives and the
 // Phrases tools are this exact view; they differ only in the headword field and
@@ -36,7 +38,16 @@ export default function CategoryCardsTool<T extends CardItem>({
   term,
   extra,
 }: Props<T>) {
-  const [activeCat, setActiveCat] = useState(categories[0].id)
+  // Deep-select seeds the active category from `?sel=categoryId/term`. These tools
+  // list every item in a category at once, so a card is "pre-selected" by opening
+  // its category (per-item highlight/scroll is out of scope for v1).
+  const deepSelected = useDeepSelect(
+    categories.flatMap((c) => c.items.map((item) => ({ catId: c.id, item }))),
+    (f) => cardSlug(f.catId, term(f.item)),
+  )
+  const [activeCat, setActiveCat] = useState(
+    () => deepSelected?.catId ?? categories[0].id,
+  )
   const current = categories.find((c) => c.id === activeCat) ?? categories[0]
 
   return (

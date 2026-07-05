@@ -5,6 +5,8 @@ import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
 import { filterVerbs } from "./filter.js";
 import { font, color } from "../../lib/theme";
+import { useDeepSelect } from "../../lib/useDeepSelect";
+import { verbSlug } from "../../lib/catalog/slug";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const BLUE   = "#1d6ef5";
@@ -18,7 +20,9 @@ const TYPE_META: Record<VerbType, { bg: string; fg: string; dot: string; label: 
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 export default function GermanVerbs() {
-  const [selected, setSelected] = useState<Verb>(verbData[0]);
+  // Deep-select seeds the initial verb from `?sel=`, falling back to the default.
+  const deepSelected = useDeepSelect(verbData, (v) => verbSlug(v.infinitive));
+  const [selected, setSelected] = useState<Verb>(() => deepSelected ?? verbData[0]);
   const [query, setQuery] = useState("");
   const meta = TYPE_META[selected.type];
 
