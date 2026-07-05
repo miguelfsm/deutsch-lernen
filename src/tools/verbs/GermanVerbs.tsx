@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "../../components/Header";
+import SpeakButton from "../../components/SpeakButton";
 import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
 import { filterVerbs } from "./filter.js";
@@ -170,13 +171,20 @@ export default function GermanVerbs() {
         }}>
           <div>
             <div style={{
-              fontSize: 28,
-              fontWeight: 700,
-              color: "#1c1917",
-              letterSpacing: "-1px",
-              lineHeight: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
             }}>
-              {selected.infinitive}
+              <span style={{
+                fontSize: 28,
+                fontWeight: 700,
+                color: "#1c1917",
+                letterSpacing: "-1px",
+                lineHeight: 1,
+              }}>
+                {selected.infinitive}
+              </span>
+              <SpeakButton text={selected.infinitive} size={20} />
             </div>
             <div style={{
               fontSize: 14,

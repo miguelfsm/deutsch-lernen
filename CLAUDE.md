@@ -35,11 +35,19 @@ These are how Miguel wants the system built — apply them to every change:
 
 - **SOLID** — single-responsibility modules, open for extension, small focused
   interfaces, depend on abstractions.
-- **Composition over inheritance** — build behaviour by composing small units,
-  not by deep class/inheritance hierarchies.
+- **Composition over inheritance** — when both are viable, build behaviour by
+  composing small units, not by deep class/inheritance hierarchies.
 - **DRY is about functionality, not code** — remove duplication of *behaviour/
   knowledge*. Do **not** force-merge code that merely looks similar but serves
-  different purposes; incidental resemblance is fine.
+  different purposes; incidental resemblance (some code duplication) is fine.
+- **YAGNI** — build for the requirement in front of you, not a speculative
+  future one. Prefer the simplest thing that works now; add abstraction when a
+  second real caller demands it, not before. This tempers the modularity and
+  SOLID points below — don't gold-plate.
+- **Modularity (tempered by YAGNI)** — favour small, focused, replaceable
+  modules with clear seams (so e.g. a new tool can register into search without
+  editing search). But do not fragment code into indirection that no current
+  requirement needs.
 - **Tests accompany every code change** — but keep them **high-ROI**: cover
   important flows and real logic. Do **not** test trivial getters/setters or
   framework boilerplate.

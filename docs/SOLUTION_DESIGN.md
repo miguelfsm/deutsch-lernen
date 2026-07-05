@@ -189,6 +189,7 @@ manage Azure resources (e.g. if Azure Static Web Apps is later chosen as host).
 | 2026-06-21 | Avoid React Native. | Would require rewriting the UI; no reuse of existing JSX. |
 | 2026-06-21 | Keep Azure service-principal auth for cloud sessions, independent of host choice. | Lets Claude Code work from the web/iPad without subscription-wide privileges. |
 | 2026-06-21 | Confirm **GitHub Pages** as the host; **defer Azure** (secrets + subscription reactivation) as optional/future. | GitHub Actions builds and Pages serves the static site with no Azure dependency; Azure only needed if Azure Static Web Apps/resources are adopted later. |
+| 2026-07-05 | Pronunciation audio via the browser **Web Speech API** behind a single `src/lib/speak.ts` seam (`isSpeechSupported`, `speak`, `pickGermanVoice`); `SpeakButton` and all call sites depend on `speak()`, never on `speechSynthesis` directly. | No npm package/network/key; offline where an OS German voice exists. The `speak()` seam is the only module touching the API, so Feature G (Piper offline neural TTS) is a swap here alone. German voice is detected lazily at click (iOS returns `[]` from `getVoices()` until a gesture) and a negative is never cached. |
 
 ## 11. Open Items
 

@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import Header from './Header'
+import SpeakButton from './SpeakButton'
 import { font, color } from '../lib/theme'
 
 // Shared "category pills → list of cards" layout. Both the Adjectives and the
@@ -119,13 +120,22 @@ export default function CategoryCardsTool<T extends CardItem>({
             >
               <span
                 style={{
-                  fontSize: 19,
-                  fontWeight: 700,
-                  color: color.ink,
-                  letterSpacing: '-0.3px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
                 }}
               >
-                {term(item)}
+                <span
+                  style={{
+                    fontSize: 19,
+                    fontWeight: 700,
+                    color: color.ink,
+                    letterSpacing: '-0.3px',
+                  }}
+                >
+                  {term(item)}
+                </span>
+                <SpeakButton text={term(item)} size={15} />
               </span>
               <span
                 style={{
@@ -148,8 +158,18 @@ export default function CategoryCardsTool<T extends CardItem>({
 
             {/* Example */}
             <div style={{ padding: '10px 20px', fontFamily: font.sans }}>
-              <div style={{ fontSize: 15, color: color.ink, fontWeight: 600 }}>
-                {item.example}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  fontSize: 15,
+                  color: color.ink,
+                  fontWeight: 600,
+                }}
+              >
+                <span>{item.example}</span>
+                <SpeakButton text={item.example} />
               </div>
               <div
                 style={{

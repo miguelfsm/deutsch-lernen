@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "../../components/Header";
+import SpeakButton from "../../components/SpeakButton";
 import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
 
@@ -192,6 +193,11 @@ export default function GermanNouns() {
               }}>
                 {selected.singular}
               </span>
+              <SpeakButton
+                text={`${selected.article} ${selected.singular}`}
+                label={`„${selected.article} ${selected.singular}“ vorlesen`}
+                size={20}
+              />
             </div>
             <div style={{
               fontSize: 14,
