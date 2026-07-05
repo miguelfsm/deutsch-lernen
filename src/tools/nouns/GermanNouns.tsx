@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import SpeakButton from "../../components/SpeakButton";
 import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
+import { font, color } from "../../lib/theme";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten"];
@@ -371,6 +372,36 @@ export default function GermanNouns() {
           <span style={{ marginRight: 6 }}>💡</span>
           {selected.note}
         </div>
+
+        {/* Example sentence (A1) — a slot below the 💡 note, matching the
+            Adjectives/Phrases cards; incidental style duplication is fine. */}
+        {selected.example && selected.translation && (
+          <div style={{
+            padding: "12px 22px",
+            borderTop: "1px solid #f0ede8",
+            fontFamily: font.sans,
+          }}>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 15,
+              color: color.ink,
+              fontWeight: 600,
+            }}>
+              <span>{selected.example}</span>
+              <SpeakButton text={selected.example} />
+            </div>
+            <div style={{
+              fontSize: 12.5,
+              color: color.faint,
+              marginTop: 2,
+              fontStyle: "italic",
+            }}>
+              {selected.translation}
+            </div>
+          </div>
+        )}
 
       </div>
 
