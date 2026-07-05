@@ -671,6 +671,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "spielen", english: "to play", type: "regular",
+    example: "Ich spiele Fußball.", translation: "I play football.",
     note: "Fully regular. Works for games, sports and instruments: Ich spiele Fußball / Ich spiele Gitarre.",
     conjugations: [
       { pronoun: "ich",      form: "spiele",  stemChange: false },
@@ -683,6 +684,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "anschauen", english: "to watch / to look at", type: "regular",
+    example: "Ich schaue den Film an.", translation: "I am watching the film.",
     customStem: "schau",
     note: "Separable verb — 'an-' detaches to the end of the clause: Ich schaue den Film an. The base verb schauen conjugates regularly; forms here show the base without the prefix.",
     conjugations: [
@@ -696,6 +698,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "aufmachen", english: "to open", type: "regular",
+    example: "Ich mache die Tür auf.", translation: "I am opening the door.",
     customStem: "mach",
     note: "Separable verb — 'auf-' detaches: Ich mache die Tür auf (I open the door). Base verb machen is fully regular and already in this list.",
     conjugations: [
@@ -709,6 +712,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "einkaufen", english: "to go shopping / to shop", type: "regular",
+    example: "Ich kaufe im Supermarkt ein.", translation: "I am shopping at the supermarket.",
     customStem: "kauf",
     note: "Separable verb — 'ein-' detaches: Ich kaufe im Supermarkt ein. Base verb kaufen is already in this list. Contrast: kaufen = to buy one thing; einkaufen = to do the shopping.",
     conjugations: [
@@ -722,6 +726,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "anrufen", english: "to call / to phone", type: "regular",
+    example: "Ich rufe dich später an.", translation: "I will call you later.",
     customStem: "ruf",
     note: "Separable verb — 'an-' detaches: Ich rufe dich an (I'll call you). Base verb rufen is regular. Very common in everyday German.",
     conjugations: [
@@ -737,6 +742,7 @@ export const verbData: Verb[] = [
   // ── Tagesablauf / Daily routine ────────────────────────────────────────────
   {
     infinitive: "aufstehen", english: "to get up", type: "regular",
+    example: "Ich stehe früh auf.", translation: "I get up early.",
     customStem: "steh",
     note: "Separable verb — 'auf-' detaches: Lara steht früh auf. Base verb stehen is fully regular and already in this list.",
     conjugations: [
@@ -750,6 +756,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "aufräumen", english: "to tidy up", type: "regular",
+    example: "Ich räume mein Zimmer auf.", translation: "I am tidying up my room.",
     customStem: "räum",
     note: "Separable verb — 'auf-' detaches: Sie räumt die Küche auf. Base verb räumen is fully regular.",
     conjugations: [
@@ -763,6 +770,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "fernsehen", english: "to watch TV", type: "irregular",
+    example: "Ich sehe abends fern.", translation: "I watch TV in the evening.",
     customStem: "seh",
     note: "Separable verb — 'fern-' detaches: Er sieht fern. Base verb sehen has the same e → ie change in du/er as the standalone sehen.",
     conjugations: [
@@ -776,6 +784,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "essen", english: "to eat", type: "irregular",
+    example: "Ich esse einen Apfel.", translation: "I am eating an apple.",
     note: "Vowel change e → i in du/er forms, and both collapse to the same form: isst (du) = isst (er/sie/es).",
     conjugations: [
       { pronoun: "ich",      form: "esse",  stemChange: false },
@@ -788,6 +797,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "frühstücken", english: "to have breakfast", type: "regular",
+    example: "Ich frühstücke um acht Uhr.", translation: "I have breakfast at eight o'clock.",
     note: "Fully regular despite the long stem. Ich frühstücke um acht Uhr (I have breakfast at eight).",
     conjugations: [
       { pronoun: "ich",      form: "frühstücke",  stemChange: false },
@@ -802,6 +812,7 @@ export const verbData: Verb[] = [
   // ── Aus dem Unterricht / from class notes ──────────────────────────────────
   {
     infinitive: "anfangen", english: "to begin / to start", type: "irregular",
+    example: "Der Kurs fängt um neun an.", translation: "The class starts at nine.",
     customStem: "fang",
     note: "Separable AND stem-changing: 'an-' detaches and a → ä in du/er. Der Kurs fängt um neun an (the class starts at nine).",
     conjugations: [
@@ -815,6 +826,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "schlafen", english: "to sleep", type: "irregular",
+    example: "Ich schlafe acht Stunden.", translation: "I sleep eight hours.",
     note: "Stem change a → ä in du/er forms: du schläfst, er schläft. Wie lange schläfst du am Wochenende?",
     conjugations: [
       { pronoun: "ich",      form: "schlafe",  stemChange: false },
@@ -827,6 +839,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "abkühlen", english: "to cool off / to cool down", type: "regular",
+    example: "Die Suppe kühlt schnell ab.", translation: "The soup cools down quickly.",
     customStem: "kühl",
     note: "Separable verb — 'ab-' detaches: Die Suppe kühlt schnell ab. Base verb kühlen is regular; reflexive sich abkühlen = to cool oneself down.",
     conjugations: [
@@ -840,6 +853,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "chatten", english: "to chat (online)", type: "regular",
+    example: "Ich chatte mit meinen Freunden.", translation: "I am chatting with my friends.",
     note: "Regular loanword. The stem ends in -tt, so an -e- is inserted before -st/-t: du chattest, er chattet (same rule as arbeiten).",
     conjugations: [
       { pronoun: "ich",      form: "chatte",   stemChange: false },
@@ -852,6 +866,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "kochen", english: "to cook", type: "regular",
+    example: "Ich koche heute Abend.", translation: "I am cooking this evening.",
     note: "Fully regular: stem koch- + -e / -st / -t / -en. Ich koche heute Abend (I'm cooking tonight).",
     conjugations: [
       { pronoun: "ich",      form: "koche",  stemChange: false },
@@ -866,6 +881,7 @@ export const verbData: Verb[] = [
   // ── Hochfrequenz / high-frequency additions ────────────────────────────────
   {
     infinitive: "geben", english: "to give", type: "irregular",
+    example: "Es gibt hier einen Supermarkt.", translation: "There is a supermarket here.",
     note: "Vowel change e → i in du/er: du gibst, er gibt. Most useful in es gibt = there is / there are (+ accusative).",
     conjugations: [
       { pronoun: "ich",      form: "gebe",  stemChange: false },
@@ -878,6 +894,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "fahren", english: "to drive / to go (by vehicle)", type: "irregular",
+    example: "Ich fahre mit dem Bus.", translation: "I go by bus.",
     note: "Stem change a → ä in du/er: du fährst, er fährt. Ich fahre mit dem Bus (I go by bus).",
     conjugations: [
       { pronoun: "ich",      form: "fahre",  stemChange: false },
@@ -890,6 +907,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "lesen", english: "to read", type: "irregular",
+    example: "Ich lese ein Buch.", translation: "I am reading a book.",
     note: "Vowel change e → ie in du/er: du liest, er liest. The stem -s merges with the -st ending, so both forms are 'liest'.",
     conjugations: [
       { pronoun: "ich",      form: "lese",  stemChange: false },
@@ -902,6 +920,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "fragen", english: "to ask", type: "regular",
+    example: "Ich frage den Lehrer.", translation: "I am asking the teacher.",
     note: "Fully regular. The natural counterpart to antworten: Ich frage, du antwortest.",
     conjugations: [
       { pronoun: "ich",      form: "frage",  stemChange: false },
@@ -914,6 +933,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "verstehen", english: "to understand", type: "regular",
+    example: "Ich verstehe die Frage nicht.", translation: "I don't understand the question.",
     note: "Inseparable prefix ver- (never detaches); regular endings on the -steh- stem. Ich verstehe nicht = I don't understand.",
     conjugations: [
       { pronoun: "ich",      form: "verstehe",  stemChange: false },
@@ -926,6 +946,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "lernen", english: "to learn", type: "regular",
+    example: "Ich lerne Deutsch.", translation: "I am learning German.",
     note: "Fully regular. Ich lerne Deutsch (I'm learning German).",
     conjugations: [
       { pronoun: "ich",      form: "lerne",  stemChange: false },
@@ -938,6 +959,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "helfen", english: "to help", type: "irregular",
+    example: "Ich helfe dir gern.", translation: "I am happy to help you.",
     note: "Stem change e → i in du/er: du hilfst, er hilft. Takes the dative: Ich helfe dir.",
     conjugations: [
       { pronoun: "ich",      form: "helfe",  stemChange: false },
@@ -950,6 +972,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "kennen", english: "to know (be familiar with)", type: "regular",
+    example: "Ich kenne diese Stadt.", translation: "I know this city.",
     note: "Regular. kennen = to know a person/place (Ich kenne Berlin); wissen = to know a fact (Ich weiß das).",
     conjugations: [
       { pronoun: "ich",      form: "kenne",  stemChange: false },
