@@ -4,6 +4,7 @@ import SpeakButton from "../../components/SpeakButton";
 import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
 import { filterVerbs } from "./filter.js";
+import { font, color } from "../../lib/theme";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const BLUE   = "#1d6ef5";
@@ -298,6 +299,36 @@ export default function GermanVerbs() {
             })}
           </tbody>
         </table>
+
+        {/* Example sentence (A1) — same visual language as the Adjectives/
+            Phrases cards; incidental style duplication is fine per Feature B. */}
+        {selected.example && selected.translation && (
+          <div style={{
+            padding: "12px 22px",
+            borderTop: "1px solid #f0ede8",
+            fontFamily: font.sans,
+          }}>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 15,
+              color: color.ink,
+              fontWeight: 600,
+            }}>
+              <span>{selected.example}</span>
+              <SpeakButton text={selected.example} />
+            </div>
+            <div style={{
+              fontSize: 12.5,
+              color: color.faint,
+              marginTop: 2,
+              fontStyle: "italic",
+            }}>
+              {selected.translation}
+            </div>
+          </div>
+        )}
 
         {/* Note */}
         <div style={{

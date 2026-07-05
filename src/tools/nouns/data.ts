@@ -9,6 +9,12 @@ export interface Noun {
   plural: string
   category: string
   note: string
+  // A1 example sentence using the noun (with its article) + its English
+  // translation. Optional during the Feature B backfill; flipped to required
+  // once every noun has one (the final commit of that PR) so the compiler
+  // enforces completeness.
+  example?: string
+  translation?: string
 }
 
 export const nounData: Noun[] = [
@@ -16,76 +22,91 @@ export const nounData: Noun[] = [
   // ── Familie ────────────────────────────────────────────────────────────────
   {
     singular: "Vater",      english: "father",              article: "der", plural: "Väter",
+    example: "Mein Vater arbeitet viel.", translation: "My father works a lot.",
     category: "Familie",
     note: "Umlaut only — vowel -a- becomes -ä-. Same pattern as Mutter, Bruder, Großvater.",
   },
   {
     singular: "Mutter",     english: "mother",              article: "die", plural: "Mütter",
+    example: "Meine Mutter kocht gern.", translation: "My mother likes cooking.",
     category: "Familie",
     note: "Umlaut only. Note: die Eltern (parents) exists only in the plural — there is no singular.",
   },
   {
     singular: "Sohn",       english: "son",                 article: "der", plural: "Söhne",
+    example: "Mein Sohn ist fünf Jahre alt.", translation: "My son is five years old.",
     category: "Familie",
     note: "Umlaut + -e ending. A very common masculine plural pattern.",
   },
   {
     singular: "Tochter",    english: "daughter",            article: "die", plural: "Töchter",
+    example: "Meine Tochter geht zur Schule.", translation: "My daughter goes to school.",
     category: "Familie",
     note: "Umlaut only — same pattern as Mutter and Schwester.",
   },
   {
     singular: "Bruder",     english: "brother",             article: "der", plural: "Brüder",
+    example: "Mein Bruder spielt Fußball.", translation: "My brother plays football.",
     category: "Familie",
     note: "Umlaut only. Contrast with die Schwester → Schwestern (no umlaut, -n ending).",
   },
   {
     singular: "Schwester",  english: "sister",              article: "die", plural: "Schwestern",
+    example: "Meine Schwester wohnt in Berlin.", translation: "My sister lives in Berlin.",
     category: "Familie",
     note: "No umlaut — just adds -n. Feminine nouns very rarely take an umlaut in the plural.",
   },
   {
     singular: "Mann",       english: "man / husband",       article: "der", plural: "Männer",
+    example: "Der Mann trinkt Kaffee.", translation: "The man is drinking coffee.",
     category: "Familie",
     note: "Umlaut + -er ending. Also means husband in context: mein Mann.",
   },
   {
     singular: "Frau",       english: "woman / wife",        article: "die", plural: "Frauen",
+    example: "Die Frau kauft Brot.", translation: "The woman is buying bread.",
     category: "Familie",
     note: "No umlaut, adds -en. Also means wife in context: meine Frau.",
   },
   {
     singular: "Kind",       english: "child",               article: "das", plural: "Kinder",
+    example: "Das Kind spielt im Garten.", translation: "The child is playing in the garden.",
     category: "Familie",
     note: "-er ending, no umlaut. One of the most essential neuter nouns in German.",
   },
   {
     singular: "Großvater",  english: "grandfather",         article: "der", plural: "Großväter",
+    example: "Mein Großvater wohnt auf dem Land.", translation: "My grandfather lives in the countryside.",
     category: "Familie",
     note: "Compound: groß + Vater. The plural follows Vater → Väter.",
   },
   {
     singular: "Großmutter", english: "grandmother",         article: "die", plural: "Großmütter",
+    example: "Meine Großmutter backt einen Kuchen.", translation: "My grandmother is baking a cake.",
     category: "Familie",
     note: "Compound: groß + Mutter. Follows Mutter → Mütter.",
   },
   {
     singular: "Onkel",      english: "uncle",               article: "der", plural: "Onkel",
+    example: "Mein Onkel wohnt in Hamburg.", translation: "My uncle lives in Hamburg.",
     category: "Familie",
     note: "No change in the plural! Many masculine nouns ending in -el stay the same.",
   },
   {
     singular: "Tante",      english: "aunt",                article: "die", plural: "Tanten",
+    example: "Meine Tante trinkt gern Tee.", translation: "My aunt likes drinking tea.",
     category: "Familie",
     note: "Adds -n. Borrowed from French tante.",
   },
   {
     singular: "Cousin",     english: "male cousin",         article: "der", plural: "Cousins",
+    example: "Mein Cousin ist sehr nett.", translation: "My (male) cousin is very nice.",
     category: "Familie",
     note: "Borrowed from French — takes -s in the plural, like most foreign loanwords.",
   },
   {
     singular: "Cousine",    english: "female cousin",       article: "die", plural: "Cousinen",
+    example: "Meine Cousine lernt Deutsch.", translation: "My (female) cousin is learning German.",
     category: "Familie",
     note: "Also from French. Note the -e ending for the feminine form.",
   },

@@ -16,11 +16,17 @@ export interface Verb {
   note: string
   customStem?: string
   conjugations: Conjugation[]
+  // A1 example sentence using the verb + its English translation. Optional
+  // during the Feature B backfill; flipped to required once every verb has one
+  // (the final commit of that PR) so the compiler enforces completeness.
+  example?: string
+  translation?: string
 }
 
 export const verbData: Verb[] = [
   {
     infinitive: "sein", english: "to be", type: "irregular",
+    example: "Ich bin sehr müde.", translation: "I am very tired.",
     note: "Fully suppletive — every form is unpredictable. Memorise each one individually.",
     conjugations: [
       { pronoun: "ich",      form: "bin",   stemChange: true  },
@@ -33,6 +39,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "haben", english: "to have", type: "irregular",
+    example: "Ich habe einen Bruder.", translation: "I have a brother.",
     note: "The -b- drops in du/er forms: habe → hast / hat.",
     conjugations: [
       { pronoun: "ich",      form: "habe",  stemChange: false },
@@ -45,6 +52,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "werden", english: "to become / will", type: "irregular",
+    example: "Es wird kalt.", translation: "It is getting cold.",
     note: "Vowel change e → i in du/er forms. Also the future & passive auxiliary.",
     conjugations: [
       { pronoun: "ich",      form: "werde",  stemChange: false },
@@ -57,6 +65,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "können", english: "can / to be able to", type: "modal",
+    example: "Ich kann gut kochen.", translation: "I can cook well.",
     note: "Modal: no ending for ich/er. Vowel change ö → a in singular forms.",
     conjugations: [
       { pronoun: "ich",      form: "kann",   stemChange: true  },
@@ -69,6 +78,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "müssen", english: "must / to have to", type: "modal",
+    example: "Ich muss jetzt gehen.", translation: "I have to go now.",
     note: "Modal: no ending for ich/er. Umlaut ü drops in singular forms.",
     conjugations: [
       { pronoun: "ich",      form: "muss",   stemChange: true  },
@@ -81,6 +91,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sagen", english: "to say", type: "regular",
+    example: "Ich sage die Wahrheit.", translation: "I tell the truth.",
     note: "Fully regular. Pattern: stem + -e / -st / -t / -en / -t / -en.",
     conjugations: [
       { pronoun: "ich",      form: "sage",  stemChange: false },
@@ -93,6 +104,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "machen", english: "to make / to do", type: "regular",
+    example: "Ich mache meine Hausaufgaben.", translation: "I do my homework.",
     note: "Fully regular. A perfect model verb for learning the standard pattern.",
     conjugations: [
       { pronoun: "ich",      form: "mache",  stemChange: false },
@@ -105,6 +117,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "gehen", english: "to go", type: "regular",
+    example: "Ich gehe nach Hause.", translation: "I am going home.",
     note: "Regular in Präsens. In Perfekt it takes 'sein': ich bin gegangen.",
     conjugations: [
       { pronoun: "ich",      form: "gehe",  stemChange: false },
@@ -117,6 +130,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "kommen", english: "to come", type: "regular",
+    example: "Ich komme aus Portugal.", translation: "I come from Portugal.",
     note: "Regular in Präsens. Double -mm- stays in all forms.",
     conjugations: [
       { pronoun: "ich",      form: "komme",  stemChange: false },
@@ -129,6 +143,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sollen", english: "should / to be supposed to", type: "modal",
+    example: "Du sollst mehr Wasser trinken.", translation: "You should drink more water.",
     note: "The most regular modal — no vowel change! No ending for ich/er.",
     conjugations: [
       { pronoun: "ich",      form: "soll",   stemChange: false },
@@ -141,6 +156,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "wollen", english: "to want", type: "modal",
+    example: "Ich will einen Kaffee.", translation: "I want a coffee.",
     note: "Modal: no ending for ich/er. Vowel change o → i in singular forms.",
     conjugations: [
       { pronoun: "ich",      form: "will",   stemChange: true  },
@@ -153,6 +169,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "wissen", english: "to know (a fact)", type: "irregular",
+    example: "Ich weiß die Antwort nicht.", translation: "I don't know the answer.",
     note: "Behaves like a modal in singular: wiss → weiß, no ending for ich/er.",
     conjugations: [
       { pronoun: "ich",      form: "weiß",   stemChange: true  },
@@ -165,6 +182,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sehen", english: "to see", type: "irregular",
+    example: "Ich sehe einen Vogel.", translation: "I see a bird.",
     note: "Vowel change e → ie in du/er forms (a common pattern: lesen, geben, nehmen…).",
     conjugations: [
       { pronoun: "ich",      form: "sehe",   stemChange: false },
@@ -177,6 +195,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "lassen", english: "to let / to leave", type: "irregular",
+    example: "Ich lasse die Tür offen.", translation: "I am leaving the door open.",
     note: "Vowel change a → ä (umlaut) in du/er forms: lasse → lässt.",
     conjugations: [
       { pronoun: "ich",      form: "lasse",  stemChange: false },
@@ -189,6 +208,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "stehen", english: "to stand", type: "regular",
+    example: "Der Stuhl steht in der Küche.", translation: "The chair is in the kitchen.",
     note: "Regular in Präsens.",
     conjugations: [
       { pronoun: "ich",      form: "stehe",  stemChange: false },
@@ -201,6 +221,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "finden", english: "to find / to think", type: "regular",
+    example: "Ich finde den Film gut.", translation: "I think the film is good.",
     note: "Stem ends in -d: an -e- is inserted before -st and -t → findest, findet.",
     conjugations: [
       { pronoun: "ich",      form: "finde",   stemChange: false },
@@ -213,6 +234,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "bleiben", english: "to stay / to remain", type: "regular",
+    example: "Ich bleibe heute zu Hause.", translation: "I am staying home today.",
     note: "Regular in Präsens. Perfekt uses 'sein': ich bin geblieben.",
     conjugations: [
       { pronoun: "ich",      form: "bleibe",  stemChange: false },
@@ -225,6 +247,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "liegen", english: "to lie / to be located", type: "regular",
+    example: "Das Buch liegt auf dem Tisch.", translation: "The book is lying on the table.",
     note: "Regular in Präsens.",
     conjugations: [
       { pronoun: "ich",      form: "liege",  stemChange: false },
@@ -237,6 +260,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "heißen", english: "to be called", type: "regular",
+    example: "Ich heiße Miguel.", translation: "My name is Miguel.",
     note: "Stem ends in -ß: du heißt (not heißst — -st contracts to -t after ß/s/z).",
     conjugations: [
       { pronoun: "ich",      form: "heiße",  stemChange: false },
@@ -249,6 +273,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "denken", english: "to think", type: "regular",
+    example: "Ich denke oft an dich.", translation: "I often think of you.",
     note: "Regular in Präsens. Note: Perfekt is irregular → hat gedacht.",
     conjugations: [
       { pronoun: "ich",      form: "denke",  stemChange: false },
@@ -261,6 +286,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "brauchen", english: "to need", type: "regular",
+    example: "Ich brauche deine Hilfe.", translation: "I need your help.",
     note: "Fully regular. Very common in everyday speech: Ich brauche Hilfe — I need help.",
     conjugations: [
       { pronoun: "ich",      form: "brauche",  stemChange: false },
@@ -273,6 +299,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "schreiben", english: "to write", type: "regular",
+    example: "Ich schreibe eine E-Mail.", translation: "I am writing an email.",
     note: "Regular in Präsens. Strong verb — vowel changes only in Präteritum/Perfekt (schrieb, geschrieben).",
     conjugations: [
       { pronoun: "ich",      form: "schreibe",  stemChange: false },
@@ -285,6 +312,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "hören", english: "to hear / to listen", type: "regular",
+    example: "Ich höre gern Musik.", translation: "I like listening to music.",
     note: "Fully regular. Also used in hör mal! (hey, listen!) and Ich höre Musik.",
     conjugations: [
       { pronoun: "ich",      form: "höre",  stemChange: false },
@@ -297,6 +325,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sprechen", english: "to speak / to talk", type: "irregular",
+    example: "Ich spreche ein bisschen Deutsch.", translation: "I speak a little German.",
     note: "Vowel change e → i in du/er forms — same pattern as sehen (e→ie), lesen, geben.",
     conjugations: [
       { pronoun: "ich",      form: "spreche",  stemChange: false },
