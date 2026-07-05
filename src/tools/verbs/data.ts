@@ -16,11 +16,10 @@ export interface Verb {
   note: string
   customStem?: string
   conjugations: Conjugation[]
-  // A1 example sentence using the verb + its English translation. Optional
-  // during the Feature B backfill; flipped to required once every verb has one
-  // (the final commit of that PR) so the compiler enforces completeness.
-  example?: string
-  translation?: string
+  // A1 example sentence using the verb + its English translation. Required: the
+  // backfill is complete, so the compiler now forces every verb to carry both.
+  example: string
+  translation: string
 }
 
 export const verbData: Verb[] = [

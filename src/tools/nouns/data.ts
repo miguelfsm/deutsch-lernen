@@ -10,11 +10,10 @@ export interface Noun {
   category: string
   note: string
   // A1 example sentence using the noun (with its article) + its English
-  // translation. Optional during the Feature B backfill; flipped to required
-  // once every noun has one (the final commit of that PR) so the compiler
-  // enforces completeness.
-  example?: string
-  translation?: string
+  // translation. Required: the backfill is complete, so the compiler now forces
+  // every noun to carry both.
+  example: string
+  translation: string
 }
 
 export const nounData: Noun[] = [
