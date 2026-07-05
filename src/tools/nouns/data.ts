@@ -1117,81 +1117,97 @@ export const nounData: Noun[] = [
   // ── Geografie ──────────────────────────────────────────────────────────────
   {
     singular: "Berg",         english: "mountain",              article: "der", plural: "Berge",
+    example: "Der Berg ist hoch.", translation: "The mountain is high.",
     category: "Geografie",
     note: "Adds -e. No umlaut — a regular masculine one-syllable noun. In die Berge fahren (to go to the mountains).",
   },
   {
     singular: "Fluss",        english: "river",                 article: "der", plural: "Flüsse",
+    example: "Der Fluss ist breit.", translation: "The river is wide.",
     category: "Geografie",
     note: "Umlaut + -e. Vowel -u- becomes -ü-. Der Rhein and die Donau are two of Europe's major Flüsse.",
   },
   {
     singular: "Hauptstadt",   english: "capital (city)",        article: "die", plural: "Hauptstädte",
+    example: "Berlin ist die Hauptstadt.", translation: "Berlin is the capital.",
     category: "Geografie",
     note: "Umlaut + -e. Compound: Haupt- (main/head) + die Stadt (city), which follows the same Stadt → Städte pattern.",
   },
   {
     singular: "Land",         english: "country",               article: "das", plural: "Länder",
+    example: "Portugal ist ein schönes Land.", translation: "Portugal is a beautiful country.",
     category: "Geografie",
     note: "Umlaut + -er. Aus welchem Land kommen Sie? is a key A1 question. Also means 'state' within Germany (Bundesland).",
   },
   {
     singular: "Dorf",         english: "village",               article: "das", plural: "Dörfer",
+    example: "Das Dorf ist klein.", translation: "The village is small.",
     category: "Geografie",
     note: "Umlaut + -er. Same pattern as Land → Länder, Haus → Häuser. Auf dem Dorf means 'in the countryside.'",
   },
   {
     singular: "Stadt",        english: "city / town",           article: "die", plural: "Städte",
+    example: "Die Stadt ist groß.", translation: "The city is big.",
     category: "Geografie",
     note: "Umlaut + -e. In die Stadt gehen (to go into town) is common everyday phrasing.",
   },
   {
     singular: "See",          english: "lake",                  article: "der", plural: "Seen",
+    example: "Der See ist tief.", translation: "The lake is deep.",
     category: "Geografie",
     note: "Adds -n. Watch the gender switch: der See (lake) vs. die See (sea) — same word, different meaning and article!",
   },
   {
     singular: "Insel",        english: "island",                article: "die", plural: "Inseln",
+    example: "Die Insel liegt im Meer.", translation: "The island lies in the sea.",
     category: "Geografie",
     note: "Adds -n. Masculine/feminine -el nouns are mixed: dieser one takes -n, unlike der Schlüssel which stays unchanged.",
   },
   {
     singular: "Wald",         english: "forest / woods",        article: "der", plural: "Wälder",
+    example: "Der Wald ist dunkel.", translation: "The forest is dark.",
     category: "Geografie",
     note: "Umlaut + -er. In den Wald gehen (to go into the forest). The Black Forest is der Schwarzwald.",
   },
   {
     singular: "Tal",          english: "valley",                article: "das", plural: "Täler",
+    example: "Das Tal ist grün.", translation: "The valley is green.",
     category: "Geografie",
     note: "Umlaut + -er. Same pattern as Land → Länder. Found in many place names, e.g. Neandertal.",
   },
   {
     singular: "Grenze",       english: "border / boundary",     article: "die", plural: "Grenzen",
+    example: "Die Grenze ist offen.", translation: "The border is open.",
     category: "Geografie",
     note: "Adds -n. An der Grenze (at the border). Also used figuratively: Grenzen setzen (to set boundaries).",
   },
   {
     singular: "Kontinent",    english: "continent",             article: "der", plural: "Kontinente",
+    example: "Afrika ist ein Kontinent.", translation: "Africa is a continent.",
     category: "Geografie",
     note: "Adds -e. International loanword from Latin continens.",
   },
   {
     singular: "Straße",       english: "street / road",         article: "die", plural: "Straßen",
+    example: "Die Straße ist lang.", translation: "The street is long.",
     category: "Geografie",
     note: "Adds -n. The most common word for a street — appears in nearly every German address.",
   },
   {
     singular: "Weg",          english: "way / path / road",     article: "der", plural: "Wege",
+    example: "Der Weg führt zum See.", translation: "The path leads to the lake.",
     category: "Geografie",
     note: "Adds -e. Used for paths, routes, and directions: Welcher Weg führt zum Bahnhof? (Which way leads to the station?)",
   },
   {
     singular: "Gasse",        english: "alley / lane",          article: "die", plural: "Gassen",
+    example: "Die Gasse ist eng.", translation: "The alley is narrow.",
     category: "Geografie",
     note: "Adds -n. A narrow street, common in old town centers (Altstadt). Common in Swiss and Austrian street names.",
   },
   {
     singular: "Allee",        english: "avenue",                article: "die", plural: "Alleen",
+    example: "Die Allee hat viele Bäume.", translation: "The avenue has many trees.",
     category: "Geografie",
     note: "Adds -n. Borrowed from French allée — typically a wide, tree-lined street or boulevard.",
   },
@@ -1199,11 +1215,13 @@ export const nounData: Noun[] = [
   // ── Alltag ─────────────────────────────────────────────────────────────────
   {
     singular: "Abkürzung",    english: "abbreviation / shortcut", article: "die", plural: "Abkürzungen",
+    example: "Ich kenne eine Abkürzung.", translation: "I know a shortcut.",
     category: "Alltag",
     note: "Adds -en. Feminine -ung noun. Has two meanings: a shortened word/phrase, or a shorter physical route.",
   },
   {
     singular: "Unfall",       english: "accident",               article: "der", plural: "Unfälle",
+    example: "Der Unfall war schlimm.", translation: "The accident was bad.",
     category: "Alltag",
     note: "Umlaut + -e. Einen Unfall haben (to have an accident). Compound: un- (negative prefix) + der Fall (fall/case).",
   },
@@ -1211,16 +1229,19 @@ export const nounData: Noun[] = [
   // ── Mengen & Einheiten ─────────────────────────────────────────────────────
   {
     singular: "Pfund",        english: "pound (unit of weight)", article: "das", plural: "Pfund",
+    example: "Ich kaufe ein Pfund Butter.", translation: "I am buying a pound of butter.",
     category: "Mengen & Einheiten",
     note: "No change in plural. After a number, the unit stays unchanged: ein Pfund Brot, zwei Pfund Butter — not 'zwei Pfunde.'",
   },
   {
     singular: "Kilo",         english: "kilo / kilogram",        article: "das", plural: "Kilo",
+    example: "Ich brauche ein Kilo Kartoffeln.", translation: "I need a kilo of potatoes.",
     category: "Mengen & Einheiten",
     note: "Usually unchanged after a number: ein Kilo Lauch, zwei Kilo Kartoffeln. The form Kilos exists but is less common in measurements.",
   },
   {
     singular: "Gramm",        english: "gram",                   article: "das", plural: "Gramm",
+    example: "Ich möchte hundert Gramm Käse.", translation: "I would like a hundred grams of cheese.",
     category: "Mengen & Einheiten",
     note: "No change in plural. Almost always paired directly with a number and no article: 100 Gramm Speck, 250 Gramm Mehl.",
   },
@@ -1234,11 +1255,13 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Bild",          english: "picture / image",         article: "das", plural: "Bilder",
+    example: "Das Bild hängt an der Wand.", translation: "The picture hangs on the wall.",
     category: "Alltag",
     note: "-er ending, no umlaut: das Bild → die Bilder. Same plural pattern as Kind → Kinder.",
   },
   {
     singular: "Sonnenaufgang", english: "sunrise",                 article: "der", plural: "Sonnenaufgänge",
+    example: "Der Sonnenaufgang ist schön.", translation: "The sunrise is beautiful.",
     category: "Geografie",
     note: "Umlaut + -e plural: a → ä. Opposite: der Sonnenuntergang (sunset). Compound of die Sonne + der Aufgang — the last part (Aufgang, masc.) fixes the gender.",
   },
@@ -1246,56 +1269,67 @@ export const nounData: Noun[] = [
   // ── Zeit ─────────────────────────────────────────────────────────────────────
   {
     singular: "Tag",       english: "day",                  article: "der", plural: "Tage",
+    example: "Heute ist ein schöner Tag.", translation: "Today is a beautiful day.",
     category: "Zeit",
     note: "Parts of the day are mostly masculine: der Morgen, der Mittag, der Abend — but die Nacht. Guten Tag!",
   },
   {
     singular: "Woche",     english: "week",                 article: "die", plural: "Wochen",
+    example: "Die Woche hat sieben Tage.", translation: "The week has seven days.",
     category: "Zeit",
     note: "Regular -n plural. diese Woche = this week, nächste Woche = next week.",
   },
   {
     singular: "Monat",     english: "month",                article: "der", plural: "Monate",
+    example: "Der Monat hat dreißig Tage.", translation: "The month has thirty days.",
     category: "Zeit",
     note: "-e plural, no umlaut. im Monat / dieser Monat.",
   },
   {
     singular: "Jahr",      english: "year",                 article: "das", plural: "Jahre",
+    example: "Das Jahr hat zwölf Monate.", translation: "The year has twelve months.",
     category: "Zeit",
     note: "-e plural. dieses Jahr = this year; Ich bin … Jahre alt.",
   },
   {
     singular: "Stunde",    english: "hour",                 article: "die", plural: "Stunden",
+    example: "Die Stunde hat sechzig Minuten.", translation: "The hour has sixty minutes.",
     category: "Zeit",
     note: "-n plural. eine Stunde = an hour. Don't confuse with die Uhr (clock / o'clock).",
   },
   {
     singular: "Minute",    english: "minute",               article: "die", plural: "Minuten",
+    example: "Eine Minute hat sechzig Sekunden.", translation: "A minute has sixty seconds.",
     category: "Zeit",
     note: "-n plural. fünf Minuten. Same pattern as Stunde, Woche.",
   },
   {
     singular: "Morgen",    english: "morning",              article: "der", plural: "Morgen",
+    example: "Am Morgen trinke ich Kaffee.", translation: "In the morning I drink coffee.",
     category: "Zeit",
     note: "No change in the plural (der Morgen → die Morgen). am Morgen = in the morning. Note: lowercase morgen = tomorrow.",
   },
   {
     singular: "Abend",     english: "evening",              article: "der", plural: "Abende",
+    example: "Am Abend lese ich ein Buch.", translation: "In the evening I read a book.",
     category: "Zeit",
     note: "-e plural. am Abend = in the evening; Guten Abend!",
   },
   {
     singular: "Nacht",     english: "night",                article: "die", plural: "Nächte",
+    example: "In der Nacht schlafe ich.", translation: "At night I sleep.",
     category: "Zeit",
     note: "Umlaut + -e: a → ä. Feminine, unlike the masculine parts of the day. Gute Nacht!",
   },
   {
     singular: "Uhr",       english: "clock / o'clock",      article: "die", plural: "Uhren",
+    example: "Die Uhr ist kaputt.", translation: "The clock is broken.",
     category: "Zeit",
     note: "-en plural. die Uhr = clock/watch; also 'o'clock': um drei Uhr. Wie viel Uhr ist es?",
   },
   {
     singular: "Zeit",      english: "time",                 article: "die", plural: "Zeiten",
+    example: "Ich habe keine Zeit.", translation: "I have no time.",
     category: "Zeit",
     note: "-en plural, but often uncountable: Ich habe keine Zeit. See the phrase 'Zeit haben'.",
   },
