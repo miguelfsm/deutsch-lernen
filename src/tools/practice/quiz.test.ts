@@ -65,4 +65,16 @@ describe('buildChoices', () => {
     const b = buildChoices(card, pool, 'de-en', rngZero)
     expect(a).toEqual(b)
   })
+
+  it('randomizes option order — the correct answer is not pinned to a position', () => {
+    // Guard against a memorizable layout: across many production (Math.random)
+    // builds, the correct answer must land in more than one index.
+    const positions = new Set<number>()
+    for (let i = 0; i < 200; i++) {
+      const choices = buildChoices(card, pool, 'de-en')
+      positions.add(choices.findIndex((c) => c.correct))
+    }
+    // With 4 options a fixed position would give size 1; a real shuffle spreads it.
+    expect(positions.size).toBeGreaterThan(1)
+  })
 })
