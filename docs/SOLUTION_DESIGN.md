@@ -74,9 +74,10 @@ DeutschLernen/
 │   │   ├── nouns/      { GermanNouns.tsx, data.ts, catalog.ts }
 │   │   ├── adjectives/ { GermanAdjectives.tsx, data.ts, catalog.ts }
 │   │   ├── phrases/    { GermanPhrases.tsx, data.ts, catalog.ts }
-│   │   └── satzbau/    { GermanSatzbau.tsx, data.ts, catalog.ts }
+│   │   ├── satzbau/    { GermanSatzbau.tsx, data.ts, catalog.ts }
+│   │   └── practice/   { PracticeTool.tsx, session.ts }  # drills the catalog
 │   └── lib/                   # shared helpers (theme, highlight, speak,
-│       │                     #   useDeepSelect)
+│       │                     #   useDeepSelect, progress)
 │       └── catalog/           # CatalogEntry type + static index + search + slug
 ├── index.html
 ├── vite.config.ts
@@ -196,6 +197,7 @@ manage Azure resources (e.g. if Azure Static Web Apps is later chosen as host).
 | 2026-07-05 | **Catalog foundation** (`src/lib/catalog/`) as **static explicit concatenation** of per-tool `catalog.ts` adapters — `export const catalog = [...verbsCatalog(), ...]` — **not** a register-on-import mutable registry. | A mutable `sources[]` populated by side-effecting imports has three real hazards: tree-shaking/lazy routes can silently drop an unimported adapter; Vite HMR double-registers; Vitest module isolation makes the result order-dependent/flaky. A plain array has none, is trivially testable, and is more YAGNI. One explicit import+spread per tool is an acceptable, visible cost. |
 | 2026-07-05 | **Identity keeps German case** (`CatalogEntry.term` original-case; `slug` lowercased/umlaut-folded and URL-safe). Nouns identified by **(singular, category)** → slug encodes the category (`familie/bild`); verbs unique by infinitive. Case-folding happens **only** in search matching. | Capitalisation is meaning in German (`essen` verb vs `Essen` noun); folding it in identity would collapse distinct items. The `slug` is the deep-select key, distinct from the display term, so `?sel=` stays unambiguous. |
 | 2026-07-05 | **Deep-select routing** via `useDeepSelect(items, toSlug, param='sel')` seeded through **lazy initial `useState`**, not a mount `useEffect`. Global search (`/suchen`) is the foundation's first consumer. | Lazy seeding avoids StrictMode's double-invoke fighting the user's first click. Search is the safe first consumer (matches headwords, unaffected by inflection), validating the registry before the morphology-risky cross-linking (Feature D). |
+| 2026-07-06 | **Practice mode** (`/uben`) drills the `catalog` directly; pure React-free `session.ts` (deck build/shuffle with an **injected RNG**, direction, advance, tally) is split from the view and from persistence. Progress is a typed, **version-1-enveloped** `localStorage` wrapper (`src/lib/progress.ts`) keyed by catalog `slug`, guarded for missing storage. v1 is **Leitner-lite** (seen/known), not SM-2. | SRP/DIP: the session drills `CatalogEntry`, so any tool contributing entries becomes drillable with no edits. Injected RNG keeps shuffle tests deterministic while production stays randomly shuffled. Versioning the envelope from day one lets a future schema change migrate rather than orphan progress; slug (not display term) is the stable key. |
 
 ## 11. Open Items
 
