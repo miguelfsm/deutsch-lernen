@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import Header from '../../components/Header'
 import SpeakButton from '../../components/SpeakButton'
 import { font, color } from '../../lib/theme'
@@ -15,8 +15,10 @@ import {
   promptText,
   answerText,
   type Direction,
+  type PracticeMode,
   type Session,
 } from './session'
+import { buildChoices, type Choice } from './quiz'
 import {
   loadProgress,
   recordAndSave,
@@ -36,6 +38,11 @@ const CONTENT_SETS = tools
 const DIRECTIONS: { id: Direction; label: string }[] = [
   { id: 'de-en', label: 'Deutsch → English' },
   { id: 'en-de', label: 'English → Deutsch' },
+]
+
+const MODES: { id: PracticeMode; label: string }[] = [
+  { id: 'flashcard', label: 'Karten · Flashcards' },
+  { id: 'quiz', label: 'Quiz · Multiple choice' },
 ]
 
 // ─── Shared style helpers ──────────────────────────────────────────────────────
@@ -70,6 +77,7 @@ export default function PracticeTool() {
     () => new Set(CONTENT_SETS.map((c) => c.id)),
   )
   const [direction, setDirection] = useState<Direction>('de-en')
+  const [mode, setMode] = useState<PracticeMode>('flashcard')
   const [session, setSession] = useState<Session | null>(null)
   const [revealed, setRevealed] = useState(false)
   const [lifetime, setLifetime] = useState<ProgressEntry>(() =>
@@ -88,7 +96,7 @@ export default function PracticeTool() {
   }
 
   function start() {
-    setSession(createSession(filterByTools(catalog, selected), direction))
+    setSession(createSession(filterByTools(catalog, selected), direction, mode))
     setRevealed(false)
   }
 
@@ -121,20 +129,27 @@ export default function PracticeTool() {
           onToggle={toggleSet}
           direction={direction}
           onDirection={setDirection}
+          mode={mode}
+          onMode={setMode}
           deckSize={deckSize}
           onStart={start}
           lifetime={lifetime}
         />
       )}
 
-      {session !== null && !isComplete(session) && !isEmpty(session) && (
-        <PlayScreen
-          session={session}
-          revealed={revealed}
-          onReveal={() => setRevealed(true)}
-          onRate={rate}
-        />
-      )}
+      {session !== null &&
+        !isComplete(session) &&
+        !isEmpty(session) &&
+        (session.mode === 'flashcard' ? (
+          <FlashcardPlay
+            session={session}
+            revealed={revealed}
+            onReveal={() => setRevealed(true)}
+            onRate={rate}
+          />
+        ) : (
+          <QuizPlay key={session.index} session={session} onAnswer={rate} />
+        ))}
 
       {session !== null && (isComplete(session) || isEmpty(session)) && (
         <DoneScreen
@@ -154,6 +169,8 @@ function SetupScreen({
   onToggle,
   direction,
   onDirection,
+  mode,
+  onMode,
   deckSize,
   onStart,
   lifetime,
@@ -162,6 +179,8 @@ function SetupScreen({
   onToggle: (id: string) => void
   direction: Direction
   onDirection: (d: Direction) => void
+  mode: PracticeMode
+  onMode: (m: PracticeMode) => void
   deckSize: number
   onStart: () => void
   lifetime: ProgressEntry
@@ -170,6 +189,20 @@ function SetupScreen({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+      <Field label="Modus · Mode">
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {MODES.map((m) => (
+            <button
+              key={m.id}
+              onClick={() => onMode(m.id)}
+              style={pill(mode === m.id)}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+      </Field>
+
       <Field label="Richtung · Direction">
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {DIRECTIONS.map((d) => (
@@ -241,8 +274,8 @@ function SetupScreen({
   )
 }
 
-// ─── Play ─────────────────────────────────────────────────────────────────────
-function PlayScreen({
+// ─── Flashcard play (reveal + self-rate) ───────────────────────────────────────
+function FlashcardPlay({
   session,
   revealed,
   onReveal,
@@ -353,6 +386,117 @@ function PlayScreen({
             Gewusst
           </button>
         </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Quiz play (multiple choice, objectively graded) ───────────────────────────
+function QuizPlay({
+  session,
+  onAnswer,
+}: {
+  session: Session
+  onAnswer: (known: boolean) => void
+}) {
+  const card = currentCard(session)
+  // Choices are built once per card (not per render) so they don't reshuffle when
+  // the user picks. Injected RNG defaults to Math.random here; the pure builder is
+  // unit-tested deterministically.
+  const choices = useMemo(
+    () => (card ? buildChoices(card, session.cards, session.direction) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [card?.id],
+  )
+  const [picked, setPicked] = useState<Choice | null>(null)
+
+  if (!card) return null
+
+  const prompt = promptText(card, session.direction)
+  const promptIsGerman = session.direction === 'de-en'
+
+  function choiceStyle(c: Choice) {
+    const base = {
+      padding: '12px 16px',
+      borderRadius: 12,
+      border: `1.5px solid ${color.cardBorder}`,
+      background: '#ffffff',
+      color: color.ink,
+      fontSize: 15,
+      fontFamily: font.sans,
+      fontWeight: 600,
+      cursor: picked ? 'default' : 'pointer',
+      textAlign: 'left' as const,
+      transition: 'all 0.12s',
+    }
+    if (!picked) return base
+    // After answering: correct → green; the wrong one the user picked → red; rest dim.
+    if (c.correct) return { ...base, background: '#d1fae5', color: '#065f46', borderColor: '#10b981' }
+    if (c === picked) return { ...base, background: '#fee2e2', color: '#991b1b', borderColor: '#ef4444' }
+    return { ...base, opacity: 0.5 }
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div
+        style={{
+          fontFamily: font.sans,
+          fontSize: 12,
+          color: color.faint,
+          textAlign: 'center',
+          letterSpacing: 1,
+        }}
+      >
+        Karte {session.index + 1} / {session.cards.length}
+      </div>
+
+      <div
+        style={{
+          background: '#ffffff',
+          border: `1px solid ${color.cardBorder}`,
+          borderRadius: 16,
+          boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+          padding: '28px 22px',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 26,
+            fontWeight: 700,
+            color: color.ink,
+            letterSpacing: '-0.5px',
+          }}
+        >
+          {prompt}
+        </span>
+        {promptIsGerman && <SpeakButton text={card.term} size={20} />}
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {choices.map((c) => (
+          <button
+            key={c.text}
+            disabled={picked !== null}
+            onClick={() => setPicked(c)}
+            style={choiceStyle(c)}
+          >
+            {c.text}
+          </button>
+        ))}
+      </div>
+
+      {picked && (
+        <button
+          onClick={() => onAnswer(picked.correct)}
+          style={{ ...bigButton('#1c1917', '#faf9f7'), flex: 'unset' }}
+        >
+          Weiter →
+        </button>
       )}
     </div>
   )

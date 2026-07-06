@@ -66,16 +66,21 @@ describe('filterByTools', () => {
 
 describe('createSession', () => {
   it('builds a deck from the given entries with a zeroed tally', () => {
-    const s = createSession(fixture, 'de-en', rngZero)
+    const s = createSession(fixture, 'de-en', 'flashcard', rngZero)
     expect(s.cards).toHaveLength(fixture.length)
     expect(s.index).toBe(0)
     expect(s.known).toBe(0)
     expect(s.unknown).toBe(0)
     expect(s.direction).toBe('de-en')
+    expect(s.mode).toBe('flashcard')
+  })
+
+  it('records the chosen mode on the session', () => {
+    expect(createSession(fixture, 'de-en', 'quiz', rngZero).mode).toBe('quiz')
   })
 
   it('reports an empty deck via isEmpty', () => {
-    const s = createSession([], 'de-en', rngZero)
+    const s = createSession([], 'de-en', 'flashcard', rngZero)
     expect(isEmpty(s)).toBe(true)
     expect(isComplete(s)).toBe(true)
     expect(currentCard(s)).toBeUndefined()
@@ -84,7 +89,7 @@ describe('createSession', () => {
 
 describe('answer / advance', () => {
   it('records known/unknown and advances the index', () => {
-    let s = createSession(fixture, 'de-en', rngZero)
+    let s = createSession(fixture, 'de-en', 'flashcard', rngZero)
     s = answer(s, true)
     expect(s.index).toBe(1)
     expect(s.known).toBe(1)
@@ -97,7 +102,7 @@ describe('answer / advance', () => {
   })
 
   it('completes after the last card and is a no-op past the end', () => {
-    let s = createSession(fixture, 'de-en', rngZero)
+    let s = createSession(fixture, 'de-en', 'flashcard', rngZero)
     for (let i = 0; i < fixture.length; i++) s = answer(s, i % 2 === 0)
     expect(isComplete(s)).toBe(true)
 
@@ -106,7 +111,7 @@ describe('answer / advance', () => {
   })
 
   it('summarises the round', () => {
-    let s = createSession(fixture, 'de-en', rngZero)
+    let s = createSession(fixture, 'de-en', 'flashcard', rngZero)
     s = answer(s, true)
     s = answer(s, true)
     s = answer(s, false)

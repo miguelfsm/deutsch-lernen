@@ -7,9 +7,16 @@ import type { CatalogEntry } from '../../lib/catalog/types'
 
 export type Direction = 'de-en' | 'en-de'
 
+// How a card is drilled. 'flashcard' = reveal + self-rate; 'quiz' = pick the right
+// answer from multiple choices (objectively graded). Captured on the session so a
+// round's mode is fixed once started. Richer modes (typed recall, article &
+// conjugation drills) are planned in plans/PRACTICE_V2.md.
+export type PracticeMode = 'flashcard' | 'quiz'
+
 export interface Session {
   readonly cards: readonly CatalogEntry[]
   readonly direction: Direction
+  readonly mode: PracticeMode
   readonly index: number
   readonly known: number
   readonly unknown: number
@@ -47,11 +54,13 @@ export function filterByTools(
 export function createSession(
   entries: readonly CatalogEntry[],
   direction: Direction,
+  mode: PracticeMode,
   rng: () => number = Math.random,
 ): Session {
   return {
     cards: shuffle(entries, rng),
     direction,
+    mode,
     index: 0,
     known: 0,
     unknown: 0,
