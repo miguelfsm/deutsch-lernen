@@ -6,6 +6,8 @@ import { getPluralParts } from "./highlight.js";
 import { font, color } from "../../lib/theme";
 import { useDeepSelect } from "../../lib/useDeepSelect";
 import { nounSlug } from "../../lib/catalog/slug";
+import { linksForCard } from "../../lib/catalog/resolver";
+import CrossLinks from "../../components/CrossLinks";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten"];
@@ -405,6 +407,14 @@ export default function GermanNouns() {
             }}>
               {selected.translation}
             </div>
+            {/* Cross-links to any verb/noun the example references. */}
+            <CrossLinks
+              entries={linksForCard(
+                selected.example,
+                nounSlug(selected.singular, selected.category),
+                "nomen",
+              )}
+            />
           </div>
         )}
 

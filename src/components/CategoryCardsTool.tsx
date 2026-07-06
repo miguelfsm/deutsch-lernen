@@ -4,6 +4,8 @@ import SpeakButton from './SpeakButton'
 import { font, color } from '../lib/theme'
 import { useDeepSelect } from '../lib/useDeepSelect'
 import { cardSlug } from '../lib/catalog/slug'
+import { linksForText } from '../lib/catalog/resolver'
+import CrossLinks from './CrossLinks'
 
 // Shared "category pills → list of cards" layout. Both the Adjectives and the
 // Phrases tools are this exact view; they differ only in the headword field and
@@ -192,6 +194,10 @@ export default function CategoryCardsTool<T extends CardItem>({
               >
                 {item.translation}
               </div>
+              {/* Cross-links to any verb/noun the example references. The card's
+                  own item (adjective/phrase/pattern) is never a link target, so
+                  no self-reference can appear. */}
+              <CrossLinks entries={linksForText(item.example)} />
             </div>
 
             {/* Optional note */}
