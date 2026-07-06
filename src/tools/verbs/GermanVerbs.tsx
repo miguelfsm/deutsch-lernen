@@ -7,6 +7,8 @@ import { filterVerbs } from "./filter.js";
 import { font, color } from "../../lib/theme";
 import { useDeepSelect } from "../../lib/useDeepSelect";
 import { verbSlug } from "../../lib/catalog/slug";
+import { linksForCard } from "../../lib/catalog/resolver";
+import CrossLinks from "../../components/CrossLinks";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const BLUE   = "#1d6ef5";
@@ -331,6 +333,14 @@ export default function GermanVerbs() {
             }}>
               {selected.translation}
             </div>
+            {/* Cross-links to any verb/noun the example references. */}
+            <CrossLinks
+              entries={linksForCard(
+                selected.example,
+                verbSlug(selected.infinitive),
+                "verben",
+              )}
+            />
           </div>
         )}
 
