@@ -7,6 +7,7 @@ import GermanNouns from './tools/nouns/GermanNouns.jsx'
 import GermanAdjectives from './tools/adjectives/GermanAdjectives.jsx'
 import GermanPhrases from './tools/phrases/GermanPhrases.jsx'
 import GermanSatzbau from './tools/satzbau/GermanSatzbau.jsx'
+import PracticeTool from './tools/practice/PracticeTool.jsx'
 import GlobalSearch from './components/GlobalSearch.jsx'
 
 // Route path → tool component. Kept beside the registry so adding a tool is a
@@ -17,6 +18,7 @@ const ELEMENTS: Record<string, ReactElement> = {
   '/adjektive': <GermanAdjectives />,
   '/redemittel': <GermanPhrases />,
   '/satzbau': <GermanSatzbau />,
+  '/uben': <PracticeTool />,
 }
 
 function NavBar() {

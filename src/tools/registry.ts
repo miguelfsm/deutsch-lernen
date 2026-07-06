@@ -38,4 +38,10 @@ export const tools: Tool[] = [
     english: 'Sentence structure',
     blurb: 'Word order, verb position and separable-verb patterns.',
   },
+  {
+    path: '/uben',
+    label: 'Üben',
+    english: 'Practice',
+    blurb: 'Flashcards to drill vocabulary in both directions.',
+  },
 ]
