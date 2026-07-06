@@ -7,11 +7,11 @@ import type { CatalogEntry } from '../../lib/catalog/types'
 
 export type Direction = 'de-en' | 'en-de'
 
-// How a card is drilled. 'flashcard' = reveal + self-rate; 'quiz' = pick the right
-// answer from multiple choices (objectively graded). Captured on the session so a
-// round's mode is fixed once started. Richer modes (typed recall, article &
-// conjugation drills) are planned in plans/PRACTICE_V2.md.
-export type PracticeMode = 'flashcard' | 'quiz'
+// How a card is drilled. 'flashcard' = reveal + self-rate; 'quiz' = pick from
+// multiple choices; 'article' = guess der/die/das; 'conjugation' = type the form
+// for a pronoun. All four share this deck/round/summary shell — they differ only
+// in the play view. Captured on the session so a round's mode is fixed once started.
+export type PracticeMode = 'flashcard' | 'quiz' | 'article' | 'conjugation'
 
 export interface Session {
   readonly cards: readonly CatalogEntry[]

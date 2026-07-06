@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useState, type FormEvent, type ReactNode } from 'react'
 import Header from '../../components/Header'
 import SpeakButton from '../../components/SpeakButton'
 import { font, color } from '../../lib/theme'
@@ -19,6 +19,11 @@ import {
   type Session,
 } from './session'
 import { buildChoices, type Choice } from './quiz'
+import { checkArticle, checkConjugation } from './drills'
+import { nounData, type Article } from '../nouns/data'
+import { verbData } from '../verbs/data'
+import { getHighlightParts } from '../verbs/highlight'
+import { nounSlug } from '../../lib/catalog/slug'
 import {
   loadProgress,
   recordAndSave,
@@ -43,7 +48,31 @@ const DIRECTIONS: { id: Direction; label: string }[] = [
 const MODES: { id: PracticeMode; label: string }[] = [
   { id: 'flashcard', label: 'Karten · Flashcards' },
   { id: 'quiz', label: 'Quiz · Multiple choice' },
+  { id: 'article', label: 'Artikel · der/die/das' },
+  { id: 'conjugation', label: 'Konjugation · type it' },
 ]
+
+// The two drills bind to exactly one content set each (articles → nouns,
+// conjugation → verbs), so they ignore the direction / content-set pickers. A
+// blank means "not a drill" (flashcards/quiz use the user's picks instead).
+const DRILL_TOOL: Partial<Record<PracticeMode, string>> = {
+  article: 'nomen',
+  conjugation: 'verben',
+}
+
+// Gender colours reused from GermanNouns so the article feedback matches the
+// noun tool (der=blue, die=red, das=green).
+const ARTICLE_COLOR: Record<Article, { bg: string; fg: string; border: string }> = {
+  der: { bg: '#dbeafe', fg: '#1e40af', border: '#3b82f6' },
+  die: { bg: '#fee2e2', fg: '#991b1b', border: '#ef4444' },
+  das: { bg: '#d1fae5', fg: '#065f46', border: '#10b981' },
+}
+const ARTICLES: Article[] = ['der', 'die', 'das']
+
+// Stem-change highlight colours reused from GermanVerbs (red = vowel/stem change,
+// blue = regular ending) for the conjugation reveal.
+const STEM_RED = '#e03e2d'
+const STEM_BLUE = '#1d6ef5'
 
 // ─── Shared style helpers ──────────────────────────────────────────────────────
 const pill = (active: boolean) => ({
@@ -84,7 +113,10 @@ export default function PracticeTool() {
     totals(loadProgress()),
   )
 
-  const deckSize = filterByTools(catalog, selected).length
+  // A drill fixes its deck to one content set; flashcards/quiz use the picks.
+  const drillTool = DRILL_TOOL[mode]
+  const deckSets = drillTool ? new Set([drillTool]) : selected
+  const deckSize = filterByTools(catalog, deckSets).length
 
   function toggleSet(id: string) {
     setSelected((prev) => {
@@ -96,7 +128,7 @@ export default function PracticeTool() {
   }
 
   function start() {
-    setSession(createSession(filterByTools(catalog, selected), direction, mode))
+    setSession(createSession(filterByTools(catalog, deckSets), direction, mode))
     setRevealed(false)
   }
 
@@ -121,7 +153,7 @@ export default function PracticeTool() {
         minHeight: '100vh',
       }}
     >
-      <Header eyebrow="Üben · Practice" title="Flashcards" />
+      <Header eyebrow="Üben · Practice" title="Übungen" />
 
       {session === null && (
         <SetupScreen
@@ -131,6 +163,7 @@ export default function PracticeTool() {
           onDirection={setDirection}
           mode={mode}
           onMode={setMode}
+          isDrill={!!drillTool}
           deckSize={deckSize}
           onStart={start}
           lifetime={lifetime}
@@ -140,16 +173,7 @@ export default function PracticeTool() {
       {session !== null &&
         !isComplete(session) &&
         !isEmpty(session) &&
-        (session.mode === 'flashcard' ? (
-          <FlashcardPlay
-            session={session}
-            revealed={revealed}
-            onReveal={() => setRevealed(true)}
-            onRate={rate}
-          />
-        ) : (
-          <QuizPlay key={session.index} session={session} onAnswer={rate} />
-        ))}
+        renderPlay(session, revealed, setRevealed, rate)}
 
       {session !== null && (isComplete(session) || isEmpty(session)) && (
         <DoneScreen
@@ -163,6 +187,35 @@ export default function PracticeTool() {
   )
 }
 
+// Dispatch the active mode to its play view. Drills key on session.index so each
+// item's local state (picked article / typed input) resets between cards.
+function renderPlay(
+  session: Session,
+  revealed: boolean,
+  setRevealed: (v: boolean) => void,
+  rate: (known: boolean) => void,
+) {
+  switch (session.mode) {
+    case 'flashcard':
+      return (
+        <FlashcardPlay
+          session={session}
+          revealed={revealed}
+          onReveal={() => setRevealed(true)}
+          onRate={rate}
+        />
+      )
+    case 'quiz':
+      return <QuizPlay key={session.index} session={session} onAnswer={rate} />
+    case 'article':
+      return <ArticlePlay key={session.index} session={session} onAnswer={rate} />
+    case 'conjugation':
+      return (
+        <ConjugationPlay key={session.index} session={session} onAnswer={rate} />
+      )
+  }
+}
+
 // ─── Setup ──────────────────────────────────────────────────────────────────────
 function SetupScreen({
   selected,
@@ -171,6 +224,7 @@ function SetupScreen({
   onDirection,
   mode,
   onMode,
+  isDrill,
   deckSize,
   onStart,
   lifetime,
@@ -181,11 +235,14 @@ function SetupScreen({
   onDirection: (d: Direction) => void
   mode: PracticeMode
   onMode: (m: PracticeMode) => void
+  isDrill: boolean
   deckSize: number
   onStart: () => void
   lifetime: ProgressEntry
 }) {
-  const nothingSelected = selected.size === 0
+  // Drills pick their own content set and have no DE↔EN direction, so those
+  // fields are hidden — and their deck is never empty, so no empty-state applies.
+  const nothingSelected = !isDrill && selected.size === 0
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
@@ -203,34 +260,38 @@ function SetupScreen({
         </div>
       </Field>
 
-      <Field label="Richtung · Direction">
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {DIRECTIONS.map((d) => (
-            <button
-              key={d.id}
-              onClick={() => onDirection(d.id)}
-              style={pill(direction === d.id)}
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
-      </Field>
+      {!isDrill && (
+        <Field label="Richtung · Direction">
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {DIRECTIONS.map((d) => (
+              <button
+                key={d.id}
+                onClick={() => onDirection(d.id)}
+                style={pill(direction === d.id)}
+              >
+                {d.label}
+              </button>
+            ))}
+          </div>
+        </Field>
+      )}
 
-      <Field label="Inhalte · Content sets">
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {CONTENT_SETS.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => onToggle(c.id)}
-              aria-pressed={selected.has(c.id)}
-              style={pill(selected.has(c.id))}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
-      </Field>
+      {!isDrill && (
+        <Field label="Inhalte · Content sets">
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {CONTENT_SETS.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => onToggle(c.id)}
+                aria-pressed={selected.has(c.id)}
+                style={pill(selected.has(c.id))}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </Field>
+      )}
 
       {nothingSelected ? (
         <p
@@ -498,6 +559,251 @@ function QuizPlay({
           Weiter →
         </button>
       )}
+    </div>
+  )
+}
+
+// ─── Article drill (guess der/die/das) ─────────────────────────────────────────
+function ArticlePlay({
+  session,
+  onAnswer,
+}: {
+  session: Session
+  onAnswer: (known: boolean) => void
+}) {
+  const card = currentCard(session)
+  // Resolve the full Noun (the catalog entry carries no gender). Match on the
+  // slug so identity is (singular, category), never the ambiguous singular alone.
+  const noun = card
+    ? nounData.find((n) => nounSlug(n.singular, n.category) === card.slug)
+    : undefined
+  const [picked, setPicked] = useState<Article | null>(null)
+
+  if (!card || !noun) return null
+  const target = noun // narrowed binding the style closure can safely capture
+  const correct = picked !== null && checkArticle(target, picked)
+
+  function articleStyle(a: Article) {
+    const c = ARTICLE_COLOR[a]
+    const base = {
+      flex: 1,
+      padding: '14px 8px',
+      borderRadius: 12,
+      border: `1.5px solid ${color.cardBorder}`,
+      background: '#ffffff',
+      color: color.ink,
+      fontSize: 17,
+      fontFamily: font.sans,
+      fontWeight: 700,
+      cursor: picked ? 'default' : 'pointer',
+      transition: 'all 0.12s',
+    }
+    if (!picked) return base
+    // After answering: the correct article always lights up green-in-its-own
+    // colour; a wrong pick the user made is outlined in its gender colour; rest dim.
+    if (a === target.article) return { ...base, background: c.bg, color: c.fg, borderColor: c.border }
+    if (a === picked) return { ...base, background: c.bg, color: c.fg, borderColor: c.border, opacity: 0.85 }
+    return { ...base, opacity: 0.45 }
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <ProgressCounter session={session} />
+
+      <div
+        style={{
+          background: '#ffffff',
+          border: `1px solid ${color.cardBorder}`,
+          borderRadius: 16,
+          boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+          padding: '28px 22px',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+        }}
+      >
+        <span style={{ fontSize: 26, fontWeight: 700, color: color.ink, letterSpacing: '-0.5px' }}>
+          {noun.singular}
+        </span>
+        <SpeakButton text={`${noun.article} ${noun.singular}`} size={20} />
+      </div>
+
+      <div style={{ display: 'flex', gap: 8 }}>
+        {ARTICLES.map((a) => (
+          <button key={a} disabled={picked !== null} onClick={() => setPicked(a)} style={articleStyle(a)}>
+            {a}
+          </button>
+        ))}
+      </div>
+
+      {picked && (
+        <>
+          <div
+            style={{
+              fontFamily: font.sans,
+              fontSize: 14,
+              textAlign: 'center',
+              color: correct ? '#065f46' : '#991b1b',
+              fontWeight: 700,
+            }}
+          >
+            {correct ? 'Richtig!' : `${noun.article} ${noun.singular}`}
+          </div>
+          <button
+            onClick={() => onAnswer(correct)}
+            style={{ ...bigButton('#1c1917', '#faf9f7'), flex: 'unset' }}
+          >
+            Weiter →
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+
+// ─── Conjugation drill (type the form) ─────────────────────────────────────────
+function ConjugationPlay({
+  session,
+  onAnswer,
+}: {
+  session: Session
+  onAnswer: (known: boolean) => void
+}) {
+  const card = currentCard(session)
+  const verb = card ? verbData.find((v) => v.infinitive === card.term) : undefined
+  // One pronoun is drilled per card; pick it once so it survives re-renders and
+  // the input's controlled state. Keyed by card via the parent's `key`.
+  const conj = useMemo(
+    () => (verb ? verb.conjugations[Math.floor(Math.random() * verb.conjugations.length)] : undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [card?.id],
+  )
+  const [input, setInput] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  if (!card || !verb || !conj) return null
+
+  const result = checkConjugation(verb, conj.pronoun, input)
+  // On reveal, split the expected form into stem (unchanged) + the highlighted
+  // ending/vowel change, coloured red for a stem change and blue for a regular one.
+  const parts = getHighlightParts(verb.infinitive, result.expected, verb.customStem)
+  const hlColor = conj.stemChange ? STEM_RED : STEM_BLUE
+
+  function submit(e: FormEvent) {
+    e.preventDefault()
+    if (input.trim() === '' || submitted) return
+    setSubmitted(true)
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <ProgressCounter session={session} />
+
+      <div
+        style={{
+          background: '#ffffff',
+          border: `1px solid ${color.cardBorder}`,
+          borderRadius: 16,
+          boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+          padding: '28px 22px',
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 6,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <span style={{ fontSize: 26, fontWeight: 700, color: color.ink, letterSpacing: '-0.5px' }}>
+            {verb.infinitive}
+          </span>
+          <SpeakButton text={verb.infinitive} size={20} />
+        </div>
+        <span style={{ fontFamily: font.sans, fontSize: 16, color: color.muted, fontStyle: 'italic' }}>
+          {conj.pronoun} …
+        </span>
+      </div>
+
+      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <input
+          autoFocus
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={submitted}
+          aria-label={`Konjugation von ${verb.infinitive} für ${conj.pronoun}`}
+          placeholder="Form eingeben…"
+          style={{
+            padding: '12px 16px',
+            borderRadius: 12,
+            border: `1.5px solid ${
+              submitted ? (result.correct ? '#10b981' : '#ef4444') : color.cardBorder
+            }`,
+            background: submitted ? (result.correct ? '#d1fae5' : '#fee2e2') : '#ffffff',
+            color: color.ink,
+            fontSize: 17,
+            fontFamily: font.sans,
+            fontWeight: 600,
+            textAlign: 'center',
+            outline: 'none',
+          }}
+        />
+
+        {!submitted ? (
+          <button
+            type="submit"
+            disabled={input.trim() === ''}
+            style={{
+              ...bigButton('#e7e5e0', '#1c1917'),
+              flex: 'unset',
+              opacity: input.trim() === '' ? 0.5 : 1,
+            }}
+          >
+            Prüfen · Check
+          </button>
+        ) : (
+          <>
+            <div style={{ fontFamily: font.sans, fontSize: 15, textAlign: 'center', color: color.muted }}>
+              {result.correct ? (
+                <span style={{ color: '#065f46', fontWeight: 700 }}>Richtig!</span>
+              ) : (
+                <span>
+                  {conj.pronoun}{' '}
+                  <span style={{ fontWeight: 700, color: color.ink }}>
+                    {parts.unchanged}
+                    <span style={{ color: hlColor }}>{parts.changed}</span>
+                  </span>
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => onAnswer(result.correct)}
+              style={{ ...bigButton('#1c1917', '#faf9f7'), flex: 'unset' }}
+            >
+              Weiter →
+            </button>
+          </>
+        )}
+      </form>
+    </div>
+  )
+}
+
+// Shared "Karte n / total" counter used by every play view.
+function ProgressCounter({ session }: { session: Session }) {
+  return (
+    <div
+      style={{
+        fontFamily: font.sans,
+        fontSize: 12,
+        color: color.faint,
+        textAlign: 'center',
+        letterSpacing: 1,
+      }}
+    >
+      Karte {session.index + 1} / {session.cards.length}
     </div>
   )
 }

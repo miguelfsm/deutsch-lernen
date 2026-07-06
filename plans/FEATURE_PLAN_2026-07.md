@@ -498,16 +498,18 @@ Two focused exercises inside Practice mode:
   data; no free-text grammar grading).
 
 ### Definition of Done
-- [ ] From `/uben`, choose Article or Conjugation drill.
-- [ ] Article trainer: pick der/die/das, correct/incorrect feedback in gender
-      colours, tallied in the summary.
-- [ ] Conjugation drill: type a form for (infinitive, pronoun); correct answers
+- [x] From `/uben`, choose Article or Conjugation drill (a `mode` selector on the
+      setup screen; drills hide the direction/content pickers they don't use).
+- [x] Article trainer: pick der/die/das, correct/incorrect feedback in gender
+      colours (reused from GermanNouns), tallied in the summary.
+- [x] Conjugation drill: type a form for (infinitive, pronoun); correct answers
       accepted (case/whitespace-insensitive), wrong answers show the expected form
-      with stem-change highlight.
-- [ ] Session summary and versioned `localStorage` progress work for these modes.
-- [ ] Tests: `checkArticle` and `checkConjugation` (correct, wrong, normalisation,
-      stem-change verbs).
-- [ ] Commit gate green.
+      with stem-change highlight (reused RED/BLUE from GermanVerbs).
+- [x] Session summary and versioned `localStorage` progress work for these modes
+      (drills reuse the same `Session`/`recordAndSave` shell, keyed by catalog slug).
+- [x] Tests: `checkArticle` and `checkConjugation` (correct, wrong, normalisation,
+      stem-change verbs) in `drills.test.ts`.
+- [x] Commit gate green (typecheck, lint, 121 tests, build).
 
 ---
 
@@ -578,13 +580,18 @@ Called out so they aren't forgotten in any single feature:
 
 ## Cross-cutting Definition of Done (whole plan)
 
-- [ ] Each PR (six; see *Branching & PR strategy*) landed via a reviewed PR into
+- [x] Each PR (six; see *Branching & PR strategy*) landed via a reviewed PR into
       protected `main`, branched off freshly-merged `main` so no repointing was
-      needed.
-- [ ] [SOLUTION_DESIGN.md](../docs/SOLUTION_DESIGN.md) updated for the catalog
+      needed. **PR-1…PR-5 merged; PR-6 (this) is the last.**
+- [x] [SOLUTION_DESIGN.md](../docs/SOLUTION_DESIGN.md) updated for the catalog
       foundation, deep-select routing, the `speak()` seam, the Feature D
-      auto-scan-vs-explicit-links decision, and any new tool/route; [PRD.md](../docs/PRD.md)
+      auto-scan-vs-explicit-links decision, and any new tool/route (incl. the
+      Practice drill modes' data-path decision); [PRD.md](../docs/PRD.md)
       updated where scope grew (practice, audio, search).
-- [ ] The "add a learning tool" recipe in [CLAUDE.md](../CLAUDE.md) updated to
+- [x] The "add a learning tool" recipe in [CLAUDE.md](../CLAUDE.md) updated to
       mention adding a `catalog.ts` + one line in `catalog/index.ts` so new tools
-      are searchable/linkable/drillable.
+      are searchable/linkable/drillable (added in the PR-3 catalog foundation).
+
+> **Plan complete.** All six PRs (A, B, catalog+E, C, D, F) are delivered. Only
+> Feature G (Piper offline neural TTS) remains, intentionally parked as a
+> documented future upgrade.
