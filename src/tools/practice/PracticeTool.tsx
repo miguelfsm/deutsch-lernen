@@ -565,12 +565,34 @@ function QuizPlay({
       </div>
 
       {picked && (
-        <button
-          onClick={() => onAnswer(picked.correct)}
-          style={{ ...bigButton('#1c1917', '#faf9f7'), flex: 'unset' }}
-        >
-          Weiter →
-        </button>
+        <>
+          {/* When the German is the ANSWER (en-de), the prompt carried no 🔊 —
+              offer it here on reveal so both directions can hear the German,
+              mirroring the German-prompt speaker in de-en. */}
+          {!promptIsGerman && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                fontFamily: font.sans,
+                fontSize: 16,
+                fontWeight: 700,
+                color: '#065f46',
+              }}
+            >
+              <span>{card.term}</span>
+              <SpeakButton text={card.term} size={18} />
+            </div>
+          )}
+          <button
+            onClick={() => onAnswer(picked.correct)}
+            style={{ ...bigButton('#1c1917', '#faf9f7'), flex: 'unset' }}
+          >
+            Weiter →
+          </button>
+        </>
       )}
     </div>
   )
