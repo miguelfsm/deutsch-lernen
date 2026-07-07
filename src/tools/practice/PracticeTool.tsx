@@ -1,4 +1,5 @@
-import { useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import Header from '../../components/Header'
 import SpeakButton from '../../components/SpeakButton'
 import { font, color } from '../../lib/theme'
@@ -112,6 +113,18 @@ export default function PracticeTool() {
   const [lifetime, setLifetime] = useState<ProgressEntry>(() =>
     totals(loadProgress()),
   )
+
+  // Re-tapping the "Üben" nav link while already on /uben doesn't remount this
+  // component, so a running round would otherwise stay put. Each nav click mints a
+  // fresh location.key (react-router does a history.replace even for the same
+  // path), so keying on it returns the user to the selection menu — and refreshes
+  // the lifetime tally, which a completed round may have advanced.
+  const location = useLocation()
+  useEffect(() => {
+    setSession(null)
+    setRevealed(false)
+    setLifetime(totals(loadProgress()))
+  }, [location.key])
 
   // A drill fixes its deck to one content set; flashcards/quiz use the picks.
   const drillTool = DRILL_TOOL[mode]
