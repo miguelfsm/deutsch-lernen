@@ -40,6 +40,16 @@ describe('searchCatalog', () => {
     expect(searchCatalog(entries, '   ')).toEqual([])
   })
 
+  it('folds ß/ss both ways — content is Swiss ss, a query may still type ß', () => {
+    const withGross: CatalogEntry[] = [
+      ...entries,
+      { id: 'adjektive:gegensaetze/gross', toolId: 'adjektive', route: '/adjektive', slug: 'gegensaetze/gross', term: 'gross', gloss: 'big / tall', kind: 'adjective', lessons: ['A1.1'] },
+    ]
+    expect(searchCatalog(withGross, 'groß').map((e) => e.id)).toEqual(['adjektive:gegensaetze/gross'])
+    expect(searchCatalog(withGross, 'gross').map((e) => e.id)).toEqual(['adjektive:gegensaetze/gross'])
+    expect(searchCatalog(withGross, 'GROSS').map((e) => e.id)).toEqual(['adjektive:gegensaetze/gross'])
+  })
+
   it('searches a brand-new tool with no changes to search (open/closed)', () => {
     // A hypothetical future tool contributes an entry; search finds it purely by
     // consuming the CatalogEntry shape — no search-file edit was needed.

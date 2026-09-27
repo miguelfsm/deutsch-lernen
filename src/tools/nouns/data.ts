@@ -28,7 +28,7 @@ export const nounData: Noun[] = [
     singular: "Vater",      english: "father",              article: "der", plural: "Väter",
     example: "Mein Vater arbeitet viel.", translation: "My father works a lot.",
     category: "Familie",
-    note: "Umlaut only — vowel -a- becomes -ä-. Same pattern as Mutter, Bruder, Großvater.",
+    note: "Umlaut only — vowel -a- becomes -ä-. Same pattern as Mutter, Bruder, Grossvater.",
     lessons: ["A1.1"],
   },
   {
@@ -54,7 +54,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Bruder",     english: "brother",             article: "der", plural: "Brüder",
-    example: "Mein Bruder spielt Fußball.", translation: "My brother plays football.",
+    example: "Mein Bruder spielt Fussball.", translation: "My brother plays football.",
     category: "Familie",
     note: "Umlaut only. Contrast with die Schwester → Schwestern (no umlaut, -n ending).",
     lessons: ["A1.1"],
@@ -88,17 +88,17 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Großvater",  english: "grandfather",         article: "der", plural: "Großväter",
-    example: "Mein Großvater wohnt auf dem Land.", translation: "My grandfather lives in the countryside.",
+    singular: "Grossvater",  english: "grandfather",         article: "der", plural: "Grossväter",
+    example: "Mein Grossvater wohnt auf dem Land.", translation: "My grandfather lives in the countryside.",
     category: "Familie",
-    note: "Compound: groß + Vater. The plural follows Vater → Väter.",
+    note: "Compound: gross + Vater. The plural follows Vater → Väter.",
     lessons: ["A1.1"],
   },
   {
-    singular: "Großmutter", english: "grandmother",         article: "die", plural: "Großmütter",
-    example: "Meine Großmutter backt einen Kuchen.", translation: "My grandmother is baking a cake.",
+    singular: "Grossmutter", english: "grandmother",         article: "die", plural: "Grossmütter",
+    example: "Meine Grossmutter backt einen Kuchen.", translation: "My grandmother is baking a cake.",
     category: "Familie",
-    note: "Compound: groß + Mutter. Follows Mutter → Mütter.",
+    note: "Compound: gross + Mutter. Follows Mutter → Mütter.",
     lessons: ["A1.1"],
   },
   {
@@ -266,7 +266,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Tee",        english: "tea",                 article: "der", plural: "Tees",
-    example: "Der Tee ist heiß.", translation: "The tea is hot.",
+    example: "Der Tee ist heiss.", translation: "The tea is hot.",
     category: "Supermarkt",
     note: "Adds -s — same loanword pattern as Kaffee. Borrowed via Dutch thee from Mandarin chá.",
     lessons: ["A1.1"],
@@ -275,7 +275,7 @@ export const nounData: Noun[] = [
   // ── Zuhause ────────────────────────────────────────────────────────────────
   {
     singular: "Haus",       english: "house",               article: "das", plural: "Häuser",
-    example: "Das Haus ist groß.", translation: "The house is big.",
+    example: "Das Haus ist gross.", translation: "The house is big.",
     category: "Zuhause",
     note: "Umlaut + -er. One of the most common neuter nouns — every learner needs this one.",
     lessons: ["A1.1"],
@@ -359,7 +359,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Wand",       english: "wall",                article: "die", plural: "Wände",
-    example: "Die Wand ist weiß.", translation: "The wall is white.",
+    example: "Die Wand ist weiss.", translation: "The wall is white.",
     category: "Zuhause",
     note: "Umlaut + -e. Refers to an interior wall. An exterior/outdoor wall is die Mauer instead.",
     lessons: ["A1.1"],
@@ -550,7 +550,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Elefant",    english: "elephant",            article: "der", plural: "Elefanten",
-    example: "Der Elefant ist sehr groß.", translation: "The elephant is very big.",
+    example: "Der Elefant ist sehr gross.", translation: "The elephant is very big.",
     category: "Tiere",
     note: "Adds -en. Weak masculine noun.",
     lessons: ["A1.1"],
@@ -573,7 +573,7 @@ export const nounData: Noun[] = [
   // ── Kleidung ───────────────────────────────────────────────────────────────
   {
     singular: "Hemd",       english: "shirt",               article: "das", plural: "Hemden",
-    example: "Das Hemd ist weiß.", translation: "The shirt is white.",
+    example: "Das Hemd ist weiss.", translation: "The shirt is white.",
     category: "Kleidung",
     note: "Adds -en. Das Hemd is a dress shirt; das T-Shirt is the casual one.",
     lessons: ["A1.1"],
@@ -650,7 +650,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "T-Shirt",    english: "T-shirt",             article: "das", plural: "T-Shirts",
-    example: "Das T-Shirt ist zu groß.", translation: "The T-shirt is too big.",
+    example: "Das T-Shirt ist zu gross.", translation: "The T-shirt is too big.",
     category: "Kleidung",
     note: "Adds -s — English loanword takes the English plural.",
     lessons: ["A1.1"],
@@ -714,10 +714,10 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Fuß",        english: "foot",                article: "der", plural: "Füße",
-    example: "Ich gehe zu Fuß.", translation: "I go on foot.",
+    singular: "Fuss",        english: "foot",                article: "der", plural: "Füsse",
+    example: "Ich gehe zu Fuss.", translation: "I go on foot.",
     category: "Körper",
-    note: "Umlaut + -e. Common phrase: zu Fuß gehen (to go on foot).",
+    note: "Umlaut + -e. Common phrase: zu Fuss gehen (to go on foot).",
     lessons: ["A1.1"],
   },
   {
@@ -980,7 +980,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Spiel",        english: "game",                  article: "das", plural: "Spiele",
-    example: "Das Spiel macht Spaß.", translation: "The game is fun.",
+    example: "Das Spiel macht Spass.", translation: "The game is fun.",
     category: "Freizeit",
     note: "Adds -e. Covers board games, video games, and sports matches. Ein Spiel spielen (to play a game).",
     lessons: ["A1.1"],
@@ -1000,10 +1000,10 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Fußball",      english: "football / soccer",     article: "der", plural: "Fußbälle",
-    example: "Der Fußball ist rund.", translation: "The football is round.",
+    singular: "Fussball",      english: "football / soccer",     article: "der", plural: "Fussbälle",
+    example: "Der Fussball ist rund.", translation: "The football is round.",
     category: "Freizeit",
-    note: "Umlaut + -e. Can mean the sport (kein Plural) or the ball itself: der Fußball → die Fußbälle.",
+    note: "Umlaut + -e. Can mean the sport (kein Plural) or the ball itself: der Fussball → die Fussbälle.",
     lessons: ["A1.1"],
   },
   {
@@ -1102,7 +1102,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Honig",        english: "honey",                 article: "der", plural: "—",
-    example: "Der Honig ist süß.", translation: "The honey is sweet.",
+    example: "Der Honig ist süss.", translation: "The honey is sweet.",
     category: "Lebensmittel",
     note: "Uncountable. H — no umlaut: Honig, not Hönig. Plural die Honige exists for varieties (Waldhonig, Blütenhonig…).",
     lessons: ["A1.1"],
@@ -1137,7 +1137,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Kartoffel",    english: "potato",                article: "die", plural: "Kartoffeln",
-    example: "Die Kartoffel ist groß.", translation: "The potato is big.",
+    example: "Die Kartoffel ist gross.", translation: "The potato is big.",
     category: "Lebensmittel",
     note: "Adds -n. K — essential German staple. From Italian tartufolo (little truffle). Synonyms: die Erdäpfel (southern Germany, Austria).",
     lessons: ["A1.1"],
@@ -1237,7 +1237,7 @@ export const nounData: Noun[] = [
     singular: "Tomate",       english: "tomato",                article: "die", plural: "Tomaten",
     example: "Die Tomate ist rot.", translation: "The tomato is red.",
     category: "Lebensmittel",
-    note: "Adds -n. T — from Nahuatl tomatl. Tomatensoße (tomato sauce) and Tomatensalat are staples.",
+    note: "Adds -n. T — from Nahuatl tomatl. Tomatensosse (tomato sauce) and Tomatensalat are staples.",
     lessons: ["A1.1"],
   },
   {
@@ -1284,14 +1284,14 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Zwiebel",      english: "onion",                 article: "die", plural: "Zwiebeln",
-    example: "Die Zwiebel ist weiß.", translation: "The onion is white.",
+    example: "Die Zwiebel ist weiss.", translation: "The onion is white.",
     category: "Lebensmittel",
     note: "Adds -n. Z — from Latin cepa duplex (double onion). Zwiebelsuppe (onion soup) and Zwiebelkuchen (onion tart) are German classics.",
     lessons: ["A1.1"],
   },
   {
     singular: "Geschmack",    english: "taste / flavour",       article: "der", plural: "Geschmäcke",
-    example: "Der Kuchen hat einen süßen Geschmack.", translation: "The cake has a sweet taste.",
+    example: "Der Kuchen hat einen süssen Geschmack.", translation: "The cake has a sweet taste.",
     category: "Lebensmittel",
     note: "Umlaut + -e. Der Geschmack von Schokolade (the taste of chocolate). Also used abstractly: Geschmackssache (a matter of taste).",
     lessons: ["A1.1"],
@@ -1335,7 +1335,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Stadt",        english: "city / town",           article: "die", plural: "Städte",
-    example: "Die Stadt ist groß.", translation: "The city is big.",
+    example: "Die Stadt ist gross.", translation: "The city is big.",
     category: "Geografie",
     note: "Umlaut + -e. In die Stadt gehen (to go into town) is common everyday phrasing.",
     lessons: ["A1.1"],
@@ -1383,8 +1383,8 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Straße",       english: "street / road",         article: "die", plural: "Straßen",
-    example: "Die Straße ist lang.", translation: "The street is long.",
+    singular: "Strasse",       english: "street / road",         article: "die", plural: "Strassen",
+    example: "Die Strasse ist lang.", translation: "The street is long.",
     category: "Geografie",
     note: "Adds -n. The most common word for a street — appears in nearly every German address.",
     lessons: ["A1.1"],
@@ -1490,7 +1490,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Monat",     english: "month",                article: "der", plural: "Monate",
-    example: "Der Monat hat dreißig Tage.", translation: "The month has thirty days.",
+    example: "Der Monat hat dreissig Tage.", translation: "The month has thirty days.",
     category: "Zeit",
     note: "-e plural, no umlaut. im Monat / dieser Monat.",
     lessons: ["A1.1"],

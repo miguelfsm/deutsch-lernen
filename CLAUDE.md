@@ -94,7 +94,9 @@ npm run typecheck  # tsc --noEmit
   `src/tools/<tool>/data.ts`; the data is typed, so `npm run typecheck` catches
   shape mistakes. Every item requires a `lessons: LessonId[]` tag (existing
   content is tagged `['A1.1']`; see
-  [`plans/LESSONS_PLAN_A1_2.md`](./plans/LESSONS_PLAN_A1_2.md)).
+  [`plans/LESSONS_PLAN_A1_2.md`](./plans/LESSONS_PLAN_A1_2.md)). Content is
+  **Swiss-spelled — no `ß`, use `ss`** (D1); a content guard test enforces this,
+  and `searchCatalog` still matches a query typed with `ß`.
 - **Add a lesson:** one entry in `src/content/lessons.ts` plus one new
   `LessonId` union member there — a typo in a `lessons: [...]` tag is then a
   compile error.

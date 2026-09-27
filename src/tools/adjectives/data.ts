@@ -45,7 +45,7 @@ export const categories: AdjectiveCategory[] = [
       {
         word: "neu", meaning: "new",
         opposite: { word: "alt", meaning: "old" },
-        example: "Mein Haus ist alt und groß.", translation: "My house is old and big.",
+        example: "Mein Haus ist alt und gross.", translation: "My house is old and big.",
         lessons: ["A1.1"],
       },
       {
@@ -55,9 +55,9 @@ export const categories: AdjectiveCategory[] = [
         lessons: ["A1.1"],
       },
       {
-        word: "groß", meaning: "big / tall",
+        word: "gross", meaning: "big / tall",
         opposite: { word: "klein", meaning: "small" },
-        example: "Es ist groß und hell.", translation: "It's big and bright.",
+        example: "Es ist gross und hell.", translation: "It's big and bright.",
         lessons: ["A1.1"],
       },
       {

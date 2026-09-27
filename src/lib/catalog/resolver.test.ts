@@ -10,7 +10,7 @@ const fixture: CatalogEntry[] = [
   { id: 'verben:lernen', toolId: 'verben', route: '/verben', slug: 'lernen', term: 'lernen', gloss: 'to learn', kind: 'verb', lessons: ['A1.1'] },
   { id: 'verben:kommen', toolId: 'verben', route: '/verben', slug: 'kommen', term: 'kommen', gloss: 'to come', kind: 'verb', lessons: ['A1.1'] },
   { id: 'verben:essen', toolId: 'verben', route: '/verben', slug: 'essen', term: 'essen', gloss: 'to eat', kind: 'verb', lessons: ['A1.1'] },
-  { id: 'verben:heissen', toolId: 'verben', route: '/verben', slug: 'heissen', term: 'heißen', gloss: 'to be called', kind: 'verb', lessons: ['A1.1'] },
+  { id: 'verben:heissen', toolId: 'verben', route: '/verben', slug: 'heissen', term: 'heissen', gloss: 'to be called', kind: 'verb', lessons: ['A1.1'] },
   { id: 'nomen:familie/bruder', toolId: 'nomen', route: '/nomen', slug: 'familie/bruder', term: 'Bruder', gloss: 'brother', category: 'Familie', kind: 'noun', lessons: ['A1.1'] },
   { id: 'nomen:lebensmittel/essen', toolId: 'nomen', route: '/nomen', slug: 'lebensmittel/essen', term: 'Essen', gloss: 'food', category: 'Lebensmittel', kind: 'noun', lessons: ['A1.1'] },
   { id: 'nomen:zeit/tag', toolId: 'nomen', route: '/nomen', slug: 'zeit/tag', term: 'Tag', gloss: 'day', category: 'Zeit', kind: 'noun', lessons: ['A1.1'] },
@@ -71,8 +71,8 @@ describe('linksForText (disciplined auto-scan)', () => {
     expect(links.some((e) => e.toolId === 'verben')).toBe(false)
   })
 
-  it('does NOT link the adjective "heiß" to the verb "heißen" (needs an inflectional ending)', () => {
-    expect(linksForText('Der Tee ist heiß.', fixture)).toEqual([])
+  it('does NOT link the adjective "heiss" to the verb "heissen" (needs an inflectional ending)', () => {
+    expect(linksForText('Der Tee ist heiss.', fixture)).toEqual([])
   })
 
   it('ignores unknown and short tokens', () => {
