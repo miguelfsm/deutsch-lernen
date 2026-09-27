@@ -4,16 +4,19 @@ import { font } from '../lib/theme'
 
 // Inline chips linking an example to a word the app teaches elsewhere: a card
 // whose sentence uses a known verb gets a "→ Konjugation" chip, a known noun a
-// "→ Nomen" chip. Only verbs and nouns are ever link targets (see resolver), so
-// those are the only labels needed.
+// "→ Nomen" chip. `linksForText`'s auto-scan only ever yields verbs and nouns,
+// but a caller may also pass entries it resolved itself (e.g. a grammar
+// topic's explicit `related` list), which can point at a preposition too.
 const CHIP: Record<string, { label: string; bg: string; fg: string }> = {
   verben: { label: 'Konjugation', bg: '#dbeafe', fg: '#1e40af' },
   nomen: { label: 'Nomen', bg: '#d1fae5', fg: '#065f46' },
+  praepositionen: { label: 'Präposition', bg: '#f3e8ff', fg: '#6b21a8' },
 }
 
-// `entries` are already-resolved catalog entries (from linksForText). An unknown
-// slug never reaches here — the resolver only ever yields real entries — so an
-// empty list simply renders nothing (no dead chip, no crash).
+// `entries` are already-resolved catalog entries (from linksForText, or from a
+// caller's own lookup, e.g. a grammar topic's `related` ids). An unknown id
+// never reaches here — callers resolve against the catalog first — so an empty
+// list simply renders nothing (no dead chip, no crash).
 export default function CrossLinks({ entries }: { entries: CatalogEntry[] }) {
   if (entries.length === 0) return null
   return (

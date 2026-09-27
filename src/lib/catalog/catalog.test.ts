@@ -68,11 +68,11 @@ describe('catalog invariants (fixture)', () => {
 })
 
 describe('live catalog', () => {
-  it('is non-empty and covers all five tools', () => {
+  it('is non-empty and covers every searchable tool', () => {
     expect(catalog.length).toBeGreaterThan(0)
     const toolIds = new Set(catalog.map((e) => e.toolId))
     expect(toolIds).toEqual(
-      new Set(['verben', 'nomen', 'adjektive', 'redemittel', 'praepositionen', 'satzbau']),
+      new Set(['verben', 'nomen', 'adjektive', 'redemittel', 'praepositionen', 'grammatik', 'satzbau']),
     )
   })
 
