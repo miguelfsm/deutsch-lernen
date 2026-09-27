@@ -1,0 +1,12 @@
+{
+  // Tests: run under Vitest/Node (jsdom), so Node globals are legitimately
+  // available here, unlike in the shipped app (tsconfig.json). A separate
+  // program from tsconfig.json also means this file's inclusion of `src`
+  // doesn't reintroduce Node globals into the strict, Node-free app program.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["react", "react-dom", "node"]
+  },
+  "include": ["src"],
+  "exclude": []
+}

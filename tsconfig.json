@@ -18,7 +18,20 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    // Restrict ambient globals to what the shipped browser app actually needs
+    // — in particular, NOT "node", so a stray `process`/`fs` import in `src/`
+    // is a type error rather than silently compiling (this is a browser app
+    // with no backend). Node-only code gets its own program:
+    //   - scripts/ + vite.config.ts → tsconfig.scripts.json
+    //   - *.test.ts(x) + test setup → tsconfig.test.json (importing `vitest`
+    //     itself pulls in @types/node transitively — vite's own .d.ts has an
+    //     unconditional `/// <reference types="node" />` that "types" cannot
+    //     suppress — so tests are typechecked as the Node-run code they
+    //     actually are, in a program that does not include shipped app code)
+    "types": ["react", "react-dom"]
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test"]
 }

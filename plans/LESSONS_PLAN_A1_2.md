@@ -37,6 +37,7 @@ What Miguel wants, in his words turned into requirements:
 | D2 Storage | **By word type + lesson tags.** Verbs stay in `verbs/data.ts`, nouns in `nouns/data.ts`… each item gets `lessons: LessonId[]`. A lesson page *queries* by tag. | A word recurs across lessons (e.g. *helfen*: L9 grammar, L13 Dativ verb). One record, many tags, no copies. |
 | D3 Existing content | Tag everything already in the app **`A1.1`** (a level-wide pseudo-lesson). | Precise L1–7 tags can come later by retagging only. |
 | D4 Vocab check | **Report first, add after OK.** | Keeps Miguel in control of what goes in. |
+| D5 Reflexive verb storage | **Open.** `checkVocab` matches a `sich …` line against both `sich X` and bare `X` catalog terms, so either storage works today. | Decide when the first reflexive verb is actually added (Phase 8+ intake), not speculatively now (YAGNI). |
 
 ## 2a. Design & interaction target (the mock)
 
@@ -316,7 +317,7 @@ Order is chosen so Miguel can start sending lesson photos after **Phase 3**.
 | **0 — Docs** ✅ | Record D1–D4 and this model in `docs/SOLUTION_DESIGN.md` (decisions log) and `docs/PRD.md` (R1–R6). Link this plan from `CLAUDE.md`. | Docs merged; mock linked from the Solution Design. |
 | **1 — Lesson registry + tags** ✅ | `src/content/lessons.ts` with A1.1 bucket + L8–L14 filled from the TOC photos (Appendix A). `lessons?` on every item; backfill all existing items to `['A1.1']`; flip to required. `CatalogEntry.lessons` + `kind` in every `catalog.ts`. | Typecheck forces every item to carry a tag; catalog test asserts every entry has ≥1 lesson and a valid kind. |
 | **2 — Swiss spelling** ✅ | Replace `ß → ss` in all content. Test: no `ß` in any content string. Search folds both ways. | Progress keys unchanged (slug test proves it). |
-| **3 — Vocab check** | `checkVocab` + `scripts/vocab-check.ts` + `npm run vocab:check`. `content/lws/` folder. | Tests cover article/plural stripping, ß/ss, case, "tag missing" vs "missing". Report shape matches mock: *Wortschatz-Check*. |
+| **3 — Vocab check** ✅ | `checkVocab` + `scripts/vocab-check.ts` + `npm run vocab:check`. `content/lws/` folder. | Tests cover article/plural stripping, ß/ss, case, "tag missing" vs "missing". Report shape matches mock: *Wortschatz-Check*. |
 | **4 — Lesson pages + lesson search** | `/lektionen`, `/lektionen/:id`, `entriesForLesson`, lesson queries in search, `?lektion=` practice filter. Registry entry → nav + Home card. | Searching "Lektion 8" lands on the L8 page. Matches mock: *Home*, *Suche*, *Lektionen*, *Lektion 8*, *Üben* (lesson filter). |
 | **5 — Verb tenses** | `praeteritum?` + `perfekt?` fields, `perfektForms()`, tense switch UI, `&tense=` deep link, drill tense picker. Backfill all 73 verbs, then flip to required. | Every verb shows 3 tenses; drill tests per tense. Matches mock: *Verben · 3 Zeiten*, *Üben → Konjugation*. |
 | **6 — Prepositions tool** | New tool + data (A1.1 ones + L8 temporal + L11 lokal + L12 temporal). Move `praep` out of Phrases with progress migration. "Welcher Fall?" drill. | Filter by case/use works; migration test keeps old progress. Matches mock: *Präpositionen*, *Üben → Welcher Fall?*. |
