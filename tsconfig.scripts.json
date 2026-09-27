@@ -1,0 +1,10 @@
+{
+  // Node-only code — the vocab-check CLI and vite.config.ts — separate from
+  // tsconfig.json so `src/` never implicitly gets Node globals (`process`,
+  // `fs`, ...) and this file's Node globals don't leak the other way either.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["scripts", "vite.config.ts"]
+}

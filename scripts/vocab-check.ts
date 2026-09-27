@@ -12,9 +12,10 @@
 // Run with `tsx` (a devDependency): the smallest way to execute a TS/ESM
 // script against this repo's setup without adding a second build pipeline —
 // vite-node is not otherwise a project dependency, and ts-node's CJS/ESM
-// interop is fiddlier under "type": "module". `scripts/` is in tsconfig.json's
-// `include` (with `@types/node` for the Node globals it uses), so `npm run
-// typecheck` and `npm run lint` both cover this file like any other.
+// interop is fiddlier under "type": "module". `scripts/` is typechecked by
+// `tsconfig.scripts.json` (Node globals, kept out of the app's own
+// tsconfig.json), which `npm run typecheck` also runs; `npm run lint` covers
+// this file like any other, since ESLint isn't split per tsconfig.
 
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -54,11 +55,17 @@ const lines = raw.split(/\r?\n/)
 const entryCount = lines.map((l) => l.trim()).filter((l) => l !== '' && !l.startsWith('#')).length
 const result = checkVocab(lines, catalog, lessonId)
 
+/** The line, or "line [form]" when a " / "-separated line was split into
+ * several headwords and this result is about just one of them. */
+function describeLine(m: { line: string; form: string }): string {
+  return m.form === m.line.trim() ? m.line : `${m.line}  [${m.form}]`
+}
+
 function printMatchGroup(title: string, items: VocabMatch[]): void {
   console.log(`\n${title} (${items.length})`)
   for (const m of items) {
     const terms = m.entries.map((e) => e.term).join(', ')
-    console.log(`  ${m.line}  →  ${terms}`)
+    console.log(`  ${describeLine(m)}  →  ${terms}`)
   }
 }
 
@@ -81,7 +88,7 @@ function printMissing(items: VocabMiss[]): void {
     const group = byKind.get(kind)
     if (!group || group.length === 0) continue
     console.log(`  ${KIND_LABEL[kind]} (${group.length})`)
-    for (const m of group) console.log(`    ${m.line}`)
+    for (const m of group) console.log(`    ${describeLine(m)}`)
   }
 }
 

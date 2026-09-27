@@ -7,19 +7,27 @@ import type { LessonId } from '../../content/lessons'
 // React-free by design — the CLI is the only current caller, but keeping this
 // out of any tool means it stays trivially unit-testable.
 
-/** The word class guessed for a line the app does not have at all. */
+/** The word class guessed for a headword the app does not have at all. */
 export type GuessedKind = 'noun' | 'verb' | 'phrase' | 'unknown'
 
-/** A line that matched one or more catalog entries (exactly, or case-folded). */
+/** A headword that matched one or more catalog entries (exactly, or case-folded). */
 export interface VocabMatch {
   /** The original line, exactly as it appeared in the source file. */
   line: string
+  /**
+   * The specific headword this result is about. Equal to `line` (trimmed)
+   * unless the line held several forms separated by " / " (e.g. "der Kollege,
+   * -n / die Kollegin, -nen"), in which case each form is checked and reported
+   * on its own, with `line` kept alongside for context.
+   */
+  form: string
   entries: CatalogEntry[]
 }
 
-/** A line with no catalog match at all. */
+/** A headword with no catalog match at all. */
 export interface VocabMiss {
   line: string
+  form: string
   kind: GuessedKind
 }
 
@@ -34,59 +42,117 @@ export interface VocabCheckResult {
   maybe: VocabMatch[]
 }
 
+/** Valency placeholders the book prints around a verb's government, e.g.
+ * "jemandem helfen" or "jemanden fragen" — not part of the headword itself. */
+const PLACEHOLDER_WORDS = ['jemandem', 'jemanden', 'jemand', 'etwas']
+const LEADING_PLACEHOLDER = new RegExp(`^(?:${PLACEHOLDER_WORDS.join('|')})\\b\\s*`, 'i')
+const TRAILING_PLACEHOLDER = new RegExp(`\\s*\\b(?:${PLACEHOLDER_WORDS.join('|')})$`, 'i')
+
 /** Fold ß→ss so Swiss-spelled content and ß-spelled photos compare equal (D1). */
 function foldSharpS(s: string): string {
   return s.replace(/ß/g, 'ss')
 }
 
-/**
- * Strip the parts of a printed Lernwortschatz line that are not the headword:
- * a leading article (identifies a noun), everything after the first comma
- * (plural/extra markers, e.g. "der Arzt, -¨e" → "Arzt"), and a leading
- * reflexive "sich " (e.g. "sich bewerben" → "bewerben").
- */
-function extractHeadword(trimmed: string): {
-  headword: string
-  hasArticle: boolean
-  hadSich: boolean
-} {
-  const articleMatch = /^(der|die|das)\s+/.exec(trimmed)
-  const hasArticle = articleMatch !== null
-  const afterArticle = hasArticle ? trimmed.slice(articleMatch![0].length) : trimmed
-
-  const commaIndex = afterArticle.indexOf(',')
-  const beforeComma = (commaIndex >= 0 ? afterArticle.slice(0, commaIndex) : afterArticle).trim()
-
-  const sichMatch = /^sich\s+/.exec(beforeComma)
-  const hadSich = sichMatch !== null
-  const headword = hadSich ? beforeComma.slice(sichMatch![0].length).trim() : beforeComma
-
-  return { headword, hasArticle, hadSich }
+/** Repeatedly strip a trailing parenthesised note, e.g. "(Pl.)", "(+ Dat.)". */
+function stripTrailingParens(s: string): string {
+  let result = s
+  let previous: string
+  do {
+    previous = result
+    result = result.replace(/\s*\([^()]*\)\s*$/, '').trim()
+  } while (result !== previous)
+  return result
 }
 
-/** Guess a word class for a line that matched nothing in the catalog. */
-function guessKind(
-  trimmedLine: string,
-  headword: string,
-  hasArticle: boolean,
-  hadSich: boolean,
-): GuessedKind {
+/** Strip leading/trailing valency placeholders (not a middle occurrence). */
+function stripPlaceholders(s: string): string {
+  let result = s
+  let changed = true
+  while (changed) {
+    changed = false
+    if (LEADING_PLACEHOLDER.test(result)) {
+      result = result.replace(LEADING_PLACEHOLDER, '')
+      changed = true
+    }
+    if (TRAILING_PLACEHOLDER.test(result)) {
+      result = result.replace(TRAILING_PLACEHOLDER, '')
+      changed = true
+    }
+  }
+  return result.trim()
+}
+
+interface ExtractedForm {
+  /** Candidate strings to compare against `CatalogEntry.term`. Two candidates
+   * (the full reflexive form and the bare infinitive) when the line has a
+   * leading "sich " — the catalog may store either, so both are tried (plan
+   * review: don't bake in a storage convention). */
+  candidates: string[]
+  hasArticle: boolean
+  hadSich: boolean
+  /** The candidate used to guess a word class when nothing matches. */
+  headwordForGuess: string
+}
+
+/**
+ * Clean one headword ("form") from a Lernwortschatz line: strip a leading
+ * article (identifies a noun), everything after the first comma (plural/extra
+ * markers, e.g. "der Arzt, -¨e" → "Arzt"), a trailing parenthesised note
+ * (e.g. "(Pl.)", "(+ Dat.)"), separable-verb dots/pipes ("an·rufen" /
+ * "an|rufen" → "anrufen"), and leading/trailing valency placeholders
+ * ("jemandem helfen" → "helfen").
+ */
+function extractForm(rawForm: string): ExtractedForm {
+  const trimmed = rawForm.trim()
+
+  const articleMatch = /^(der|die|das)\s+/.exec(trimmed)
+  const hasArticle = articleMatch !== null
+  let rest = hasArticle ? trimmed.slice(articleMatch![0].length) : trimmed
+
+  const commaIndex = rest.indexOf(',')
+  rest = (commaIndex >= 0 ? rest.slice(0, commaIndex) : rest).trim()
+
+  rest = stripTrailingParens(rest)
+  rest = rest.replace(/[·|]/g, '')
+  rest = stripPlaceholders(rest)
+  rest = rest.replace(/\s+/g, ' ').trim()
+
+  const sichMatch = /^sich\s+/i.exec(rest)
+  const hadSich = sichMatch !== null
+  const bare = hadSich ? rest.slice(sichMatch![0].length).trim() : rest
+
+  return {
+    candidates: hadSich ? [rest, bare] : [rest],
+    hasArticle,
+    hadSich,
+    headwordForGuess: bare,
+  }
+}
+
+/** Guess a word class for a headword that matched nothing in the catalog. */
+function guessKind(headword: string, hasArticle: boolean, hadSich: boolean): GuessedKind {
   if (hasArticle) return 'noun'
   if (hadSich || /^[a-zäöü].*(en|ern|eln)$/.test(headword)) return 'verb'
-  const isMultiWord = trimmedLine.split(/\s+/).length > 1
-  if (/[?!]$/.test(trimmedLine) || isMultiWord) return 'phrase'
+  const isMultiWord = headword.split(/\s+/).length > 1
+  if (/[?!]$/.test(headword) || isMultiWord) return 'phrase'
   return 'unknown'
 }
 
 /**
  * Check one lesson's transcribed vocab lines against the catalog.
  *
- * Matching rules (plan §4.3): trim; skip blank lines and `#` comments; strip a
- * leading article; strip plural/extra markers after the first comma; strip a
- * leading reflexive "sich "; fold ß↔ss; compare to `CatalogEntry.term`
- * case-sensitively first (German case is meaning), then case-insensitively as a
- * "maybe". Nouns match on the singular term regardless of category. If several
- * entries match, all are reported.
+ * Matching rules (plan §4.3, refined in review): trim; skip blank lines and
+ * `#` comments; split a line on " / " into separate headwords (each checked
+ * on its own, e.g. "der Kollege, -n / die Kollegin, -nen"); strip a leading
+ * article; strip plural/extra markers after the first comma; strip a trailing
+ * parenthesised note; strip separable-verb "·"/"|"; strip leading/trailing
+ * valency placeholders ("jemandem", "jemanden", "jemand", "etwas"); fold
+ * ß↔ss; compare to `CatalogEntry.term` case-sensitively first (German case is
+ * meaning), then case-insensitively as a "maybe". A reflexive headword is
+ * tried both as printed ("sich bewerben") and as the bare infinitive
+ * ("bewerben"), since the catalog may store either. Nouns match on the
+ * singular term regardless of category. If several entries match, all are
+ * reported.
  */
 export function checkVocab(
   lines: string[],
@@ -96,27 +162,40 @@ export function checkVocab(
   const result: VocabCheckResult = { tagged: [], untagged: [], missing: [], maybe: [] }
 
   for (const rawLine of lines) {
-    const trimmed = rawLine.trim()
-    if (trimmed === '' || trimmed.startsWith('#')) continue
+    const trimmedLine = rawLine.trim()
+    if (trimmedLine === '' || trimmedLine.startsWith('#')) continue
 
-    const { headword, hasArticle, hadSich } = extractHeadword(trimmed)
-    const folded = foldSharpS(headword)
+    const forms = trimmedLine
+      .split(' / ')
+      .map((f) => f.trim())
+      .filter((f) => f !== '')
 
-    const exact = entries.filter((e) => foldSharpS(e.term) === folded)
-    if (exact.length > 0) {
-      const target = exact.some((e) => e.lessons.includes(lessonId)) ? result.tagged : result.untagged
-      target.push({ line: rawLine, entries: exact })
-      continue
+    for (const form of forms) {
+      const { candidates, hasArticle, hadSich, headwordForGuess } = extractForm(form)
+
+      const exact = entries.filter((e) =>
+        candidates.some((c) => foldSharpS(e.term) === foldSharpS(c)),
+      )
+      if (exact.length > 0) {
+        const bucket = exact.some((e) => e.lessons.includes(lessonId)) ? result.tagged : result.untagged
+        bucket.push({ line: rawLine, form, entries: exact })
+        continue
+      }
+
+      const caseInsensitive = entries.filter((e) =>
+        candidates.some((c) => foldSharpS(e.term).toLowerCase() === foldSharpS(c).toLowerCase()),
+      )
+      if (caseInsensitive.length > 0) {
+        result.maybe.push({ line: rawLine, form, entries: caseInsensitive })
+        continue
+      }
+
+      result.missing.push({
+        line: rawLine,
+        form,
+        kind: guessKind(headwordForGuess, hasArticle, hadSich),
+      })
     }
-
-    const foldedLower = folded.toLowerCase()
-    const caseInsensitive = entries.filter((e) => foldSharpS(e.term).toLowerCase() === foldedLower)
-    if (caseInsensitive.length > 0) {
-      result.maybe.push({ line: rawLine, entries: caseInsensitive })
-      continue
-    }
-
-    result.missing.push({ line: rawLine, kind: guessKind(trimmed, headword, hasArticle, hadSich) })
   }
 
   return result

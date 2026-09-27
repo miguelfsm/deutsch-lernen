@@ -6,11 +6,19 @@ import { checkVocab } from './checkVocab'
 const entries: CatalogEntry[] = [
   { id: 'verben:arbeiten', toolId: 'verben', route: '/verben', slug: 'arbeiten', term: 'arbeiten', gloss: 'to work', kind: 'verb', lessons: ['A1.2-L08'] },
   { id: 'verben:essen', toolId: 'verben', route: '/verben', slug: 'essen', term: 'essen', gloss: 'to eat', kind: 'verb', lessons: ['A1.1'] },
-  // Reflexive verbs are stored by their bare infinitive — the "sich " in the
-  // book's printed list is a marker, not part of the identity (plan §4.3).
+  // The catalog is free to store a reflexive verb either way (bare infinitive
+  // or the full "sich ..." form) — checkVocab tries both, so this fixture
+  // deliberately keeps one of each rather than asserting a storage rule the
+  // plan doesn't make (see the "reflexive verbs" tests below).
   { id: 'verben:bewerben', toolId: 'verben', route: '/verben', slug: 'bewerben', term: 'bewerben', gloss: 'to apply', kind: 'verb', lessons: ['A1.1'] },
+  { id: 'verben:freuen', toolId: 'verben', route: '/verben', slug: 'freuen', term: 'sich freuen', gloss: 'to be glad', kind: 'verb', lessons: ['A1.1'] },
+  { id: 'verben:anrufen', toolId: 'verben', route: '/verben', slug: 'anrufen', term: 'anrufen', gloss: 'to call', kind: 'verb', lessons: ['A1.1'] },
+  { id: 'verben:helfen', toolId: 'verben', route: '/verben', slug: 'helfen', term: 'helfen', gloss: 'to help', kind: 'verb', lessons: ['A1.1'] },
   { id: 'nomen:lebensmittel/essen', toolId: 'nomen', route: '/nomen', slug: 'lebensmittel/essen', term: 'Essen', gloss: 'food', category: 'Lebensmittel', kind: 'noun', lessons: ['A1.1'] },
   { id: 'nomen:beruf/arzt', toolId: 'nomen', route: '/nomen', slug: 'beruf/arzt', term: 'Arzt', gloss: 'doctor', category: 'Beruf', kind: 'noun', lessons: ['A1.1'] },
+  { id: 'nomen:beruf/kollege', toolId: 'nomen', route: '/nomen', slug: 'beruf/kollege', term: 'Kollege', gloss: 'colleague (m)', category: 'Beruf', kind: 'noun', lessons: ['A1.1'] },
+  { id: 'nomen:beruf/kollegin', toolId: 'nomen', route: '/nomen', slug: 'beruf/kollegin', term: 'Kollegin', gloss: 'colleague (f)', category: 'Beruf', kind: 'noun', lessons: ['A1.2-L08'] },
+  { id: 'nomen:familie/eltern', toolId: 'nomen', route: '/nomen', slug: 'familie/eltern', term: 'Eltern', gloss: 'parents', category: 'Familie', kind: 'noun', lessons: ['A1.1'] },
   { id: 'nomen:koerper/gross', toolId: 'nomen', route: '/nomen', slug: 'koerper/gross', term: 'Gross', gloss: 'tall (noun use)', category: 'Koerper', kind: 'noun', lessons: ['A1.1'] },
   { id: 'redemittel:praep/seit', toolId: 'redemittel', route: '/redemittel', slug: 'praep/seit', term: 'seit', gloss: 'since', category: 'Präpositionen', kind: 'preposition', lessons: ['A1.2-L08'] },
 ]
@@ -28,12 +36,6 @@ describe('checkVocab', () => {
     const result = checkVocab(['der Arzt, -¨e'], entries, 'A1.2-L08')
     expect(result.untagged).toHaveLength(1)
     expect(result.untagged[0].entries.map((e) => e.id)).toEqual(['nomen:beruf/arzt'])
-  })
-
-  it('strips a leading reflexive "sich "', () => {
-    const result = checkVocab(['sich bewerben'], entries, 'A1.2-L08')
-    expect(result.untagged).toHaveLength(1)
-    expect(result.untagged[0].entries.map((e) => e.id)).toEqual(['verben:bewerben'])
   })
 
   it('folds ß and ss so both spellings match the same entry', () => {
@@ -88,7 +90,7 @@ describe('checkVocab', () => {
 
   it('guesses "noun" for a missing line with a leading article', () => {
     const result = checkVocab(['die Ärztin, -nen'], entries, 'A1.2-L08')
-    expect(result.missing).toEqual([{ line: 'die Ärztin, -nen', kind: 'noun' }])
+    expect(result.missing).toEqual([{ line: 'die Ärztin, -nen', form: 'die Ärztin, -nen', kind: 'noun' }])
   })
 
   it('guesses "verb" for a missing lowercase line ending in -en/-ern/-eln', () => {
@@ -101,9 +103,9 @@ describe('checkVocab', () => {
   })
 
   it('guesses "verb" for a missing reflexive line', () => {
-    const result = checkVocab(['sich freuen auf'], entries, 'A1.2-L08')
-    // "sich " is stripped first, so this takes the sich branch even though
-    // the remainder is multi-word.
+    const result = checkVocab(['sich ärgern über'], entries, 'A1.2-L08')
+    // The leading "sich " alone decides it, even though the remainder is
+    // multi-word and wouldn't otherwise look like a verb.
     expect(result.missing[0].kind).toBe('verb')
   })
 
@@ -122,5 +124,59 @@ describe('checkVocab', () => {
   it('keeps the original line text (with markers) on every result', () => {
     const result = checkVocab(['der Arzt, -¨e'], entries, 'A1.2-L08')
     expect(result.untagged[0].line).toBe('der Arzt, -¨e')
+    expect(result.untagged[0].form).toBe('der Arzt, -¨e')
+  })
+
+  // ── Review fixes ───────────────────────────────────────────────────────
+
+  it('splits a multi-form line on " / " and checks each headword separately, keeping the original line for context', () => {
+    const line = 'der Kollege, -n / die Kollegin, -nen'
+    const result = checkVocab([line], entries, 'A1.2-L08')
+
+    // "Kollege" is in the app but not tagged for L08; "Kollegin" is.
+    expect(result.untagged).toHaveLength(1)
+    expect(result.untagged[0]).toMatchObject({ line, form: 'der Kollege, -n' })
+    expect(result.untagged[0].entries.map((e) => e.id)).toEqual(['nomen:beruf/kollege'])
+
+    expect(result.tagged).toHaveLength(1)
+    expect(result.tagged[0]).toMatchObject({ line, form: 'die Kollegin, -nen' })
+    expect(result.tagged[0].entries.map((e) => e.id)).toEqual(['nomen:beruf/kollegin'])
+  })
+
+  it('reports a missing form from a multi-form line on its own, with the full line for context', () => {
+    const line = 'der Arzt, -¨e / die Zahnärztin, -nen'
+    const result = checkVocab([line], entries, 'A1.2-L08')
+    expect(result.untagged[0]).toMatchObject({ line, form: 'der Arzt, -¨e' })
+    expect(result.missing[0]).toMatchObject({ line, form: 'die Zahnärztin, -nen', kind: 'noun' })
+  })
+
+  it('strips separable-verb "·" and "|" so the notation matches the plain infinitive', () => {
+    const withDot = checkVocab(['an·rufen'], entries, 'A1.2-L08')
+    const withPipe = checkVocab(['an|rufen'], entries, 'A1.2-L08')
+    expect(withDot.untagged[0]?.entries.map((e) => e.id)).toEqual(['verben:anrufen'])
+    expect(withPipe.untagged[0]?.entries.map((e) => e.id)).toEqual(['verben:anrufen'])
+  })
+
+  it('strips leading valency placeholders ("jemandem", "jemanden", "jemand", "etwas")', () => {
+    const dative = checkVocab(['jemandem helfen'], entries, 'A1.2-L08')
+    expect(dative.untagged[0]?.entries.map((e) => e.id)).toEqual(['verben:helfen'])
+  })
+
+  it('strips a trailing "(+ Dat.)"/"(+ Akk.)" government marker', () => {
+    const result = checkVocab(['helfen (+ Dat.)'], entries, 'A1.2-L08')
+    expect(result.untagged[0]?.entries.map((e) => e.id)).toEqual(['verben:helfen'])
+  })
+
+  it('strips a trailing "(Pl.)" plural-only marker', () => {
+    const result = checkVocab(['die Eltern (Pl.)'], entries, 'A1.2-L08')
+    expect(result.untagged[0]?.entries.map((e) => e.id)).toEqual(['nomen:familie/eltern'])
+  })
+
+  it('matches a reflexive line whether the catalog stores the bare infinitive or the full "sich " form', () => {
+    const bareInCatalog = checkVocab(['sich bewerben'], entries, 'A1.2-L08')
+    expect(bareInCatalog.untagged[0]?.entries.map((e) => e.id)).toEqual(['verben:bewerben'])
+
+    const fullInCatalog = checkVocab(['sich freuen'], entries, 'A1.2-L08')
+    expect(fullInCatalog.untagged[0]?.entries.map((e) => e.id)).toEqual(['verben:freuen'])
   })
 })
