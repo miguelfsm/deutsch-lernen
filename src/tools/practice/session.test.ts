@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { CatalogEntry } from '../../lib/catalog/types'
+import type { CatalogEntry, EntryKind } from '../../lib/catalog/types'
 import type { LessonId } from '../../content/lessons'
 import {
   shuffle,
@@ -16,13 +16,28 @@ import {
 } from './session'
 
 // Fixture catalog so the logic is tested independently of live content.
+const KIND_BY_TOOL: Record<string, EntryKind> = {
+  verben: 'verb',
+  nomen: 'noun',
+  adjektive: 'adjective',
+}
+
 const entry = (
   toolId: string,
   slug: string,
   term: string,
   gloss: string,
   lessons: LessonId[] = ['A1.1'],
-): CatalogEntry => ({ id: `${toolId}:${slug}`, toolId, route: `/${toolId}`, slug, term, gloss, kind: 'verb', lessons })
+): CatalogEntry => ({
+  id: `${toolId}:${slug}`,
+  toolId,
+  route: `/${toolId}`,
+  slug,
+  term,
+  gloss,
+  kind: KIND_BY_TOOL[toolId] ?? 'phrase',
+  lessons,
+})
 
 const fixture: CatalogEntry[] = [
   entry('verben', 'schlafen', 'schlafen', 'to sleep'),
