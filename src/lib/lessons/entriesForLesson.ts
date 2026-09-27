@@ -8,11 +8,14 @@ export interface LessonGroup {
 }
 
 // Fixed display order + label for a lesson page's content-by-kind section
-// (plan §4.1, §5 Phase 4). Two kinds share a label — Phrases and Strategien
-// both read as "Redemittel/Strategien" on the page, matching the mock, since
-// the book doesn't separate them either. `grammar` is intentionally absent:
-// it renders nothing until Phase 7 builds the grammar tool.
+// (plan §4.1, §5 Phase 4, grammar row added in the Phase 7 follow-up). Two
+// kinds share a label — Phrases and Strategien both read as
+// "Redemittel/Strategien" on the page, matching the mock, since the book
+// doesn't separate them either. `grammar` comes first, per the mock's
+// `lesson()` screen — the "Grammatik und Kommunikation" summary is the
+// lesson's own headline content, read before the word lists.
 const GROUP_ORDER: { kind: EntryKind; label: string }[] = [
+  { kind: 'grammar', label: 'Grammatik' },
   { kind: 'verb', label: 'Verben' },
   { kind: 'noun', label: 'Nomen' },
   { kind: 'adjective', label: 'Adjektive' },

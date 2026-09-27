@@ -34,6 +34,7 @@ describe('entriesForLesson', () => {
   it('groups in the fixed display order, skipping empty groups', () => {
     const groups = entriesForLesson(CATALOG, 'A1.2-L08')
     expect(groups.map((g) => g.label)).toEqual([
+      'Grammatik',
       'Verben',
       'Nomen',
       'Adjektive',
@@ -48,9 +49,10 @@ describe('entriesForLesson', () => {
     expect(redemittel?.entries.map((e) => e.id).sort()).toEqual(['ph1', 's1'])
   })
 
-  it('renders nothing for the grammar kind (reserved for Phase 7)', () => {
+  it('puts Grammatik first, ahead of the word-class groups (Phase 7 follow-up)', () => {
     const groups = entriesForLesson(CATALOG, 'A1.2-L08')
-    expect(groups.some((g) => g.entries.some((e) => e.kind === 'grammar'))).toBe(false)
+    expect(groups[0].label).toBe('Grammatik')
+    expect(groups[0].entries.map((e) => e.id)).toEqual(['g1'])
   })
 
   it('returns [] for a lesson with no tagged entries', () => {

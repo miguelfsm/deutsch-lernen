@@ -263,12 +263,15 @@ searchable) **the first time** such a word arrives — not before.
 - **Lesson page:**
   1. Header from the registry: A–E section titles + goals, Wortfelder,
      Phonetik, Prüfung, Fokus.
-  2. **Grammatik** — the lesson's grammar topics (rendered inline).
-  3. **Content by kind** — Verben, Nomen, Adjektive, Adverbien, Präpositionen,
-     Redemittel/Strategien, Satzbau — each item a link to its tool (`?sel=`).
-  4. **"Diese Lektion üben"** → `/uben?lektion=A1.2-L08` (practice deck
+  2. **Content by kind** — Grammatik, Verben, Nomen, Adjektive, Adverbien,
+     Präpositionen, Redemittel/Strategien, Satzbau — each item a link to its
+     tool (`?sel=`). Grammatik comes first (implemented as a `kind: 'grammar'`
+     group like any other, each topic a chip to `/grammatik?sel=<topic>`, not
+     a separately rendered block — simpler, and consistent with every other
+     group).
+  3. **"Diese Lektion üben"** → `/uben?lektion=A1.2-L08` (practice deck
      filtered by tag).
-  5. **Coverage line**: "Lernwortschatz: 142 / 150 words in the app" (from §4.3).
+  4. **Coverage line**: "Lernwortschatz: 142 / 150 words in the app" (from §4.3).
 - Pure selector `entriesForLesson(catalog, id)` grouped by `kind` — tested; the
   page just renders it.
 
@@ -321,7 +324,7 @@ Order is chosen so Miguel can start sending lesson photos after **Phase 3**.
 | **4 — Lesson pages + lesson search** ✅ | `/lektionen`, `/lektionen/:id`, `entriesForLesson`, lesson queries in search, `?lektion=` practice filter. Registry entry → nav + Home card. | Searching "Lektion 8" lands on the L8 page. Matches mock: *Home*, *Suche*, *Lektionen*, *Lektion 8*, *Üben* (lesson filter). |
 | **5 — Verb tenses** ✅ | `praeteritum` + `perfekt` fields (required — the backfill below is complete), `perfektForms()`, tense switch UI, `&tense=` deep link, drill tense picker. Backfilled all 72 verbs (the plan's "73" included the interface's own field, not a verb). | Every verb shows 3 tenses; drill tests per tense. Matches mock: *Verben · 3 Zeiten*, *Üben → Konjugation*. |
 | **6 — Prepositions tool** ✅ | New tool + data (A1.1 ones + L8 temporal + L11 lokal + L12 temporal). Move `praep` out of Phrases with progress migration. "Welcher Fall?" drill. | Filter by case/use works; migration test keeps old progress. Matches mock: *Präpositionen*, *Üben → Welcher Fall?*. |
-| **7 — Grammar tool** ✅ (tool only) | Block model, `GrammarTopicView`, first topics from the L8 summary (Appendix B). ~~Grammar section on lesson pages~~ **follow-up after Phase 4 merges** (Phase 4 owns lesson pages; not touched here to avoid a merge conflict). | `/grammatik` shows all five L8 grammar topics, matching mock screen *Grammatik*. The *Lektion 8* grammar row is still open — do in the per-lesson-page follow-up once Phase 4 (lesson pages) has merged. |
+| **7 — Grammar tool** ✅ | Block model, `GrammarTopicView`, first topics from the L8 summary (Appendix B). Grammar section on lesson pages — `entriesForLesson` renders it first, ahead of the word-class groups, per the mock's `lesson()` screen. | `/grammatik` shows all five L8 grammar topics, matching mock screen *Grammatik*. The *Lektion 8* page shows the same five as its first content group, each deep-linking to `/grammatik?sel=<topic>`. |
 | **8+ — Lesson intake (repeat per lesson)** | For L8 → L14: LWS check → approve → add items + tags; add that lesson's grammar topics from the "Grammatik und Kommunikation" photo. | Lesson coverage ≈ 100%. |
 
 Phases 5, 6 and 7 are independent of each other and may be reordered.

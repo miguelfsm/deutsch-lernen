@@ -112,15 +112,17 @@ In short:
   phrase, strategy, pattern, preposition, grammar) so lesson pages group by word
   class, not by tool.
 - **Verbs** add a full `praeteritum` table and `perfekt: { auxiliary, partizip }`;
-  the six Perfekt forms are derived, not stored. *(Phase 5, planned.)*
+  the six Perfekt forms are derived, not stored (Phase 5, done).
 - **New tools:** `prepositions/` (`/praepositionen`, case + use — Phase 6, done)
   and `grammar/` (`/grammatik`, topics built from `table` / `rule` / `examples`
-  blocks — Phase 7, planned).
+  blocks — Phase 7, done).
 - **Lesson pages** (`/lektionen`, `/lektionen/:id` — Phase 4, done): a pure
-  `entriesForLesson` selector groups the catalog by `kind` for one lesson; the
-  page renders the registry's own section/meta fields, a coverage line, a
-  "Diese Lektion üben" link into practice, and a deep-linking chip per item.
-  No per-lesson code is needed — a new lesson is one registry entry.
+  `entriesForLesson` selector groups the catalog by `kind` for one lesson —
+  `grammar` first, then the word-class groups — the page just renders it. It
+  also renders the registry's own section/meta fields, a coverage line, a
+  "Diese Lektion üben" link into practice, and a deep-linking chip per item
+  (including each grammar topic, to `/grammatik?sel=<topic>`). No per-lesson
+  code is needed — a new lesson is one registry entry.
 - **Search recognises lesson queries** ("lektion 8", "l8", "L08", "a1.2 l8"):
   `parseLessonQuery` (pure) feeds `searchLessons`, which the search UI composes
   with the ordinary `searchCatalog` — a lesson hit links to the lesson page,
