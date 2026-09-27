@@ -62,11 +62,6 @@ export const lessons: Lesson[] = [
   },
 
   // ── A1.2 — Lektionen 8–14, from the Kursbuch + Arbeitsbuch TOC ────────────
-  // Section titles below mirror the TOC's short goal phrases (Appendix A did
-  // not include the book's quoted section titles, e.g. "Ich bin
-  // Physiotherapeutin."); the real quoted titles can be filled in during the
-  // per-lesson intake (plan §5, Phase 8+) once the Kursbuch pages are
-  // transcribed. See the Phase 1 handback for this judgement call.
   {
     id: 'A1.2-L08',
     level: 'A1.2',
@@ -74,21 +69,31 @@ export const lessons: Lesson[] = [
     title: 'Beruf und Arbeit',
     folge: 'Total fotogen',
     sections: [
-      { key: 'A', title: 'Berufe benennen', goals: ['Berufe benennen'] },
+      {
+        key: 'A',
+        title: 'Ich bin Physiotherapeutin.',
+        goals: ['Berufe benennen und erfragen', 'über die berufliche Situation sprechen'],
+      },
       {
         key: 'B',
-        title: 'über Vergangenheit/Gegenwart austauschen',
-        goals: ['über Vergangenheit/Gegenwart austauschen'],
+        title: 'Wann hast du die Ausbildung gemacht?',
+        goals: [
+          'private und berufliche Informationen über Vergangenheit und Gegenwart austauschen',
+        ],
       },
       {
         key: 'C',
-        title: 'von Ereignissen in der Vergangenheit berichten',
-        goals: ['von Ereignissen in der Vergangenheit berichten'],
+        title: 'Ich hatte ja noch keine Berufserfahrung.',
+        goals: ['von Ereignissen und Aktivitäten in der Vergangenheit berichten'],
       },
       {
         key: 'D',
-        title: 'Stelleninserate, Stellengesuch',
-        goals: ['Stelleninserate', 'Stellengesuch'],
+        title: 'Inserate',
+        goals: [
+          'Stellenanzeigen verstehen',
+          'Telefongespräch: Informationen zu einem Stellenangebot erfragen',
+          'ein Stellengesuch schreiben',
+        ],
       },
     ],
     wortfelder: ['Berufe', 'Arbeit'],
@@ -102,7 +107,7 @@ export const lessons: Lesson[] = [
     phonetik: ['e/ä, -e/-er'],
     pruefung: ['Sprechen T2'],
     fokus: ['Inserat schreiben', 'Aufgabenverteilung fragen'],
-    pages: { lws: 178 },
+    pages: { kb: 10, ab: 96, lws: 178 },
   },
   {
     id: 'A1.2-L09',
@@ -111,11 +116,34 @@ export const lessons: Lesson[] = [
     title: 'Ämter',
     folge: 'Komm mit!',
     sections: [
-      { key: 'A', title: 'Abläufe erklären', goals: ['Abläufe erklären'] },
-      { key: 'B', title: 'Aufforderungen', goals: ['Aufforderungen'] },
-      { key: 'C', title: 'Erlaubtes/Verbotenes', goals: ['Erlaubtes/Verbotenes'] },
-      { key: 'D', title: 'Umzugsmeldung', goals: ['Umzugsmeldung'] },
-      { key: 'E', title: 'Einreise in die Schweiz', goals: ['Einreise in die Schweiz'] },
+      {
+        key: 'A',
+        title: 'Sie müssen ein Gesuch ausfüllen.',
+        goals: ['Abläufe auf dem Amt und im Alltag erklären'],
+      },
+      {
+        key: 'B',
+        title: 'Schau mal!',
+        goals: ['Aufforderungen verstehen und Anweisungen geben'],
+      },
+      {
+        key: 'C',
+        title: 'Sie dürfen in der Schweiz Auto fahren.',
+        goals: ['über Erlaubtes und Verbotenes sprechen'],
+      },
+      {
+        key: 'D',
+        title: 'Umzugsmeldung',
+        goals: [
+          'eine Umzugsmeldung ausfüllen',
+          'um Erklärungen und Verständnishilfen bitten',
+        ],
+      },
+      {
+        key: 'E',
+        title: 'Einreise in die Schweiz',
+        goals: ['Abläufe auf dem Amt verstehen'],
+      },
     ],
     wortfelder: ['Amt', 'Regeln Verkehr/Umwelt', 'Umzugsmeldung'],
     grammar: [
@@ -128,7 +156,7 @@ export const lessons: Lesson[] = [
     phonetik: ['Satzakzent Modalverben', 'Satzmelodie Frage/Aufforderung'],
     pruefung: ['Schreiben T1'],
     fokus: ['Genossenschaftswohnungen', 'Arbeitsplan absprechen'],
-    pages: { lws: 183 },
+    pages: { kb: 22, ab: 108, lws: 183 },
   },
   {
     id: 'A1.2-L10',
@@ -137,22 +165,38 @@ export const lessons: Lesson[] = [
     title: 'Gesundheit, Krankheit und Unfall',
     folge: 'Unsere Augen sind so blau',
     sections: [
-      { key: 'A', title: 'Körperteile, Befinden', goals: ['Körperteile', 'Befinden'] },
-      { key: 'B', title: 'Befinden anderer', goals: ['Befinden anderer'] },
+      {
+        key: 'A',
+        title: 'Ihr Auge tut weh.',
+        goals: ['Körperteile benennen', 'über das Befinden sprechen'],
+      },
+      {
+        key: 'B',
+        title: 'Unsere Augen sind so blau.',
+        goals: ['über das Befinden anderer sprechen'],
+      },
       {
         key: 'C',
-        title: 'Anweisungen/Ratschläge',
-        goals: ['Anweisungen/Ratschläge'],
+        title: 'Ich soll Schmerztabletten nehmen.',
+        goals: ['Anweisungen und Ratschläge verstehen und geben'],
       },
-      { key: 'D', title: 'Krankmeldung', goals: ['Krankmeldung'] },
-      { key: 'E', title: 'Arzt/Notfall', goals: ['Arzt/Notfall'] },
+      {
+        key: 'D',
+        title: 'Krankmeldung',
+        goals: ['sich telefonisch und schriftlich krankmelden'],
+      },
+      {
+        key: 'E',
+        title: 'Anruf beim Arzt / Notfall',
+        goals: ['einen Termin vereinbaren', 'einen Notfall melden'],
+      },
     ],
     wortfelder: ['Körperteile', 'Krankheiten', 'Brief'],
     grammar: ['Possessivartikel dein, sein, ihr, unser…', 'sollen', 'Satzklammer'],
     phonetik: ['Laut h', 'Vokalneueinsatz'],
     pruefung: ['Hören T1'],
     fokus: ['Packungsbeilage', 'Sicherheitsvorschriften'],
-    pages: { lws: 187 },
+    pages: { kb: 34, ab: 119, lws: 187 },
   },
   {
     id: 'A1.2-L11',
@@ -163,13 +207,33 @@ export const lessons: Lesson[] = [
     sections: [
       {
         key: 'A',
-        title: 'Weg fragen/beschreiben',
-        goals: ['Weg fragen/beschreiben'],
+        title: 'Fahren Sie dann nach links.',
+        goals: ['nach dem Weg fragen und den Weg beschreiben'],
       },
-      { key: 'B', title: 'Verkehrsmittel', goals: ['Verkehrsmittel'] },
-      { key: 'C', title: 'Ortsangaben', goals: ['Ortsangaben'] },
-      { key: 'D', title: 'Orte & Richtungen', goals: ['Orte & Richtungen'] },
-      { key: 'E', title: 'Am Bahnhof', goals: ['Am Bahnhof'] },
+      {
+        key: 'B',
+        title: 'Wir fahren mit dem Auto.',
+        goals: ['Verkehrsmittel benennen'],
+      },
+      {
+        key: 'C',
+        title: 'Da! Vor der Brücke links.',
+        goals: ['Ortsangaben machen'],
+      },
+      {
+        key: 'D',
+        title: 'Wir gehen zu Walter und holen das Auto.',
+        goals: ['Orte und Richtungen angeben'],
+      },
+      {
+        key: 'E',
+        title: 'Am Bahnhof',
+        goals: [
+          'Durchsagen verstehen',
+          'am Schalter: um Auskunft bitten',
+          'Fahrplänen Informationen entnehmen',
+        ],
+      },
     ],
     wortfelder: ['Einrichtungen in der Stadt', 'Verkehrsmittel'],
     grammar: [
@@ -180,7 +244,7 @@ export const lessons: Lesson[] = [
     phonetik: ['Laut z'],
     pruefung: ['Hören T2'],
     fokus: ['Kinderbetreuung finden', 'Termin bei einer Firma'],
-    pages: { lws: 190 },
+    pages: { kb: 46, ab: 131, lws: 190 },
   },
   {
     id: 'A1.2-L12',
@@ -191,13 +255,33 @@ export const lessons: Lesson[] = [
     sections: [
       {
         key: 'A',
-        title: 'Zeitangaben, Tagesabläufe',
-        goals: ['Zeitangaben', 'Tagesabläufe'],
+        title: 'Gleich nach dem Kurs gehe ich in den Laden.',
+        goals: ['Zeitangaben verstehen und machen', 'Tagesabläufe beschreiben'],
       },
-      { key: 'B', title: 'zeitliche Bezüge', goals: ['zeitliche Bezüge'] },
-      { key: 'C', title: 'höfliche Bitten', goals: ['höfliche Bitten'] },
-      { key: 'D', title: 'Telefonbeantworter', goals: ['Telefonbeantworter'] },
-      { key: 'E', title: 'Hilfe im Alltag', goals: ['Hilfe im Alltag'] },
+      {
+        key: 'B',
+        title: 'Sie bekommen sie in vier Wochen.',
+        goals: ['zeitliche Bezüge nennen', 'um Serviceleistungen bitten'],
+      },
+      {
+        key: 'C',
+        title: 'Könnten Sie mir das bitte zeigen?',
+        goals: ['höfliche Bitten und Aufforderungen ausdrücken'],
+      },
+      {
+        key: 'D',
+        title: 'Telefonbeantworter',
+        goals: ['Texte für die Combox verstehen und formulieren'],
+      },
+      {
+        key: 'E',
+        title: 'Hilfe im Alltag',
+        goals: [
+          'Inserate verstehen',
+          'eine Gebrauchsanweisung verstehen',
+          'Telefongespräch: Kundendienst',
+        ],
+      },
     ],
     wortfelder: ['Kundenservice', 'Telekommunikation'],
     grammar: [
@@ -209,7 +293,7 @@ export const lessons: Lesson[] = [
     phonetik: ['Satzakzent', 'Laut ng'],
     pruefung: ['Hören T3', 'Sprechen T3'],
     fokus: ['Angebote verstehen', 'Auf der Bank'],
-    pages: { lws: 193 },
+    pages: { kb: 58, ab: 143, lws: 193 },
   },
   {
     id: 'A1.2-L13',
@@ -218,15 +302,31 @@ export const lessons: Lesson[] = [
     title: 'Neue Kleider',
     folge: 'Das ist aber kalt heute!',
     sections: [
-      { key: 'A', title: 'Kleidungsstücke', goals: ['Kleidungsstücke'] },
-      { key: 'B', title: 'Gefallen/Missfallen', goals: ['Gefallen/Missfallen'] },
+      {
+        key: 'A',
+        title: 'Schau mal, Lara, die Jacke da! Die ist super!',
+        goals: ['Kleidungsstücke benennen'],
+      },
+      {
+        key: 'B',
+        title: 'Die Jacke passt dir perfekt.',
+        goals: ['Gefallen/Missfallen ausdrücken'],
+      },
       {
         key: 'C',
-        title: 'Vorlieben, Bewertungen',
-        goals: ['Vorlieben', 'Bewertungen'],
+        title: 'Und hier: Die ist noch besser.',
+        goals: ['Vorlieben und Bewertungen ausdrücken'],
       },
-      { key: 'D', title: 'Auswahl treffen', goals: ['Auswahl treffen'] },
-      { key: 'E', title: 'Im Warenhaus', goals: ['Im Warenhaus'] },
+      {
+        key: 'D',
+        title: 'Welche meinst du? – Diese hier.',
+        goals: ['Vorlieben erfragen', 'eine Auswahl treffen'],
+      },
+      {
+        key: 'E',
+        title: 'Im Warenhaus',
+        goals: ['um Hilfe/Rat bitten'],
+      },
     ],
     wortfelder: ['Kleider & Gegenstände', 'Landschaften'],
     grammar: [
@@ -240,7 +340,7 @@ export const lessons: Lesson[] = [
     phonetik: ['Bindung'],
     pruefung: ['Lesen T3'],
     fokus: ['Rabatt aushandeln', 'Schutzkleidung'],
-    pages: { lws: 196 },
+    pages: { kb: 70, ab: 155, lws: 196 },
   },
   {
     id: 'A1.2-L14',
@@ -249,19 +349,31 @@ export const lessons: Lesson[] = [
     title: 'Feste',
     folge: 'Ende gut, alles gut',
     sections: [
-      { key: 'A', title: 'Datum, Feste', goals: ['Datum', 'Feste'] },
+      {
+        key: 'A',
+        title: 'Am fünfzehnten Januar fange ich an.',
+        goals: ['das Datum erfragen und nennen', 'über Feste und Feiertage sprechen'],
+      },
       {
         key: 'B',
-        title: 'über Personen sprechen, um Hilfe bitten',
-        goals: ['über Personen sprechen', 'um Hilfe bitten'],
+        title: 'Ich habe dich sehr gern, Grosspapi!',
+        goals: ['über Personen und Dinge sprechen', 'um Hilfe bitten'],
       },
       {
         key: 'C',
-        title: 'Gründe, Termine absagen/zusagen',
-        goals: ['Gründe', 'Termine absagen/zusagen'],
+        title: 'Wir feiern Abschied, denn …',
+        goals: ['Gründe angeben', 'einen Termin absagen und zusagen'],
       },
-      { key: 'D', title: 'Einladungen', goals: ['Einladungen'] },
-      { key: 'E', title: 'Glückwünsche', goals: ['Glückwünsche'] },
+      {
+        key: 'D',
+        title: 'Einladungen',
+        goals: ['Einladungen verstehen und schreiben'],
+      },
+      {
+        key: 'E',
+        title: 'Feste und Glückwünsche',
+        goals: ['Feste nennen', 'Texte über Feste verstehen', 'Glückwünsche formulieren'],
+      },
     ],
     wortfelder: ['Monate', 'Feste', 'Glückwünsche'],
     grammar: [
@@ -273,6 +385,6 @@ export const lessons: Lesson[] = [
     phonetik: ['Satzmelodie Satzverbindungen'],
     pruefung: ['Lesen T2'],
     fokus: ['Veranstaltungshinweise', 'Um Hilfe bitten'],
-    pages: { lws: 200 },
+    pages: { kb: 82, ab: 168, lws: 200 },
   },
 ]

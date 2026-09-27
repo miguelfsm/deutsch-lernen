@@ -60,7 +60,7 @@ function tokenize(text: string): string[] {
 
 // A verb's stem: the folded infinitive minus its -en/-n ending. Inflected A1 forms
 // are the stem plus one of these endings. The empty ending is deliberately EXCLUDED
-// so a bare adjective/noun that equals a verb stem (heiß→heißen, Essen→essen when
+// so a bare adjective/noun that equals a verb stem (heiss→heissen, Essen→essen when
 // lower-cased) cannot masquerade as a conjugated verb — an inflectional ending must
 // actually be present.
 const VERB_ENDINGS = ['e', 'st', 't', 'en', 'et', 'te', 'test', 'tet', 'ten']

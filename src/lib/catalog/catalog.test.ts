@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import type { CatalogEntry, EntryKind } from './types'
 import { catalog } from './index'
-import { nounSlug, cardSlug, slugify } from './slug'
+import { nounSlug, cardSlug, slugify, verbSlug } from './slug'
 import { lessons, type LessonId } from '../../content/lessons'
 
 // Small fixtures keep the invariant tests decoupled from live content; a couple
@@ -39,6 +39,11 @@ describe('slug builders', () => {
 
   it('encodes the category into a card slug for category-cards tools', () => {
     expect(cardSlug('gegensaetze', 'schnell')).toBe('gegensaetze/schnell')
+  })
+
+  it('folds ß and ss to the same slug — content moved to Swiss ss (D1), but an old ß-spelled bookmark or ?sel= link must resolve to the same stored progress key', () => {
+    expect(verbSlug('heißen')).toBe(verbSlug('heissen'))
+    expect(nounSlug('Straße', 'Stadt')).toBe(nounSlug('Strasse', 'Stadt'))
   })
 
   it('keeps essen (verb) and Essen (noun) as distinct slugs via the noun category', () => {
