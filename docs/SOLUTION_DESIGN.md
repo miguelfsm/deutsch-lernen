@@ -2,7 +2,7 @@
 
 > **Status:** Canonical reference. Living document.
 > **Owner:** Miguel Segurado
-> **Last updated:** 2026-06-21
+> **Last updated:** 2026-09-27
 > **Companion:** See [PRD.md](./PRD.md) for product requirements.
 
 ## 1. Architecture Overview
@@ -85,6 +85,32 @@ DeutschLernen/
 ├── package.json
 └── .github/workflows/deploy.yml
 ```
+
+### 3.1 Lesson-aware content model (planned)
+
+Detailed in [plans/LESSONS_PLAN_A1_2.md](../plans/LESSONS_PLAN_A1_2.md) §3–4.
+The clickable mock [plans/LESSONS_PLAN_A1_2.mock.html](../plans/LESSONS_PLAN_A1_2.mock.html)
+is the **design and interaction target**; the plan owns data, logic and tests.
+Keep both in step. The mock is reference only and is never copied into `src/`.
+
+In short:
+
+- **Lesson registry** `src/content/lessons.ts` — typed list of lessons
+  (`LessonId` string-literal union, level-scoped ids like `A1.2-L08`, plus the
+  `A1.1` bucket) with the book's section goals, Wortfelder and grammar list.
+- **Every learnable item carries `lessons: LessonId[]`.** Content stays stored by
+  word type (verbs, nouns, …); lesson pages *query* by tag.
+- **`CatalogEntry` gains `lessons` and `kind`** (verb, noun, adjective, adverb,
+  phrase, strategy, pattern, preposition, grammar) so lesson pages group by word
+  class, not by tool.
+- **Verbs** add a full `praeteritum` table and `perfekt: { auxiliary, partizip }`;
+  the six Perfekt forms are derived, not stored.
+- **New tools:** `prepositions/` (`/praepositionen`, case + use) and `grammar/`
+  (`/grammatik`, topics built from `table` / `rule` / `examples` blocks).
+- **New pages:** `/lektionen` and `/lektionen/:id`; search recognises lesson
+  queries; practice accepts a lesson filter.
+- **Vocab check:** `scripts/vocab-check.ts` over committed transcriptions in
+  `content/lws/<LessonId>.txt`.
 
 ## 4. Navigation & Page Model
 
@@ -200,6 +226,13 @@ manage Azure resources (e.g. if Azure Static Web Apps is later chosen as host).
 | 2026-07-06 | **Practice mode** (`/uben`) drills the `catalog` directly; pure React-free `session.ts` (deck build/shuffle with an **injected RNG**, direction, mode, advance, tally) and `quiz.ts` (multiple-choice option builder) are split from the view and from persistence. Two modes: self-rated **flashcards** and an objectively-graded **multiple-choice quiz**. Progress is a typed, **version-1-enveloped** `localStorage` wrapper (`src/lib/progress.ts`) keyed by catalog `slug`, guarded for missing storage. Richer drills and the spaced-repetition loop are deferred to [plans/PRACTICE_V2.md](../plans/PRACTICE_V2.md). | SRP/DIP: session/quiz drill `CatalogEntry`, so any tool contributing entries becomes drillable with no edits. Injected RNG keeps shuffle/choice tests deterministic while production stays random. Versioning the envelope from day one lets a future schema change migrate rather than orphan progress; slug (not display term) is the stable key. The quiz's objective grading gives immediate, honest feedback that pure self-rating cannot. |
 | 2026-07-06 | **Targeted drills (Feature F): two new *modes* inside Practice (`/uben`), not new routes.** A `mode` selector adds **Artikel** (guess der/die/das) and **Konjugation** (type the form for a pronoun) beside the unchanged flashcard/quiz flows. Pure checkers in `src/tools/practice/drills.ts` — `checkArticle(noun, guess)` and `checkConjugation(verb, pronoun, input)` (case/whitespace-normalised, returns `{ correct, expected }`). The article drill draws its deck from the noun catalog and resolves the full `Noun` (for its gender) by slug; the **conjugation drill reads `verbData` directly** rather than the catalog. Feedback reuses existing colours: gender `der/die/das` from GermanNouns, and the RED/BLUE stem-change highlight (`getHighlightParts`) from GermanVerbs. Drills reuse the same `Session`/round/summary shell and versioned `localStorage` progress, keyed by catalog slug. | **Data-path (was TBD):** verbs are the only conjugating tool, so putting a `forms` table on every `CatalogEntry` would bloat the shared type to serve one consumer — a YAGNI violation. A direct `verbData` import is the honest seam; the drill deck is still catalog-driven (so progress stays slug-keyed and the round shell is untouched), and only the per-card conjugation table is read from source. The two drills are *modes*, not routes, so they compose the existing deck/tally/persistence machinery instead of duplicating it (composition + DRY-of-behaviour); the pure checkers earn tests because the fact under test is the stored gender/form, not the comparison. Flashcards/quiz are behaviourally unchanged (the drill modes only add branches). |
 | 2026-07-06 | **Cross-linking (Feature D): spike-gated decision → DISCIPLINED AUTO-SCAN, not a hand-maintained link table.** `src/lib/catalog/resolver.ts` exposes pure `findEntryBySlug` / `findNoun` (exact, **never** case-folded on the German side) and `linksForText(text)`. `linksForText` scans an example sentence and links **only verb and noun** headwords, gated by part-of-speech-aware casing: a **verb** matches only a **lowercase** surface token carrying a real inflectional ending (stem + `e/st/t/en/…`, empty ending excluded); a **noun** matches only a **capitalised** token by exact fold or a tight plural fold. `<CrossLinks entries={…} />` renders the results as `#/route?sel=slug` chips; card views strip their own item via `linksForCard`. | **Spike over the real 411-sentence corpus:** light-normalisation auto-scan reached **high recall** on inflection (`lernst→lernen`, `kommt→kommen`, `arbeitet→arbeiten`), disproving the "finds almost nothing" fear — but a naive scan also emitted two error classes: **function-word chip-spam** (119/438 candidates were phrases-tool links on `in`/`und`/`sehr`/`nicht`) and, critically, **cross-POS homograph links** — the noun `Essen`→verb `essen`, `Antwort`→`antworten`, `Frage`→`fragen`, `heiß`→`heißen` — the exact identity collision the catalog forbids case-folding to prevent. Restricting targets to verbs+nouns kills the spam; the lowercase-verb POS gate eliminates every capitalised-noun→verb collision; requiring a non-empty inflectional ending drops `heiß`→`heißen`. Result: zero authoring cost, high precision, correct-by-construction chips (unknown slugs render nothing). Residual, accepted trade-offs: rare lowercase homographs and a few tight-plural overreaches (`Reise`→`Reis`) still slip through, and legitimately sentence-initial (capitalised) verbs are not linked — acceptable for a personal A1 app versus the complexity of full morphology. The explicit-`links?: string[]` fallback in the plan was therefore **not** needed. |
+
+| 2026-09-27 | **Lesson-aware content: store by word type, tag by lesson.** Each item carries `lessons: LessonId[]`; a lesson registry describes lessons; lesson pages query the catalog by tag. Level-scoped ids (`A1.2-L08`). Existing content tagged `A1.1` for now. | A word recurs across lessons (e.g. *helfen*); one record with many tags avoids copies. Level-scoped ids survive book series that restart numbering per volume. A string-literal `LessonId` union makes a mistyped tag a compile error. |
+| 2026-09-27 | **Swiss spelling (`ss`, no `ß`) in all content.** | Matches the course book. Safe for stored progress: `slugify` already folds `ß→ss`, so slugs (progress keys) do not change. Search folds both ways. |
+| 2026-09-27 | **Verb tenses: Präteritum stored in full; Perfekt stored as auxiliary + Partizip II, full forms derived** from the `haben`/`sein` Präsens table. | Irregular Präteritum stems can't be derived reliably; Perfekt is compositional, so deriving it keeps the auxiliary conjugation in one place (DRY of knowledge). |
+| 2026-09-27 | **Prepositions and grammar become their own tools.** Preposition `Case` includes `'ohne'` (e.g. *als*). Grammar topics use a 3-block model (`table`, `rule`, `examples`); a 4th block type only when a real page needs it. The `praep` category leaves Phrases with a progress migration. | Prepositions are drillable words with case; grammar summaries are tables, not word lists. One small block renderer serves every topic without per-topic components (YAGNI). |
+| 2026-09-27 | **Lernwortschatz check is report-first:** transcriptions committed under `content/lws/`; a pure `checkVocab` sorts words into *tagged / untagged / missing*; nothing is added before Miguel approves. | Keeps Miguel in control; the committed word list doubles as the lesson's coverage baseline. |
+| 2026-09-27 | **A clickable HTML mock is the design and interaction target** for the lesson work (`plans/LESSONS_PLAN_A1_2.mock.html`). UI decisions U1–U7 agreed from its review (separate Präpositionen tool, tense switch, group by word type, single-lesson practice filter, no in-app vocab list, short English rules, lesson hit first in search). | Lets layout and behaviour be reviewed before code. Each plan phase names the mock screens it must match. |
 
 ## 11. Open Items
 

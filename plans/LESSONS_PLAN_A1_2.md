@@ -313,7 +313,7 @@ Order is chosen so Miguel can start sending lesson photos after **Phase 3**.
 
 | Phase | Scope | Done when (incl. mock screen to match) |
 |---|---|---|
-| **0 — Docs** | Record D1–D4 and this model in `docs/SOLUTION_DESIGN.md` (decisions log) and `docs/PRD.md` (R1–R6). Link this plan from `CLAUDE.md`. | Docs merged; mock linked from the Solution Design. |
+| **0 — Docs** ✅ | Record D1–D4 and this model in `docs/SOLUTION_DESIGN.md` (decisions log) and `docs/PRD.md` (R1–R6). Link this plan from `CLAUDE.md`. | Docs merged; mock linked from the Solution Design. |
 | **1 — Lesson registry + tags** | `src/content/lessons.ts` with A1.1 bucket + L8–L14 filled from the TOC photos (Appendix A). `lessons?` on every item; backfill all existing items to `['A1.1']`; flip to required. `CatalogEntry.lessons` + `kind` in every `catalog.ts`. | Typecheck forces every item to carry a tag; catalog test asserts every entry has ≥1 lesson and a valid kind. |
 | **2 — Swiss spelling** | Replace `ß → ss` in all content. Test: no `ß` in any content string. Search folds both ways. | Progress keys unchanged (slug test proves it). |
 | **3 — Vocab check** | `checkVocab` + `scripts/vocab-check.ts` + `npm run vocab:check`. `content/lws/` folder. | Tests cover article/plural stripping, ß/ss, case, "tag missing" vs "missing". Report shape matches mock: *Wortschatz-Check*. |

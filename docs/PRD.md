@@ -2,7 +2,7 @@
 
 > **Status:** Canonical reference. Living document.
 > **Owner:** Miguel Segurado
-> **Last updated:** 2026-06-21
+> **Last updated:** 2026-09-27
 
 ## 1. Overview
 
@@ -69,6 +69,24 @@ version control, and a path to running it like a native app on iPhone/iPad.
 | FR6 | Add new tools/pages without restructuring the app. | Must |
 | FR7 | Optional offline availability of already-loaded tools. | Should |
 | FR8 | Per-tool state persists locally where useful (e.g. progress) via browser storage. | Could |
+
+### 6.2 Lesson-aware content (A1.2 and beyond)
+
+The app follows Miguel's course book (Swiss edition; A1.2 = Lektion 8–14) and is
+fed lesson by lesson from photos. Build plan:
+[plans/LESSONS_PLAN_A1_2.md](../plans/LESSONS_PLAN_A1_2.md). Design &
+interaction target: [plans/LESSONS_PLAN_A1_2.mock.html](../plans/LESSONS_PLAN_A1_2.mock.html).
+
+| ID | Requirement | Priority |
+| -- | ----------- | -------- |
+| FR9 | Search a lesson ("Lektion 8", "L8") and see everything from it: verbs, nouns, adjectives, adverbs, prepositions, grammar, Redemittel/strategies — on one lesson page. | Must |
+| FR10 | Every verb shows **Präsens, Präteritum and Perfekt**. | Must |
+| FR11 | Prepositions carry their **case** (Dativ / Akkusativ / Wechsel / none) and **use** (temporal / lokal / modal). | Must |
+| FR12 | Each lesson's grammar summary ("Grammatik und Kommunikation") lives in the app. | Must |
+| FR13 | Repeatable **Lernwortschatz check**: from a photo, report what the app has, what is missing, and what lacks the lesson tag; add only after Miguel approves. | Must |
+| FR14 | New lessons and levels are added as data (registry entry + tags) without editing unrelated code. | Must |
+| FR15 | Practice can be limited to one lesson. | Should |
+| FR16 | Content uses **Swiss spelling** (`ss`, no `ß`), matching the book. | Must |
 
 ### 6.1 The four tools (to be confirmed when files are collected)
 
