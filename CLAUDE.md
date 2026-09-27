@@ -92,7 +92,9 @@ npm run typecheck  # tsc --noEmit
   deep-select from `?sel=` with `useDeepSelect` (lazy `useState` seed).
 - **Add/edit content** (more verbs, nouns, phrases…): edit the relevant
   `src/tools/<tool>/data.ts`; the data is typed, so `npm run typecheck` catches
-  shape mistakes. Every item requires a `lessons: LessonId[]` tag (existing
+  shape mistakes. A new verb needs all three tenses: `conjugations` (Präsens),
+  `praeteritum` (6 full forms) and `perfekt` (`{ auxiliary, partizip }` — the six
+  full Perfekt forms are derived by `verbs/tenses.ts`, never typed in). Every item requires a `lessons: LessonId[]` tag (existing
   content is tagged `['A1.1']`; see
   [`plans/LESSONS_PLAN_A1_2.md`](./plans/LESSONS_PLAN_A1_2.md)). Content is
   **Swiss-spelled — no `ß`, use `ss`** (D1); a content guard test enforces this,

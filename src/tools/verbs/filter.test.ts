@@ -8,6 +8,8 @@ const make = (infinitive: string, english: string): Verb => ({
   type: 'regular',
   note: '',
   conjugations: [],
+  praeteritum: [],
+  perfekt: { auxiliary: 'haben', partizip: '' },
   example: '',
   translation: '',
   lessons: ['A1.1'],

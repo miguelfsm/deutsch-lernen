@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "../../components/Header";
 import SpeakButton from "../../components/SpeakButton";
 import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
 import { filterVerbs } from "./filter.js";
+import { perfektForms, type Tense } from "./tenses.js";
 import { font, color } from "../../lib/theme";
 import { useDeepSelect } from "../../lib/useDeepSelect";
 import { verbSlug } from "../../lib/catalog/slug";
@@ -20,6 +22,48 @@ const TYPE_META: Record<VerbType, { bg: string; fg: string; dot: string; label: 
   modal:     { bg: "#ede9fe", fg: "#5b21b6", dot: "#8b5cf6", label: "Modal"     },
 };
 
+// Segmented tense switch above the card (mock: "Verben · 3 Zeiten"). Präsens
+// stays the default so `?sel=` links unaffected by this phase keep working.
+const TENSES: { id: Tense; label: string }[] = [
+  { id: "praesens", label: "Präsens" },
+  { id: "praeteritum", label: "Präteritum" },
+  { id: "perfekt", label: "Perfekt" },
+];
+const VALID_TENSES = new Set<string>(TENSES.map((t) => t.id));
+
+// Short display label for a lesson tag chip: "A1.1" stays as-is, "A1.2-L08"
+// shortens to "L8" (matches the mock's `tag()` helper).
+function lessonLabel(id: string): string {
+  const m = id.match(/-L0*(\d+)$/);
+  return m ? `L${m[1]}` : id;
+}
+
+// Shared cell styles for the Präsens/Präteritum/Perfekt tables.
+const TH_STYLE: CSSProperties = {
+  padding: "8px 22px",
+  textAlign: "left",
+  fontSize: 10,
+  color: "#a8a29e",
+  fontWeight: 700,
+  letterSpacing: 2,
+  textTransform: "uppercase",
+  fontFamily: "'Arial', sans-serif",
+};
+const TD_PRONOUN_STYLE: CSSProperties = {
+  padding: "13px 22px",
+  fontSize: 14,
+  color: "#9ca3af",
+  fontStyle: "italic",
+  fontFamily: "'Arial', sans-serif",
+};
+const TD_FORM_STYLE: CSSProperties = {
+  padding: "13px 22px",
+  fontSize: 18,
+  color: "#1c1917",
+  fontWeight: 600,
+  letterSpacing: "-0.3px",
+};
+
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
 export default function GermanVerbs() {
   // Deep-select seeds the initial verb from `?sel=`, falling back to the default.
@@ -27,6 +71,14 @@ export default function GermanVerbs() {
   const [selected, setSelected] = useState<Verb>(() => deepSelected ?? verbData[0]);
   const [query, setQuery] = useState("");
   const meta = TYPE_META[selected.type];
+
+  // `&tense=praeteritum|perfekt` next to `?sel=`, default Präsens. Same lazy
+  // seed pattern as useDeepSelect — read once, then plain useState for clicks.
+  const [searchParams] = useSearchParams();
+  const [tense, setTense] = useState<Tense>(() => {
+    const t = searchParams.get("tense");
+    return t && VALID_TENSES.has(t) ? (t as Tense) : "praesens";
+  });
 
   const visibleVerbs = filterVerbs(verbData, query);
 
@@ -41,7 +93,7 @@ export default function GermanVerbs() {
     }}>
 
       {/* ── Header ── */}
-      <Header eyebrow="Präsens · Present Tense" title="German Verb Conjugator" />
+      <Header eyebrow="Präsens · Präteritum · Perfekt" title="German Verb Conjugator" />
 
       {/* ── Legend (above pills so colours are meaningful at a glance) ── */}
       <div style={{
@@ -157,6 +209,47 @@ export default function GermanVerbs() {
         )}
       </div>
 
+      {/* ── Tense switch (Präsens · Präteritum · Perfekt) ── */}
+      <div
+        role="group"
+        aria-label="Zeitform"
+        style={{
+          display: "flex",
+          gap: 2,
+          justifyContent: "center",
+          background: "#f0ede8",
+          borderRadius: 99,
+          padding: 4,
+          width: "fit-content",
+          margin: "0 auto 14px",
+          fontFamily: font.sans,
+        }}
+      >
+        {TENSES.map((t) => {
+          const active = t.id === tense;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTense(t.id)}
+              aria-pressed={active}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 99,
+                border: "none",
+                background: active ? "#1c1917" : "transparent",
+                color: active ? "#faf9f7" : "#57534e",
+                fontSize: 13,
+                fontWeight: active ? 700 : 400,
+                cursor: "pointer",
+                transition: "all 0.12s",
+              }}
+            >
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* ── Card ── */}
       <div style={{
         background: "#ffffff",
@@ -202,109 +295,158 @@ export default function GermanVerbs() {
               {selected.english}
             </div>
           </div>
-          <span style={{
-            padding: "4px 12px",
-            borderRadius: 99,
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: 1,
-            textTransform: "uppercase",
-            background: meta.bg,
-            color: meta.fg,
-            whiteSpace: "nowrap",
-            marginTop: 4,
-            fontFamily: "'Arial', sans-serif",
-          }}>
-            {meta.label}
-          </span>
-        </div>
-
-        {/* Stem reference row */}
-        <div style={{
-          padding: "8px 22px",
-          background: "#f9f7f4",
-          borderBottom: "1px solid #f0ede8",
-          fontSize: 12,
-          color: "#9ca3af",
-          fontFamily: "'Arial', sans-serif",
-          letterSpacing: 0.3,
-        }}>
-          Stem: <strong style={{ color: "#78716c" }}>{getStem(selected.infinitive)}-</strong>
-        </div>
-
-        {/* Conjugation rows */}
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ background: "#f9f7f4" }}>
-              <th style={{
-                padding: "8px 22px",
-                textAlign: "left",
-                fontSize: 10,
-                color: "#a8a29e",
-                fontWeight: 700,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                fontFamily: "'Arial', sans-serif",
-                width: "38%",
-              }}>Pronoun</th>
-              <th style={{
-                padding: "8px 22px",
-                textAlign: "left",
-                fontSize: 10,
-                color: "#a8a29e",
-                fontWeight: 700,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                fontFamily: "'Arial', sans-serif",
-              }}>Conjugated Form</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selected.conjugations.map((c, i) => {
-              const { unchanged, changed } = getHighlightParts(selected.infinitive, c.form, selected.customStem);
-              const hlColor = c.stemChange ? RED : BLUE;
-              const isEven = i % 2 === 0;
-              return (
-                <tr
-                  key={c.pronoun}
-                  style={{
-                    borderTop: "1px solid #f0ede8",
-                    background: isEven ? "#ffffff" : "#fdfcfb",
-                  }}
-                >
-                  <td style={{
-                    padding: "13px 22px",
-                    fontSize: 14,
-                    color: "#9ca3af",
-                    fontStyle: "italic",
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
+            <span style={{
+              padding: "4px 12px",
+              borderRadius: 99,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+              background: meta.bg,
+              color: meta.fg,
+              whiteSpace: "nowrap",
+              fontFamily: "'Arial', sans-serif",
+            }}>
+              {meta.label}
+            </span>
+            {selected.lessons.length > 0 && (
+              <div style={{ display: "flex", gap: 4, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                {selected.lessons.map((l) => (
+                  <span key={l} style={{
+                    padding: "2px 8px",
+                    borderRadius: 99,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    background: "#e7e5e0",
+                    color: "#57534e",
                     fontFamily: "'Arial', sans-serif",
                   }}>
-                    {c.pronoun}
-                  </td>
-                  <td style={{
-                    padding: "13px 22px",
-                    fontSize: 20,
-                    color: "#1c1917",
-                    fontWeight: 600,
-                    letterSpacing: "-0.3px",
-                  }}>
-                    <span>{unchanged}</span>
-                    {changed && (
-                      <span style={{
-                        color: hlColor,
-                        fontWeight: 800,
-                        borderBottom: `2px solid ${hlColor}33`,
-                        paddingBottom: 1,
-                      }}>
-                        {changed}
-                      </span>
-                    )}
-                  </td>
+                    {lessonLabel(l)}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {tense === "perfekt" ? (
+          <>
+            {/* Perfekt caption — the six forms are DERIVED, never typed in twice. */}
+            <div style={{
+              padding: "10px 22px",
+              background: "#f9f7f4",
+              borderBottom: "1px solid #f0ede8",
+              fontSize: 12,
+              color: "#9ca3af",
+              fontFamily: "'Arial', sans-serif",
+              letterSpacing: 0.3,
+            }}>
+              Perfekt = <strong style={{ color: "#78716c" }}>{selected.perfekt.auxiliary}</strong> (Präsens) + Partizip II{" "}
+              <strong style={{ color: "#78716c" }}>{selected.perfekt.partizip}</strong>
+            </div>
+
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ background: "#f9f7f4" }}>
+                  <th style={TH_STYLE}>Pronoun</th>
+                  <th style={TH_STYLE}>{selected.perfekt.auxiliary}</th>
+                  <th style={TH_STYLE}>Partizip II</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {perfektForms(selected).map((f, i) => {
+                  // Partizip II always ends -t (weak/mixed, regular pattern) or
+                  // -en (strong, irregular stem) — a small, reliable split that
+                  // reuses the same red/blue legend without needing a bespoke
+                  // per-character diff against the infinitive.
+                  const p2Color = selected.perfekt.partizip.endsWith("en") ? RED : BLUE;
+                  return (
+                    <tr key={f.pronoun} style={{
+                      borderTop: "1px solid #f0ede8",
+                      background: i % 2 === 0 ? "#ffffff" : "#fdfcfb",
+                    }}>
+                      <td style={TD_PRONOUN_STYLE}>{f.pronoun}</td>
+                      <td style={TD_FORM_STYLE}>{f.auxForm}</td>
+                      <td style={TD_FORM_STYLE}>
+                        <span style={{ color: p2Color, fontWeight: 800 }}>{selected.perfekt.partizip}</span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
+        ) : (
+          <>
+            {/* Stem reference row */}
+            <div style={{
+              padding: "8px 22px",
+              background: "#f9f7f4",
+              borderBottom: "1px solid #f0ede8",
+              fontSize: 12,
+              color: "#9ca3af",
+              fontFamily: "'Arial', sans-serif",
+              letterSpacing: 0.3,
+            }}>
+              Stem: <strong style={{ color: "#78716c" }}>{getStem(selected.infinitive)}-</strong>
+              {selected.separable && (
+                <>
+                  {" "}· separable prefix <strong style={{ color: "#78716c" }}>{selected.separable}-</strong>
+                </>
+              )}
+            </div>
+
+            {/* Conjugation rows */}
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ background: "#f9f7f4" }}>
+                  <th style={{ ...TH_STYLE, width: "38%" }}>Pronoun</th>
+                  <th style={TH_STYLE}>Conjugated Form</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(tense === "praeteritum" ? selected.praeteritum : selected.conjugations).map((c, i) => {
+                  const { unchanged, changed } = getHighlightParts(selected.infinitive, c.form, selected.customStem);
+                  const hlColor = c.stemChange ? RED : BLUE;
+                  const isEven = i % 2 === 0;
+                  return (
+                    <tr
+                      key={c.pronoun}
+                      style={{
+                        borderTop: "1px solid #f0ede8",
+                        background: isEven ? "#ffffff" : "#fdfcfb",
+                      }}
+                    >
+                      <td style={TD_PRONOUN_STYLE}>
+                        {c.pronoun}
+                      </td>
+                      <td style={{
+                        padding: "13px 22px",
+                        fontSize: 20,
+                        color: "#1c1917",
+                        fontWeight: 600,
+                        letterSpacing: "-0.3px",
+                      }}>
+                        <span>{unchanged}</span>
+                        {changed && (
+                          <span style={{
+                            color: hlColor,
+                            fontWeight: 800,
+                            borderBottom: `2px solid ${hlColor}33`,
+                            paddingBottom: 1,
+                          }}>
+                            {changed}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
+        )}
 
         {/* Example sentence (A1) — same visual language as the Adjectives/
             Phrases cards; incidental style duplication is fine per Feature B. */}
