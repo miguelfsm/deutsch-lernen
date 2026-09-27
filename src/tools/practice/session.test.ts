@@ -19,7 +19,7 @@ const entry = (
   slug: string,
   term: string,
   gloss: string,
-): CatalogEntry => ({ id: `${toolId}:${slug}`, toolId, route: `/${toolId}`, slug, term, gloss })
+): CatalogEntry => ({ id: `${toolId}:${slug}`, toolId, route: `/${toolId}`, slug, term, gloss, kind: 'verb', lessons: ['A1.1'] })
 
 const fixture: CatalogEntry[] = [
   entry('verben', 'schlafen', 'schlafen', 'to sleep'),

@@ -17,6 +17,7 @@ const kind: Noun = {
   example: 'Das Kind spielt.',
   translation: 'The child is playing.',
   note: '',
+  lessons: ['A1.1'],
 }
 
 // A verb with a genuine stem change (schlafen: a → ä in du/er), so normalisation
@@ -28,6 +29,7 @@ const schlafen: Verb = {
   note: '',
   example: 'Ich schlafe gut.',
   translation: 'I sleep well.',
+  lessons: ['A1.1'],
   conjugations: [
     { pronoun: 'ich', form: 'schlafe', stemChange: false },
     { pronoun: 'du', form: 'schläfst', stemChange: true },

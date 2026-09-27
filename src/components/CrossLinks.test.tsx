@@ -16,9 +16,11 @@ function renderChips(entries: CatalogEntry[]) {
 
 const verb: CatalogEntry = {
   id: 'verben:lernen', toolId: 'verben', route: '/verben', slug: 'lernen', term: 'lernen', gloss: 'to learn',
+  kind: 'verb', lessons: ['A1.1'],
 }
 const noun: CatalogEntry = {
   id: 'nomen:familie/bild', toolId: 'nomen', route: '/nomen', slug: 'familie/bild', term: 'Bild', gloss: 'picture', category: 'Familie',
+  kind: 'noun', lessons: ['A1.1'],
 }
 
 describe('CrossLinks', () => {

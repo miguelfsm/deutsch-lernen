@@ -1,6 +1,8 @@
 // ─── DATA ────────────────────────────────────────────────────────────────────
 // stemChange: true  → vowel/stem changes (red)
 // stemChange: false → regular ending added (blue)
+import type { LessonId } from '../../content/lessons'
+
 export interface Conjugation {
   pronoun: string
   form: string
@@ -20,11 +22,15 @@ export interface Verb {
   // backfill is complete, so the compiler now forces every verb to carry both.
   example: string
   translation: string
+  // Lessons this verb belongs to. Every existing verb predates lesson tagging,
+  // so all are backfilled to the A1.1 bucket (decision D3).
+  lessons: LessonId[]
 }
 
 export const verbData: Verb[] = [
   {
     infinitive: "sein", english: "to be", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich bin sehr müde.", translation: "I am very tired.",
     note: "Fully suppletive — every form is unpredictable. Memorise each one individually.",
     conjugations: [
@@ -38,6 +44,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "haben", english: "to have", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich habe einen Bruder.", translation: "I have a brother.",
     note: "The -b- drops in du/er forms: habe → hast / hat.",
     conjugations: [
@@ -51,6 +58,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "werden", english: "to become / will", type: "irregular",
+    lessons: ["A1.1"],
     example: "Es wird kalt.", translation: "It is getting cold.",
     note: "Vowel change e → i in du/er forms. Also the future & passive auxiliary.",
     conjugations: [
@@ -64,6 +72,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "können", english: "can / to be able to", type: "modal",
+    lessons: ["A1.1"],
     example: "Ich kann gut kochen.", translation: "I can cook well.",
     note: "Modal: no ending for ich/er. Vowel change ö → a in singular forms.",
     conjugations: [
@@ -77,6 +86,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "müssen", english: "must / to have to", type: "modal",
+    lessons: ["A1.1"],
     example: "Ich muss jetzt gehen.", translation: "I have to go now.",
     note: "Modal: no ending for ich/er. Umlaut ü drops in singular forms.",
     conjugations: [
@@ -90,6 +100,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sagen", english: "to say", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich sage die Wahrheit.", translation: "I tell the truth.",
     note: "Fully regular. Pattern: stem + -e / -st / -t / -en / -t / -en.",
     conjugations: [
@@ -103,6 +114,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "machen", english: "to make / to do", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich mache meine Hausaufgaben.", translation: "I do my homework.",
     note: "Fully regular. A perfect model verb for learning the standard pattern.",
     conjugations: [
@@ -116,6 +128,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "gehen", english: "to go", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich gehe nach Hause.", translation: "I am going home.",
     note: "Regular in Präsens. In Perfekt it takes 'sein': ich bin gegangen.",
     conjugations: [
@@ -129,6 +142,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "kommen", english: "to come", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich komme aus Portugal.", translation: "I come from Portugal.",
     note: "Regular in Präsens. Double -mm- stays in all forms.",
     conjugations: [
@@ -142,6 +156,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sollen", english: "should / to be supposed to", type: "modal",
+    lessons: ["A1.1"],
     example: "Du sollst mehr Wasser trinken.", translation: "You should drink more water.",
     note: "The most regular modal — no vowel change! No ending for ich/er.",
     conjugations: [
@@ -155,6 +170,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "wollen", english: "to want", type: "modal",
+    lessons: ["A1.1"],
     example: "Ich will einen Kaffee.", translation: "I want a coffee.",
     note: "Modal: no ending for ich/er. Vowel change o → i in singular forms.",
     conjugations: [
@@ -168,6 +184,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "wissen", english: "to know (a fact)", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich weiß die Antwort nicht.", translation: "I don't know the answer.",
     note: "Behaves like a modal in singular: wiss → weiß, no ending for ich/er.",
     conjugations: [
@@ -181,6 +198,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sehen", english: "to see", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich sehe einen Vogel.", translation: "I see a bird.",
     note: "Vowel change e → ie in du/er forms (a common pattern: lesen, geben, nehmen…).",
     conjugations: [
@@ -194,6 +212,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "lassen", english: "to let / to leave", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich lasse die Tür offen.", translation: "I am leaving the door open.",
     note: "Vowel change a → ä (umlaut) in du/er forms: lasse → lässt.",
     conjugations: [
@@ -207,6 +226,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "stehen", english: "to stand", type: "regular",
+    lessons: ["A1.1"],
     example: "Der Stuhl steht in der Küche.", translation: "The chair is in the kitchen.",
     note: "Regular in Präsens.",
     conjugations: [
@@ -220,6 +240,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "finden", english: "to find / to think", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich finde den Film gut.", translation: "I think the film is good.",
     note: "Stem ends in -d: an -e- is inserted before -st and -t → findest, findet.",
     conjugations: [
@@ -233,6 +254,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "bleiben", english: "to stay / to remain", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich bleibe heute zu Hause.", translation: "I am staying home today.",
     note: "Regular in Präsens. Perfekt uses 'sein': ich bin geblieben.",
     conjugations: [
@@ -246,6 +268,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "liegen", english: "to lie / to be located", type: "regular",
+    lessons: ["A1.1"],
     example: "Das Buch liegt auf dem Tisch.", translation: "The book is lying on the table.",
     note: "Regular in Präsens.",
     conjugations: [
@@ -259,6 +282,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "heißen", english: "to be called", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich heiße Miguel.", translation: "My name is Miguel.",
     note: "Stem ends in -ß: du heißt (not heißst — -st contracts to -t after ß/s/z).",
     conjugations: [
@@ -272,6 +296,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "denken", english: "to think", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich denke oft an dich.", translation: "I often think of you.",
     note: "Regular in Präsens. Note: Perfekt is irregular → hat gedacht.",
     conjugations: [
@@ -285,6 +310,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "brauchen", english: "to need", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich brauche deine Hilfe.", translation: "I need your help.",
     note: "Fully regular. Very common in everyday speech: Ich brauche Hilfe — I need help.",
     conjugations: [
@@ -298,6 +324,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "schreiben", english: "to write", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich schreibe eine E-Mail.", translation: "I am writing an email.",
     note: "Regular in Präsens. Strong verb — vowel changes only in Präteritum/Perfekt (schrieb, geschrieben).",
     conjugations: [
@@ -311,6 +338,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "hören", english: "to hear / to listen", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich höre gern Musik.", translation: "I like listening to music.",
     note: "Fully regular. Also used in hör mal! (hey, listen!) and Ich höre Musik.",
     conjugations: [
@@ -324,6 +352,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "sprechen", english: "to speak / to talk", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich spreche ein bisschen Deutsch.", translation: "I speak a little German.",
     note: "Vowel change e → i in du/er forms — same pattern as sehen (e→ie), lesen, geben.",
     conjugations: [
@@ -337,6 +366,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "möchten", english: "would like to", type: "modal",
+    lessons: ["A1.1"],
     example: "Ich möchte einen Tee.", translation: "I would like a tea.",
     note: "Konjunktiv II of mögen used as a polite wish. Unlike other modals, ich/er take an -e ending: ich möchte, er möchte.",
     conjugations: [
@@ -350,6 +380,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "trinken", english: "to drink", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich trinke Wasser.", translation: "I am drinking water.",
     note: "Regular in Präsens. Strong verb — vowel changes only in past tenses (trank, getrunken).",
     conjugations: [
@@ -363,6 +394,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "suchen", english: "to search / to look for", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich suche meinen Schlüssel.", translation: "I am looking for my key.",
     note: "Fully regular. Often paired with nach: Ich suche nach einer Wohnung.",
     conjugations: [
@@ -376,6 +408,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "schließen", english: "to close / to shut", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich schließe das Fenster.", translation: "I am closing the window.",
     note: "Stem ends in -ß: du schließt (not schließst — same contraction rule as heißen).",
     conjugations: [
@@ -391,6 +424,7 @@ export const verbData: Verb[] = [
   // ── About me / origin ──────────────────────────────────────────────────────
   {
     infinitive: "leben", english: "to live (be alive)", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich lebe in Zürich.", translation: "I live in Zürich.",
     note: "Fully regular. Use for life in general: Ich lebe in Zürich. Contrast with wohnen (to reside at an address).",
     conjugations: [
@@ -404,6 +438,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "wohnen", english: "to live / to reside", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich wohne in der Stadt.", translation: "I live in the city.",
     note: "Fully regular. Use for a specific address or city: Ich wohne in Zürich, Mythenquai.",
     conjugations: [
@@ -417,6 +452,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "arbeiten", english: "to work", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich arbeite im Büro.", translation: "I work in the office.",
     note: "Stem ends in -t: an -e- is inserted before -st and -t → arbeitest, arbeitet (same rule as finden).",
     conjugations: [
@@ -430,6 +466,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "studieren", english: "to study (at university)", type: "regular",
+    lessons: ["A1.1"],
     example: "Sie studiert Medizin.", translation: "She studies medicine.",
     note: "Regular. Verbs ending in -ieren never add a ge- prefix in Perfekt: hat studiert.",
     conjugations: [
@@ -443,6 +480,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "stammen", english: "to originate / to come from", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich stamme aus Portugal.", translation: "I come from Portugal.",
     note: "Always used with aus: Ich stamme aus Portugal. More formal than kommen aus.",
     conjugations: [
@@ -458,6 +496,7 @@ export const verbData: Verb[] = [
   // ── Supermarket / shopping ─────────────────────────────────────────────────
   {
     infinitive: "kaufen", english: "to buy", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich kaufe Brot.", translation: "I am buying bread.",
     note: "Fully regular. Opposite: verkaufen (to sell). Ich kaufe ein = I'm shopping (einkaufen).",
     conjugations: [
@@ -471,6 +510,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "bezahlen", english: "to pay", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich bezahle die Rechnung.", translation: "I am paying the bill.",
     note: "Regular. Both bezahlen and zahlen mean to pay; bezahlen is more common at a till.",
     conjugations: [
@@ -484,6 +524,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "kosten", english: "to cost", type: "regular",
+    lessons: ["A1.1"],
     example: "Was kostet das?", translation: "How much does that cost?",
     note: "Stem ends in -t: e-insertion in du/er forms → kostest, kostet. Was kostet das?",
     conjugations: [
@@ -497,6 +538,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "nehmen", english: "to take / to get", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich nehme den Bus.", translation: "I take the bus.",
     note: "Strong vowel change e → i in du/er, and -h- drops: nehme → nimmst / nimmt.",
     conjugations: [
@@ -510,6 +552,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "wählen", english: "to choose / to select", type: "regular",
+    lessons: ["A1.1"],
     example: "Du wählst das Restaurant.", translation: "You choose the restaurant.",
     note: "Fully regular. Also means to vote: Ich wähle die SPD.",
     conjugations: [
@@ -525,6 +568,7 @@ export const verbData: Verb[] = [
   // ── Missing from top-30 most-used ─────────────────────────────────────────
   {
     infinitive: "dürfen", english: "may / to be allowed to", type: "modal",
+    lessons: ["A1.1"],
     example: "Ich darf hier parken.", translation: "I am allowed to park here.",
     note: "Modal: no ending for ich/er. Vowel change ü → a in singular. Ich darf nicht = I'm not allowed to.",
     conjugations: [
@@ -538,6 +582,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "mögen", english: "to like", type: "modal",
+    lessons: ["A1.1"],
     example: "Ich mag Käse.", translation: "I like cheese.",
     note: "Vowel change ö → a in singular, no ending for ich/er. Different from möchten (would like): Ich mag Käse vs. Ich möchte Käse kaufen.",
     conjugations: [
@@ -551,6 +596,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "glauben", english: "to believe / to think", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich glaube dir.", translation: "I believe you.",
     note: "Fully regular. Used for beliefs and opinions: Ich glaube, dass… (I think that…). Very common in spoken German.",
     conjugations: [
@@ -564,6 +610,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "halten", english: "to hold / to stop", type: "irregular",
+    lessons: ["A1.1"],
     example: "Der Bus hält hier.", translation: "The bus stops here.",
     note: "Vowel change a → ä in du/er forms. Same umlaut pattern as lassen (a→ä).",
     conjugations: [
@@ -577,6 +624,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "bringen", english: "to bring", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich bringe dir das Buch.", translation: "I am bringing you the book.",
     note: "Regular in Präsens. A mixed verb — irregular only in past tenses: brachte, hat gebracht.",
     conjugations: [
@@ -590,6 +638,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "zeigen", english: "to show", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich zeige dir mein Haus.", translation: "I am showing you my house.",
     note: "Fully regular. Very common: Kannst du mir zeigen, wo…? (Can you show me where…?)",
     conjugations: [
@@ -605,6 +654,7 @@ export const verbData: Verb[] = [
   // ── Classroom / exercise verbs ─────────────────────────────────────────────
   {
     infinitive: "verbinden", english: "to connect / to link", type: "regular",
+    lessons: ["A1.1"],
     example: "Die Brücke verbindet zwei Städte.", translation: "The bridge connects two cities.",
     note: "Stem ends in -d → e-insertion: verbindest, verbindet. Common in exercises: Verbinden Sie die Sätze! (Connect the sentences!)",
     conjugations: [
@@ -618,6 +668,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "ergänzen", english: "to complete / to fill in", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich ergänze den Satz.", translation: "I complete the sentence.",
     note: "Stem ends in -z: du ergänzt (not ergänzst — same contraction rule as heißen). Used constantly in coursebooks: Ergänzen Sie die Lücken!",
     conjugations: [
@@ -631,6 +682,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "antworten", english: "to answer / to reply", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich antworte dir sofort.", translation: "I answer you right away.",
     note: "Stem ends in -t → e-insertion: antwortest, antwortet. Takes the dative: Ich antworte dir (not: ich antworte dich).",
     conjugations: [
@@ -644,6 +696,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "ordnen", english: "to sort / to put in order", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich ordne die Wörter.", translation: "I put the words in order.",
     note: "Stem 'ordn-' ends in a consonant cluster → e-insertion: ordnest, ordnet. Used in exercises: Ordnen Sie die Wörter! (Put the words in order!)",
     conjugations: [
@@ -657,6 +710,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "gefallen", english: "to please / to like (inverted)", type: "irregular",
+    lessons: ["A1.1"],
     example: "Das Bild gefällt mir.", translation: "I like the picture.",
     note: "Works the opposite of English: Das gefällt mir = That pleases me = I like that. The thing you like is the subject. Vowel change a → ä in du/er — same pattern as lassen and halten.",
     conjugations: [
@@ -670,6 +724,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "spielen", english: "to play", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich spiele Fußball.", translation: "I play football.",
     note: "Fully regular. Works for games, sports and instruments: Ich spiele Fußball / Ich spiele Gitarre.",
     conjugations: [
@@ -683,6 +738,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "anschauen", english: "to watch / to look at", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich schaue den Film an.", translation: "I am watching the film.",
     customStem: "schau",
     note: "Separable verb — 'an-' detaches to the end of the clause: Ich schaue den Film an. The base verb schauen conjugates regularly; forms here show the base without the prefix.",
@@ -697,6 +753,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "aufmachen", english: "to open", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich mache die Tür auf.", translation: "I am opening the door.",
     customStem: "mach",
     note: "Separable verb — 'auf-' detaches: Ich mache die Tür auf (I open the door). Base verb machen is fully regular and already in this list.",
@@ -711,6 +768,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "einkaufen", english: "to go shopping / to shop", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich kaufe im Supermarkt ein.", translation: "I am shopping at the supermarket.",
     customStem: "kauf",
     note: "Separable verb — 'ein-' detaches: Ich kaufe im Supermarkt ein. Base verb kaufen is already in this list. Contrast: kaufen = to buy one thing; einkaufen = to do the shopping.",
@@ -725,6 +783,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "anrufen", english: "to call / to phone", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich rufe dich später an.", translation: "I will call you later.",
     customStem: "ruf",
     note: "Separable verb — 'an-' detaches: Ich rufe dich an (I'll call you). Base verb rufen is regular. Very common in everyday German.",
@@ -741,6 +800,7 @@ export const verbData: Verb[] = [
   // ── Tagesablauf / Daily routine ────────────────────────────────────────────
   {
     infinitive: "aufstehen", english: "to get up", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich stehe früh auf.", translation: "I get up early.",
     customStem: "steh",
     note: "Separable verb — 'auf-' detaches: Lara steht früh auf. Base verb stehen is fully regular and already in this list.",
@@ -755,6 +815,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "aufräumen", english: "to tidy up", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich räume mein Zimmer auf.", translation: "I am tidying up my room.",
     customStem: "räum",
     note: "Separable verb — 'auf-' detaches: Sie räumt die Küche auf. Base verb räumen is fully regular.",
@@ -769,6 +830,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "fernsehen", english: "to watch TV", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich sehe abends fern.", translation: "I watch TV in the evening.",
     customStem: "seh",
     note: "Separable verb — 'fern-' detaches: Er sieht fern. Base verb sehen has the same e → ie change in du/er as the standalone sehen.",
@@ -783,6 +845,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "essen", english: "to eat", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich esse einen Apfel.", translation: "I am eating an apple.",
     note: "Vowel change e → i in du/er forms, and both collapse to the same form: isst (du) = isst (er/sie/es).",
     conjugations: [
@@ -796,6 +859,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "frühstücken", english: "to have breakfast", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich frühstücke um acht Uhr.", translation: "I have breakfast at eight o'clock.",
     note: "Fully regular despite the long stem. Ich frühstücke um acht Uhr (I have breakfast at eight).",
     conjugations: [
@@ -811,6 +875,7 @@ export const verbData: Verb[] = [
   // ── Aus dem Unterricht / from class notes ──────────────────────────────────
   {
     infinitive: "anfangen", english: "to begin / to start", type: "irregular",
+    lessons: ["A1.1"],
     example: "Der Kurs fängt um neun an.", translation: "The class starts at nine.",
     customStem: "fang",
     note: "Separable AND stem-changing: 'an-' detaches and a → ä in du/er. Der Kurs fängt um neun an (the class starts at nine).",
@@ -825,6 +890,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "schlafen", english: "to sleep", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich schlafe acht Stunden.", translation: "I sleep eight hours.",
     note: "Stem change a → ä in du/er forms: du schläfst, er schläft. Wie lange schläfst du am Wochenende?",
     conjugations: [
@@ -838,6 +904,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "abkühlen", english: "to cool off / to cool down", type: "regular",
+    lessons: ["A1.1"],
     example: "Die Suppe kühlt schnell ab.", translation: "The soup cools down quickly.",
     customStem: "kühl",
     note: "Separable verb — 'ab-' detaches: Die Suppe kühlt schnell ab. Base verb kühlen is regular; reflexive sich abkühlen = to cool oneself down.",
@@ -852,6 +919,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "chatten", english: "to chat (online)", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich chatte mit meinen Freunden.", translation: "I am chatting with my friends.",
     note: "Regular loanword. The stem ends in -tt, so an -e- is inserted before -st/-t: du chattest, er chattet (same rule as arbeiten).",
     conjugations: [
@@ -865,6 +933,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "kochen", english: "to cook", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich koche heute Abend.", translation: "I am cooking this evening.",
     note: "Fully regular: stem koch- + -e / -st / -t / -en. Ich koche heute Abend (I'm cooking tonight).",
     conjugations: [
@@ -880,6 +949,7 @@ export const verbData: Verb[] = [
   // ── Hochfrequenz / high-frequency additions ────────────────────────────────
   {
     infinitive: "geben", english: "to give", type: "irregular",
+    lessons: ["A1.1"],
     example: "Es gibt hier einen Supermarkt.", translation: "There is a supermarket here.",
     note: "Vowel change e → i in du/er: du gibst, er gibt. Most useful in es gibt = there is / there are (+ accusative).",
     conjugations: [
@@ -893,6 +963,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "fahren", english: "to drive / to go (by vehicle)", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich fahre mit dem Bus.", translation: "I go by bus.",
     note: "Stem change a → ä in du/er: du fährst, er fährt. Ich fahre mit dem Bus (I go by bus).",
     conjugations: [
@@ -906,6 +977,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "lesen", english: "to read", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich lese ein Buch.", translation: "I am reading a book.",
     note: "Vowel change e → ie in du/er: du liest, er liest. The stem -s merges with the -st ending, so both forms are 'liest'.",
     conjugations: [
@@ -919,6 +991,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "fragen", english: "to ask", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich frage den Lehrer.", translation: "I am asking the teacher.",
     note: "Fully regular. The natural counterpart to antworten: Ich frage, du antwortest.",
     conjugations: [
@@ -932,6 +1005,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "verstehen", english: "to understand", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich verstehe die Frage nicht.", translation: "I don't understand the question.",
     note: "Inseparable prefix ver- (never detaches); regular endings on the -steh- stem. Ich verstehe nicht = I don't understand.",
     conjugations: [
@@ -945,6 +1019,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "lernen", english: "to learn", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich lerne Deutsch.", translation: "I am learning German.",
     note: "Fully regular. Ich lerne Deutsch (I'm learning German).",
     conjugations: [
@@ -958,6 +1033,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "helfen", english: "to help", type: "irregular",
+    lessons: ["A1.1"],
     example: "Ich helfe dir gern.", translation: "I am happy to help you.",
     note: "Stem change e → i in du/er: du hilfst, er hilft. Takes the dative: Ich helfe dir.",
     conjugations: [
@@ -971,6 +1047,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "kennen", english: "to know (be familiar with)", type: "regular",
+    lessons: ["A1.1"],
     example: "Ich kenne diese Stadt.", translation: "I know this city.",
     note: "Regular. kennen = to know a person/place (Ich kenne Berlin); wissen = to know a fact (Ich weiß das).",
     conjugations: [

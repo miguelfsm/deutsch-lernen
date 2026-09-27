@@ -10,6 +10,7 @@ const make = (infinitive: string, english: string): Verb => ({
   conjugations: [],
   example: '',
   translation: '',
+  lessons: ['A1.1'],
 })
 
 const verbs = [

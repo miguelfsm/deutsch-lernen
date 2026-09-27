@@ -14,6 +14,8 @@ export function verbsCatalog(): CatalogEntry[] {
       slug,
       term: v.infinitive,
       gloss: v.english,
+      kind: 'verb',
+      lessons: v.lessons,
     }
   })
 }

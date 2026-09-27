@@ -3,6 +3,8 @@
 // so the useful structure here is: meaning + opposite (when one exists) +
 // an example sentence. Grouped by category, same pattern as german-phrases.jsx.
 
+import type { LessonId } from '../../content/lessons'
+
 export interface AdjectiveItem {
   word: string
   meaning: string
@@ -10,6 +12,9 @@ export interface AdjectiveItem {
   example: string
   translation: string
   note?: string
+  // Lessons this item belongs to. Every existing item predates lesson tagging,
+  // so all are backfilled to the A1.1 bucket (decision D3).
+  lessons: LessonId[]
 }
 
 export interface AdjectiveCategory {
@@ -29,72 +34,85 @@ export const categories: AdjectiveCategory[] = [
         word: "schnell", meaning: "fast / quick",
         opposite: { word: "langsam", meaning: "slow" },
         example: "Das Auto ist sehr schnell.", translation: "The car is very fast.",
+        lessons: ["A1.1"],
       },
       {
         word: "kalt", meaning: "cold",
         opposite: { word: "warm", meaning: "warm" },
         example: "Im Winter ist es kalt.", translation: "In winter it's cold.",
+        lessons: ["A1.1"],
       },
       {
         word: "neu", meaning: "new",
         opposite: { word: "alt", meaning: "old" },
         example: "Mein Haus ist alt und groß.", translation: "My house is old and big.",
+        lessons: ["A1.1"],
       },
       {
         word: "billig", meaning: "cheap",
         opposite: { word: "teuer", meaning: "expensive" },
         example: "Hmm. Schön und teuer.", translation: "Hmm. Pretty and expensive.",
+        lessons: ["A1.1"],
       },
       {
         word: "groß", meaning: "big / tall",
         opposite: { word: "klein", meaning: "small" },
         example: "Es ist groß und hell.", translation: "It's big and bright.",
+        lessons: ["A1.1"],
       },
       {
         word: "breit", meaning: "wide",
         opposite: { word: "schmal", meaning: "narrow" },
         example: "Mein Haus ist sehr schmal.", translation: "My house is very narrow.",
+        lessons: ["A1.1"],
       },
       {
         word: "schön", meaning: "beautiful / nice",
         opposite: { word: "hässlich", meaning: "ugly" },
         example: "Es ist breit und schön.", translation: "It's wide and beautiful.",
+        lessons: ["A1.1"],
       },
       {
         word: "hell", meaning: "bright / light",
         opposite: { word: "dunkel", meaning: "dark" },
         example: "Es ist klein und auch dunkel.", translation: "It's small and also dark.",
         note: "Asked as a yes/no question: Ist es hell? — Nein, es ist dunkel.",
+        lessons: ["A1.1"],
       },
       {
         word: "gut", meaning: "good",
         opposite: { word: "schlecht", meaning: "bad" },
         example: "Das Essen ist sehr gut.", translation: "The food is very good.",
         note: "The most basic adjective of all. Irregular comparison: gut → besser → am besten.",
+        lessons: ["A1.1"],
       },
       {
         word: "richtig", meaning: "right / correct",
         opposite: { word: "falsch", meaning: "wrong / false" },
         example: "Die Antwort ist richtig.", translation: "The answer is correct.",
         note: "Pairs with the exercise prompt 'Richtig oder falsch?' (true or false?).",
+        lessons: ["A1.1"],
       },
       {
         word: "lang", meaning: "long",
         opposite: { word: "kurz", meaning: "short" },
         example: "Der Film ist sehr lang.", translation: "The film is very long.",
         note: "Of time or length. Umlaut in comparison: lang → länger.",
+        lessons: ["A1.1"],
       },
       {
         word: "früh", meaning: "early",
         opposite: { word: "spät", meaning: "late" },
         example: "Am Morgen stehe ich früh auf.", translation: "In the morning I get up early.",
         note: "Useful with clock time: Es ist noch früh. / Es ist schon spät.",
+        lessons: ["A1.1"],
       },
       {
         word: "leicht", meaning: "easy / light",
         opposite: { word: "schwer", meaning: "hard / heavy" },
         example: "Die Aufgabe ist leicht.", translation: "The exercise is easy.",
         note: "Both pairs share the words: leicht/schwer also mean light/heavy (weight): Die Tasche ist schwer.",
+        lessons: ["A1.1"],
       },
     ],
   },
@@ -108,29 +126,34 @@ export const categories: AdjectiveCategory[] = [
         opposite: { word: "verboten", meaning: "forbidden" },
         example: "Hier ist Rauchen nicht erlaubt.", translation: "Smoking isn't allowed here.",
         note: "erlaubt/verboten is a very common A1 pair — usually seen with sein: Das ist erlaubt. / Das ist verboten.",
+        lessons: ["A1.1"],
       },
       {
         word: "gesamt", meaning: "total / entire",
         example: "Die gesamte Wohnung kostet 1200 Franken.", translation: "The whole apartment costs 1200 francs.",
         note: "Often used attributively before a noun (die gesamte Wohnung) rather than alone — declension comes later.",
+        lessons: ["A1.1"],
       },
       {
         word: "komisch", meaning: "funny / strange",
         opposite: { word: "normal", meaning: "normal" },
         example: "Das ist komisch.", translation: "That's funny / strange.",
         note: "Carries both senses — 'amusing' and 'odd/weird' — context decides which. For 'funny ha-ha' you can also say lustig.",
+        lessons: ["A1.1"],
       },
       {
         word: "gleich", meaning: "same / equal",
         opposite: { word: "verschieden", meaning: "different" },
         example: "Wir haben die gleiche Tasche.", translation: "We have the same bag.",
         note: "As an adverb gleich also means 'in a moment / shortly': Ich komme gleich. With clock time, es ist gleich zehn = 'it's almost ten.'",
+        lessons: ["A1.1"],
       },
       {
         word: "wichtig", meaning: "important",
         opposite: { word: "unwichtig", meaning: "unimportant" },
         example: "Das ist sehr wichtig.", translation: "That's very important.",
         note: "The un- prefix flips many adjectives: wichtig → unwichtig, freundlich → unfreundlich.",
+        lessons: ["A1.1"],
       },
     ],
   },

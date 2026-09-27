@@ -4,10 +4,10 @@ import { searchCatalog } from './search'
 
 // Fixture so the search behaviour is tested independently of live content.
 const entries: CatalogEntry[] = [
-  { id: 'verben:schlafen', toolId: 'verben', route: '/verben', slug: 'schlafen', term: 'schlafen', gloss: 'to sleep' },
-  { id: 'verben:essen', toolId: 'verben', route: '/verben', slug: 'essen', term: 'essen', gloss: 'to eat' },
-  { id: 'nomen:lebensmittel/essen', toolId: 'nomen', route: '/nomen', slug: 'lebensmittel/essen', term: 'Essen', gloss: 'food', category: 'Lebensmittel', keywords: ['das'] },
-  { id: 'nomen:familie/bild', toolId: 'nomen', route: '/nomen', slug: 'familie/bild', term: 'Bild', gloss: 'picture', category: 'Familie', keywords: ['das'] },
+  { id: 'verben:schlafen', toolId: 'verben', route: '/verben', slug: 'schlafen', term: 'schlafen', gloss: 'to sleep', kind: 'verb', lessons: ['A1.1'] },
+  { id: 'verben:essen', toolId: 'verben', route: '/verben', slug: 'essen', term: 'essen', gloss: 'to eat', kind: 'verb', lessons: ['A1.1'] },
+  { id: 'nomen:lebensmittel/essen', toolId: 'nomen', route: '/nomen', slug: 'lebensmittel/essen', term: 'Essen', gloss: 'food', category: 'Lebensmittel', keywords: ['das'], kind: 'noun', lessons: ['A1.1'] },
+  { id: 'nomen:familie/bild', toolId: 'nomen', route: '/nomen', slug: 'familie/bild', term: 'Bild', gloss: 'picture', category: 'Familie', keywords: ['das'], kind: 'noun', lessons: ['A1.1'] },
 ]
 
 describe('searchCatalog', () => {
@@ -45,7 +45,7 @@ describe('searchCatalog', () => {
     // consuming the CatalogEntry shape — no search-file edit was needed.
     const withNewTool: CatalogEntry[] = [
       ...entries,
-      { id: 'praeposition:lokal/auf', toolId: 'praeposition', route: '/praepositionen', slug: 'lokal/auf', term: 'auf', gloss: 'on' },
+      { id: 'praeposition:lokal/auf', toolId: 'praeposition', route: '/praepositionen', slug: 'lokal/auf', term: 'auf', gloss: 'on', kind: 'preposition', lessons: ['A1.1'] },
     ]
     expect(searchCatalog(withNewTool, 'auf').map((e) => e.toolId)).toEqual(['praeposition'])
   })

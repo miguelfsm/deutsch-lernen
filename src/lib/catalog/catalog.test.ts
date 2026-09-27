@@ -1,14 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import type { CatalogEntry } from './types'
+import type { CatalogEntry, EntryKind } from './types'
 import { catalog } from './index'
 import { nounSlug, cardSlug, slugify } from './slug'
+import { lessons, type LessonId } from '../../content/lessons'
 
 // Small fixtures keep the invariant tests decoupled from live content; a couple
 // of guards below still run over the real `catalog` to catch actual collisions.
 const fixture: CatalogEntry[] = [
-  { id: 'verben:essen', toolId: 'verben', route: '/verben', slug: 'essen', term: 'essen', gloss: 'to eat' },
-  { id: 'nomen:lebensmittel/essen', toolId: 'nomen', route: '/nomen', slug: 'lebensmittel/essen', term: 'Essen', gloss: 'food', category: 'Lebensmittel' },
-  { id: 'nomen:familie/bild', toolId: 'nomen', route: '/nomen', slug: 'familie/bild', term: 'Bild', gloss: 'picture', category: 'Familie' },
+  { id: 'verben:essen', toolId: 'verben', route: '/verben', slug: 'essen', term: 'essen', gloss: 'to eat', kind: 'verb', lessons: ['A1.1'] },
+  { id: 'nomen:lebensmittel/essen', toolId: 'nomen', route: '/nomen', slug: 'lebensmittel/essen', term: 'Essen', gloss: 'food', category: 'Lebensmittel', kind: 'noun', lessons: ['A1.1'] },
+  { id: 'nomen:familie/bild', toolId: 'nomen', route: '/nomen', slug: 'familie/bild', term: 'Bild', gloss: 'picture', category: 'Familie', kind: 'noun', lessons: ['A1.1'] },
 ]
 
 function duplicates<T>(values: T[]): T[] {
@@ -86,5 +87,63 @@ describe('live catalog', () => {
     }
     // At least one capitalised noun term proves case is preserved.
     expect(catalog.some((e) => e.toolId === 'nomen' && /^[A-ZÄÖÜ]/.test(e.term))).toBe(true)
+  })
+})
+
+// ── Lesson tagging (plan §3.3, §6) ──────────────────────────────────────────
+describe('lesson registry', () => {
+  it('has unique lesson ids', () => {
+    expect(duplicates(lessons.map((l) => l.id))).toEqual([])
+  })
+})
+
+const VALID_KINDS: EntryKind[] = [
+  'verb',
+  'noun',
+  'adjective',
+  'adverb',
+  'phrase',
+  'strategy',
+  'pattern',
+  'preposition',
+  'grammar',
+]
+
+describe('catalog lesson tagging', () => {
+  const knownLessonIds = new Set<LessonId>(lessons.map((l) => l.id))
+
+  it('every entry has at least one lesson that exists in the registry', () => {
+    for (const e of catalog) {
+      expect(e.lessons.length).toBeGreaterThan(0)
+      for (const id of e.lessons) {
+        expect(knownLessonIds.has(id)).toBe(true)
+      }
+    }
+  })
+
+  it('every entry has a valid kind', () => {
+    for (const e of catalog) {
+      expect(VALID_KINDS).toContain(e.kind)
+    }
+  })
+
+  it('maps phrases categories to the right kind (adverb/strategy/preposition/phrase)', () => {
+    const kindByCategoryLabel = new Map(
+      catalog
+        .filter((e) => e.toolId === 'redemittel')
+        .map((e) => [e.category, e.kind] as const),
+    )
+    expect(kindByCategoryLabel.get('Adverbien (Häufigkeit & Grad)')).toBe('adverb')
+    expect(kindByCategoryLabel.get('Gesprächsstrategien')).toBe('strategy')
+    expect(kindByCategoryLabel.get('Präpositionen')).toBe('preposition')
+    // Everything else in Phrases (e.g. W-Fragen) stays a plain phrase.
+    expect(kindByCategoryLabel.get('W-Fragen')).toBe('phrase')
+  })
+
+  it('maps verbs, nouns, adjectives and satzbau to their kind', () => {
+    expect(catalog.filter((e) => e.toolId === 'verben').every((e) => e.kind === 'verb')).toBe(true)
+    expect(catalog.filter((e) => e.toolId === 'nomen').every((e) => e.kind === 'noun')).toBe(true)
+    expect(catalog.filter((e) => e.toolId === 'adjektive').every((e) => e.kind === 'adjective')).toBe(true)
+    expect(catalog.filter((e) => e.toolId === 'satzbau').every((e) => e.kind === 'pattern')).toBe(true)
   })
 })
