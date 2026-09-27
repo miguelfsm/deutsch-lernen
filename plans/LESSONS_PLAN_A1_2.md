@@ -1,6 +1,6 @@
 # Lessons Plan — A1.2 Data Architecture Refactor
 
-> **Status:** Proposed — awaiting review. Nothing here is implemented yet.
+> **Status:** Approved 2026-09-27 (plan, mock and UI defaults U1–U7). Nothing here is implemented yet.
 > **Execute one phase = one PR**, each satisfying the commit gate in
 > [CLAUDE.md](../CLAUDE.md) (100% tests pass · no lint errors · no TypeScript errors).
 > **Companion docs:** [PRD](../docs/PRD.md) · [Solution Design](../docs/SOLUTION_DESIGN.md) ·
@@ -76,10 +76,10 @@ clickable, self-contained mock of the finished feature set (published copy:
 | Üben | §4.4, §3.4 drill, §3.5 drill | 4, 5, 6 |
 | Wortschatz-Check | §4.3 (chat report, not an app screen) | 3 |
 
-**UI defaults taken from the mock review** (Claude's recommendations; Miguel
-can still overturn any of them before the relevant phase starts):
+**UI decisions from the mock review** (Claude's recommendations, **agreed by
+Miguel 2026-09-27**):
 
-| # | Question | Default |
+| # | Question | Decision |
 |---|---|---|
 | U1 | Nav grows from 6 to 9 links. Merge Präpositionen into Grammatik? | **Keep separate.** Prepositions are words you drill; grammar is tables you read. The nav row scrolls sideways on phones. |
 | U2 | Verb tenses: switch or side by side? | **Switch** (Präsens · Präteritum · Perfekt). Side by side is too wide on a phone. |
