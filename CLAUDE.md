@@ -28,6 +28,8 @@ no icon library, no UI kit) — keep this approach; do not introduce Tailwind
 without an explicit decision recorded in the Solution Design.
 
 > Active build sequence lives in [`plans/IMPLEMENTATION_PLAN.md`](./plans/IMPLEMENTATION_PLAN.md).
+> Lesson-aware (A1.2+) refactor plan: [`plans/LESSONS_PLAN_A1_2.md`](./plans/LESSONS_PLAN_A1_2.md),
+> with its design & interaction target [`plans/LESSONS_PLAN_A1_2.mock.html`](./plans/LESSONS_PLAN_A1_2.mock.html) (keep both in step).
 
 ## Engineering principles
 
