@@ -5,6 +5,9 @@
 > [CLAUDE.md](../CLAUDE.md) (100% tests pass · no lint errors · no TypeScript errors).
 > **Companion docs:** [PRD](../docs/PRD.md) · [Solution Design](../docs/SOLUTION_DESIGN.md) ·
 > [Feature Plan 2026-07](./FEATURE_PLAN_2026-07.md)
+> **Design & interaction target:** [`LESSONS_PLAN_A1_2.mock.html`](./LESSONS_PLAN_A1_2.mock.html)
+> (open in a browser; see §2a). This plan says *what data and logic* to build; the
+> mock says *how it looks and behaves*. Keep them in step: change one, update the other.
 > **Author:** Claude Code, with Miguel · **Created:** 2026-09-27
 
 ---
@@ -34,6 +37,57 @@ What Miguel wants, in his words turned into requirements:
 | D2 Storage | **By word type + lesson tags.** Verbs stay in `verbs/data.ts`, nouns in `nouns/data.ts`… each item gets `lessons: LessonId[]`. A lesson page *queries* by tag. | A word recurs across lessons (e.g. *helfen*: L9 grammar, L13 Dativ verb). One record, many tags, no copies. |
 | D3 Existing content | Tag everything already in the app **`A1.1`** (a level-wide pseudo-lesson). | Precise L1–7 tags can come later by retagging only. |
 | D4 Vocab check | **Report first, add after OK.** | Keeps Miguel in control of what goes in. |
+
+## 2a. Design & interaction target (the mock)
+
+[`plans/LESSONS_PLAN_A1_2.mock.html`](./LESSONS_PLAN_A1_2.mock.html) is a
+clickable, self-contained mock of the finished feature set (published copy:
+<https://claude.ai/artifact/Ps4i5mQBHemzEyTQbC1qEr>). Miguel reviewed it on
+2026-09-27 and approved it as the target.
+
+**How the two documents work together**
+
+- **Plan = source of truth for data, logic, phases and tests.** Mock = source of
+  truth for **layout, labels, interaction and states**.
+- Every phase in §5 names the mock screen(s) it must match. A phase is not done
+  until the real screen matches its mock screen (same sections, same order, same
+  controls and states; exact pixels are not required).
+- The mock is **throwaway reference code**: vanilla JS, sample data, not shipped,
+  not linted, not tested. The real app keeps its own conventions (React, inline
+  `style={{}}`, `src/lib/theme.ts` tokens). Never copy mock code into `src/`.
+- Mock sample data (counts like "118 / 142", the vocab-check word lists) is
+  illustrative. Real content comes from Miguel's photos.
+- If implementation shows the mock is wrong or impractical, **update the mock
+  and this plan in the same PR** and say so in the PR description.
+- The dashed amber outline and the notes column in the mock are review aids, not
+  UI. Do not build them.
+
+**Mock screen → plan section**
+
+| Mock screen | Plan section | Phase |
+|---|---|---|
+| Home | §4 (new tiles), registry | 4, 6, 7 |
+| Suche „Lektion 8" | §4.2 | 4 |
+| Lektionen | §4.1 index | 4 |
+| Lektion 8 | §4.1 lesson page | 4 (+7 for the grammar row) |
+| Verben · 3 Zeiten | §3.4 | 5 |
+| Präpositionen | §3.5 | 6 |
+| Grammatik | §3.6 | 7 |
+| Üben | §4.4, §3.4 drill, §3.5 drill | 4, 5, 6 |
+| Wortschatz-Check | §4.3 (chat report, not an app screen) | 3 |
+
+**UI defaults taken from the mock review** (Claude's recommendations; Miguel
+can still overturn any of them before the relevant phase starts):
+
+| # | Question | Default |
+|---|---|---|
+| U1 | Nav grows from 6 to 9 links. Merge Präpositionen into Grammatik? | **Keep separate.** Prepositions are words you drill; grammar is tables you read. The nav row scrolls sideways on phones. |
+| U2 | Verb tenses: switch or side by side? | **Switch** (Präsens · Präteritum · Perfekt). Side by side is too wide on a phone. |
+| U3 | Lesson page: group by word type or by book part A–E? | **By word type.** The book's word list isn't split by part. |
+| U4 | Practice lesson filter: one lesson or several? | **One lesson** for now. Multi-select later if missed. |
+| U5 | Show the ✅/❌ Lernwortschatz list inside the app? | **No** (not in scope). Only the coverage bar on the lesson page and lesson list. |
+| U6 | Grammar explanations: English or German? | **Short English rules** beside the book's German tables, like the rest of the app. |
+| U7 | Search dropdown for a lesson query | **Lesson hit first**, then a short preview (3 items per word type) and a link to the full lesson page. |
 
 ## 3. Target data model
 
@@ -128,7 +182,9 @@ export interface Verb {
 ### 3.5 Prepositions — new tool `src/tools/prepositions/` → `/praepositionen`
 
 ```ts
-export type Case = 'Dativ' | 'Akkusativ' | 'Wechsel'   // Wechsel = Dat (Wo?) / Akk (Wohin?)
+// Wechsel = Dat (Wo?) / Akk (Wohin?). 'ohne' = takes no case, e.g. "als" (L8:
+// Ich arbeite als Hauswart) — found while building the mock.
+export type Case = 'Dativ' | 'Akkusativ' | 'Wechsel' | 'ohne'
 export type PrepUse = 'temporal' | 'lokal' | 'modal'
 
 export interface Preposition {
@@ -144,8 +200,10 @@ export interface Preposition {
 }
 ```
 
-- UI: filter pills by **case** and by **use**; each card shows a colour-coded
-  case badge and the article table for that case (einem/einer/einem/—n).
+- UI (mock screen *Präpositionen*): filter pills by **case** (incl. "ohne Fall")
+  and by **use**; each card shows a colour-coded case badge and lesson tags, and
+  expands to the article table for that case (einem/einer/einem/—n), or the
+  Wo?/Wohin? rule for Wechsel, plus examples and contraction notes.
 - The existing `praep` category in `phrases/data.ts` **moves here** (its items
   are prepositions, not phrases). Slugs change from `praep/…` to the new tool;
   add a one-entry progress migration (version bump in `lib/progress.ts`) so no
@@ -253,16 +311,16 @@ Practice deck builder accepts an optional `lessonId` filter. All existing modes
 
 Order is chosen so Miguel can start sending lesson photos after **Phase 3**.
 
-| Phase | Scope | Done when |
+| Phase | Scope | Done when (incl. mock screen to match) |
 |---|---|---|
-| **0 — Docs** | Record D1–D4 and this model in `docs/SOLUTION_DESIGN.md` (decisions log) and `docs/PRD.md` (R1–R6). Link this plan from `CLAUDE.md`. | Docs merged. |
+| **0 — Docs** | Record D1–D4 and this model in `docs/SOLUTION_DESIGN.md` (decisions log) and `docs/PRD.md` (R1–R6). Link this plan from `CLAUDE.md`. | Docs merged; mock linked from the Solution Design. |
 | **1 — Lesson registry + tags** | `src/content/lessons.ts` with A1.1 bucket + L8–L14 filled from the TOC photos (Appendix A). `lessons?` on every item; backfill all existing items to `['A1.1']`; flip to required. `CatalogEntry.lessons` + `kind` in every `catalog.ts`. | Typecheck forces every item to carry a tag; catalog test asserts every entry has ≥1 lesson and a valid kind. |
 | **2 — Swiss spelling** | Replace `ß → ss` in all content. Test: no `ß` in any content string. Search folds both ways. | Progress keys unchanged (slug test proves it). |
-| **3 — Vocab check** | `checkVocab` + `scripts/vocab-check.ts` + `npm run vocab:check`. `content/lws/` folder. | Tests cover article/plural stripping, ß/ss, case, "tag missing" vs "missing". |
-| **4 — Lesson pages + lesson search** | `/lektionen`, `/lektionen/:id`, `entriesForLesson`, lesson queries in search, `?lektion=` practice filter. Registry entry → nav + Home card. | Searching "Lektion 8" lands on the L8 page. |
-| **5 — Verb tenses** | `praeteritum?` + `perfekt?` fields, `perfektForms()`, tense switch UI, `&tense=` deep link, drill tense picker. Backfill all 73 verbs, then flip to required. | Every verb shows 3 tenses; drill tests per tense. |
-| **6 — Prepositions tool** | New tool + data (A1.1 ones + L8 temporal + L11 lokal + L12 temporal). Move `praep` out of Phrases with progress migration. "Welcher Fall?" drill. | Filter by case/use works; migration test keeps old progress. |
-| **7 — Grammar tool** | Block model, `GrammarTopicView`, first topics from the L8 summary (Appendix B). Grammar section on lesson pages. | L8 page shows all five L8 grammar topics. |
+| **3 — Vocab check** | `checkVocab` + `scripts/vocab-check.ts` + `npm run vocab:check`. `content/lws/` folder. | Tests cover article/plural stripping, ß/ss, case, "tag missing" vs "missing". Report shape matches mock: *Wortschatz-Check*. |
+| **4 — Lesson pages + lesson search** | `/lektionen`, `/lektionen/:id`, `entriesForLesson`, lesson queries in search, `?lektion=` practice filter. Registry entry → nav + Home card. | Searching "Lektion 8" lands on the L8 page. Matches mock: *Home*, *Suche*, *Lektionen*, *Lektion 8*, *Üben* (lesson filter). |
+| **5 — Verb tenses** | `praeteritum?` + `perfekt?` fields, `perfektForms()`, tense switch UI, `&tense=` deep link, drill tense picker. Backfill all 73 verbs, then flip to required. | Every verb shows 3 tenses; drill tests per tense. Matches mock: *Verben · 3 Zeiten*, *Üben → Konjugation*. |
+| **6 — Prepositions tool** | New tool + data (A1.1 ones + L8 temporal + L11 lokal + L12 temporal). Move `praep` out of Phrases with progress migration. "Welcher Fall?" drill. | Filter by case/use works; migration test keeps old progress. Matches mock: *Präpositionen*, *Üben → Welcher Fall?*. |
+| **7 — Grammar tool** | Block model, `GrammarTopicView`, first topics from the L8 summary (Appendix B). Grammar section on lesson pages. | L8 page shows all five L8 grammar topics. Matches mock: *Grammatik*, grammar row on *Lektion 8*. |
 | **8+ — Lesson intake (repeat per lesson)** | For L8 → L14: LWS check → approve → add items + tags; add that lesson's grammar topics from the "Grammatik und Kommunikation" photo. | Lesson coverage ≈ 100%. |
 
 Phases 5, 6 and 7 are independent of each other and may be reordered.

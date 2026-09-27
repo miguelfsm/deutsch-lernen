@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Design & interaction target for plans/LESSONS_PLAN_A1_2.md. Throwaway mock:
+     vanilla JS, sample data. Not shipped, not linted. Open directly in a browser.
+     Published copy: https://claude.ai/artifact/Ps4i5mQBHemzEyTQbC1qEr -->
+<title>Deutsch Lernen Lektionen Mock</title>
+<style>
+  /* Single light look on purpose: it mirrors the real app, which is light-only. */
+  :root {
+    --canvas: #faf9f7; --ink: #1c1917; --muted: #78716c; --faint: #9ca3af;
+    --line: #f0ede8; --border: #e7e5e0; --raise: #fdfcfb; --white: #ffffff;
+    --red: #dc2626; --blue: #2563eb;
+    --new: #b45309; --new-bg: #fffbeb; --new-line: #f59e0b;
+    --mockbar: #292524; --mockbar-ink: #f5f5f4;
+    --dat: #1e40af; --dat-bg: #dbeafe; --akk: #9f1239; --akk-bg: #ffe4e6;
+    --wech: #6b21a8; --wech-bg: #f3e8ff; --none: #57534e; --none-bg: #f5f5f4;
+    --ok: #15803d; --ok-bg: #dcfce7; --warn: #a16207; --warn-bg: #fef9c3; --bad: #b91c1c; --bad-bg: #fee2e2;
+    --serif: 'Georgia', 'Times New Roman', serif; --sans: 'Arial', 'Helvetica', sans-serif;
+  }
+  body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--serif); }
+  * { box-sizing: border-box; }
+  button { font: inherit; cursor: pointer; }
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  /* ── Mock control bar (not part of the app) ── */
+  .mockbar { background: var(--mockbar); color: var(--mockbar-ink); padding: 10px 16px; font-family: var(--sans); font-size: 12px; }
+  .mockbar-row { max-width: 980px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .mockbar b { letter-spacing: 1.5px; text-transform: uppercase; font-size: 10.5px; color: #d6d3d1; margin-right: 6px; }
+  .mockbar button { background: #44403c; color: var(--mockbar-ink); border: 0; border-radius: 99px; padding: 5px 11px; font-size: 12px; }
+  .mockbar button[aria-pressed="true"] { background: var(--new-line); color: #1c1917; font-weight: 700; }
+  .mockbar label { margin-left: auto; display: flex; gap: 6px; align-items: center; cursor: pointer; }
+
+  /* ── App nav ── */
+  nav.app { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--raise); border-bottom: 1px solid var(--border); padding: 10px 16px; }
+  .nav-inner { max-width: 980px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+  .brand { font-weight: 700; font-size: 16px; letter-spacing: -0.3px; background: none; border: 0; color: var(--ink); padding: 0; }
+  .links { display: flex; gap: 6px; overflow-x: auto; max-width: 100%; padding-bottom: 2px; }
+  .links button { font-family: var(--sans); font-size: 12.5px; padding: 5px 11px; border-radius: 99px; border: 1px solid var(--border); background: var(--white); color: var(--muted); white-space: nowrap; }
+  .links button.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .links button.is-new { border: 1.5px dashed var(--new-line); }
+  .search { position: relative; }
+  .search input { font-family: var(--sans); font-size: 13px; padding: 6px 12px; border-radius: 99px; border: 1px solid var(--border); width: 190px; max-width: 100%; background: var(--white); }
+
+  /* ── Page ── */
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .col { min-width: 0; }
+  @media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); } .col { max-width: 560px; margin: 0 auto; width: 100%; } }
+  body.hide-notes .notes { display: none; }
+  body.hide-notes .wrap { grid-template-columns: minmax(0, 560px); justify-content: center; }
+
+  .eyebrow { font-size: 11px; letter-spacing: 4px; color: var(--faint); text-transform: uppercase; margin-bottom: 6px; text-align: center; font-family: var(--serif); }
+  h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; text-align: center; text-wrap: balance; }
+  .sub { font-family: var(--sans); font-size: 13.5px; color: var(--muted); margin: 8px 0 22px; text-align: center; }
+  h2 { font-size: 13px; font-family: var(--sans); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: 26px 0 10px; font-weight: 700; }
+
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+  .stack { display: flex; flex-direction: column; gap: 10px; }
+  .tile { display: block; width: 100%; text-align: left; background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 15px 18px; box-shadow: 0 1px 6px rgba(0,0,0,0.04); color: var(--ink); }
+  .tile-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .tile-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .tile-en { font-family: var(--sans); font-size: 12px; color: var(--faint); }
+  .tile-blurb { font-family: var(--sans); font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  .new { outline: 1.5px dashed var(--new-line); outline-offset: 3px; position: relative; }
+  .neu { display: inline-block; font-family: var(--sans); font-size: 9.5px; font-weight: 700; letter-spacing: 1px; color: var(--new); background: var(--new-bg); border: 1px solid var(--new-line); border-radius: 4px; padding: 1px 5px; vertical-align: middle; margin-left: 6px; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { font-family: var(--sans); font-size: 12.5px; padding: 5px 12px; border-radius: 99px; border: 1px solid var(--border); background: var(--white); color: var(--muted); }
+  .pill[aria-pressed="true"] { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .chip { display: inline-flex; align-items: center; gap: 4px; font-family: var(--sans); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--none-bg); color: var(--none); border: 0; white-space: nowrap; }
+  .chip.lesson { color: var(--white); }
+  .item-chip { font-family: var(--sans); font-size: 13px; padding: 6px 11px; border-radius: 10px; border: 1px solid var(--border); background: var(--white); color: var(--ink); text-align: left; }
+  .item-chip small { color: var(--faint); font-style: italic; margin-left: 4px; }
+  .art-der { color: #2563eb; font-weight: 700; } .art-die { color: #dc2626; font-weight: 700; } .art-das { color: #16a34a; font-weight: 700; }
+
+  .note-row { padding: 12px 22px; background: var(--canvas); border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); line-height: 1.6; font-family: var(--sans); }
+  .card-head { padding: 18px 22px 16px; border-bottom: 1px solid var(--line); background: var(--raise); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .big { font-size: 28px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+  .gloss { font-size: 14px; color: var(--muted); margin-top: 5px; font-style: italic; }
+  .tags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+
+  .tscroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { padding: 8px 22px; text-align: left; font-size: 10px; color: #a8a29e; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-family: var(--sans); background: #f9f7f4; }
+  td { padding: 12px 22px; border-top: 1px solid var(--line); }
+  td.pron { font-size: 14px; color: var(--faint); font-style: italic; font-family: var(--sans); width: 34%; }
+  td.form { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+  td.aux { font-size: 18px; color: var(--muted); font-weight: 400; }
+  tr:nth-child(even) td { background: var(--raise); }
+  .hl-r { color: var(--red); font-weight: 800; border-bottom: 2px solid rgba(220,38,38,.2); }
+  .hl-b { color: var(--blue); font-weight: 800; border-bottom: 2px solid rgba(37,99,235,.2); }
+  .caption { padding: 8px 22px; background: #f9f7f4; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--faint); font-family: var(--sans); }
+
+  .seg { display: flex; padding: 4px; gap: 4px; background: #f5f5f4; border-radius: 12px; margin: 12px 0; }
+  .seg button { flex: 1; border: 0; background: transparent; border-radius: 9px; padding: 8px 6px; font-family: var(--sans); font-size: 13px; color: var(--muted); }
+  .seg button[aria-pressed="true"] { background: var(--white); color: var(--ink); font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+
+  .case { font-family: var(--sans); font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+  .case.Dativ { color: var(--dat); background: var(--dat-bg); } .case.Akkusativ { color: var(--akk); background: var(--akk-bg); }
+  .case.Wechsel { color: var(--wech); background: var(--wech-bg); } .case.ohne { color: var(--none); background: var(--none-bg); }
+  .prep { width: 100%; text-align: left; background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 0; color: var(--ink); overflow: hidden; }
+  .prep-head { padding: 14px 18px; display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+  .prep-word { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .prep-q { font-family: var(--sans); font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .prep-body { border-top: 1px solid var(--line); }
+  .ex { padding: 10px 18px; border-top: 1px solid var(--line); font-family: var(--sans); }
+  .ex-de { font-size: 15px; font-weight: 600; } .ex-en { font-size: 12.5px; color: var(--faint); font-style: italic; margin-top: 2px; }
+  .ex-de mark { background: transparent; color: var(--blue); font-weight: 800; }
+
+  .lband { color: var(--white); padding: 18px 22px; display: flex; gap: 16px; align-items: center; }
+  .lnum { font-size: 44px; font-weight: 700; line-height: 1; font-family: var(--sans); }
+  .ltitle { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .lfolge { font-family: var(--sans); font-size: 13px; opacity: .9; margin-top: 3px; }
+  .goals { padding: 6px 0; }
+  .goal { display: grid; grid-template-columns: 28px 1fr; gap: 8px; padding: 9px 22px; border-top: 1px solid var(--line); font-family: var(--sans); font-size: 13px; }
+  .goal:first-child { border-top: 0; }
+  .goal .k { font-weight: 700; color: var(--faint); }
+  .goal .t { font-weight: 700; color: var(--ink); font-family: var(--serif); font-size: 14px; }
+  .goal .g { color: var(--muted); margin-top: 2px; }
+  .meta { display: grid; grid-template-columns: 90px 1fr; gap: 6px 12px; padding: 12px 22px; border-top: 1px solid var(--line); font-family: var(--sans); font-size: 12.5px; background: var(--raise); }
+  .meta dt { color: var(--faint); text-transform: uppercase; letter-spacing: 1px; font-size: 10.5px; padding-top: 2px; }
+  .meta dd { margin: 0; color: var(--muted); }
+  .bar { height: 7px; background: #eeeae4; border-radius: 99px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; border-radius: 99px; }
+  .btn { font-family: var(--sans); font-size: 13.5px; font-weight: 700; padding: 10px 16px; border-radius: 12px; border: 0; background: var(--ink); color: var(--white); }
+  .btn.ghost { background: var(--white); color: var(--ink); border: 1px solid var(--border); }
+
+  .gblock { padding: 12px 22px; border-top: 1px solid var(--line); font-family: var(--sans); font-size: 13.5px; line-height: 1.55; }
+  .gtable th { padding: 7px 12px; } .gtable td { padding: 8px 12px; font-family: var(--serif); font-size: 15px; }
+  .gtable td.q { color: var(--red); font-family: var(--sans); font-size: 12.5px; font-weight: 700; }
+
+  .opt { font-family: var(--serif); font-size: 18px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); color: var(--ink); }
+  .opt.right { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); font-weight: 700; }
+  .opt.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .term { background: #1c1917; color: #e7e5e4; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 12.5px; padding: 12px 16px; border-radius: 12px; overflow-x: auto; white-space: pre; }
+  .vgroup { padding: 12px 18px; border-top: 1px solid var(--line); font-family: var(--sans); }
+  .vgroup:first-child { border-top: 0; }
+  .vhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+  .vword { display: inline-block; font-family: var(--serif); font-size: 14px; padding: 3px 9px; border-radius: 8px; margin: 0 4px 5px 0; }
+  .v-ok { background: var(--ok-bg); color: var(--ok); } .v-tag { background: var(--warn-bg); color: var(--warn); } .v-miss { background: var(--bad-bg); color: var(--bad); }
+
+  /* dropdown */
+  .dd { background: var(--white); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.10); overflow: hidden; }
+  .dd-group { padding: 8px 16px 4px; font-family: var(--sans); font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--faint); border-top: 1px solid var(--line); }
+  .dd-row { display: flex; justify-content: space-between; gap: 10px; width: 100%; text-align: left; padding: 7px 16px; background: none; border: 0; font-family: var(--sans); font-size: 13.5px; color: var(--ink); }
+  .dd-row:hover { background: var(--canvas); }
+  .dd-row small { color: var(--faint); font-style: italic; }
+
+  /* notes column */
+  .notes { position: sticky; top: 76px; font-family: var(--sans); font-size: 13.5px; line-height: 1.55; color: #44403c; }
+  .note { background: var(--new-bg); border: 1px solid #fcd34d; border-radius: 12px; padding: 14px 16px; }
+  .note h3 { margin: 0 0 6px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--new); }
+  .note p { margin: 0 0 8px; max-width: 62ch; } .note ul { margin: 0 0 8px; padding-left: 18px; } .note li { margin-bottom: 4px; }
+  .note .steer { border-top: 1px dashed #fcd34d; padding-top: 8px; margin-top: 8px; }
+  .note .steer b { color: var(--new); }
+  .legend { margin-top: 10px; font-size: 12px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+  .legend i { display: inline-block; width: 22px; height: 14px; border: 1.5px dashed var(--new-line); border-radius: 4px; }
+  .muted { color: var(--muted); font-family: var(--sans); font-size: 13px; }
+  @media (prefers-reduced-motion: no-preference) { .screen { animation: fade .18s ease-out; } @keyframes fade { from { opacity: .4 } to { opacity: 1 } } }
+</style>
+</head>
+<body>
+
+<div class="mockbar">
+  <div class="mockbar-row" id="mockbar">
+    <b>Mock · screens</b>
+  </div>
+</div>
+
+<nav class="app">
+  <div class="nav-inner">
+    <button class="brand" data-go="home">Deutsch Lernen</button>
+    <div class="links" id="links"></div>
+    <div class="search"><input id="q" type="search" placeholder="Suchen … z.B. Lektion 8" aria-label="Suchen"></div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <main class="col screen" id="screen"></main>
+  <aside class="notes" id="notes"></aside>
+</div>
+
+<script>
+// ── Mock data (real A1.2 content from the book photos; counts are examples) ──
+const LC = { 'A1.1': '#78716c', 8: '#3b6fb6', 9: '#3f9a4a', 10: '#d0453f', 11: '#c99a1e', 12: '#2a9bb0', 13: '#7b3f8c', 14: '#4f9a6a' };
+const LESSONS = [
+  { n: 8, t: 'Beruf und Arbeit', f: 'Total fotogen', have: 118, lws: 142 },
+  { n: 9, t: 'Ämter', f: 'Komm mit!', have: 0, lws: 0 },
+  { n: 10, t: 'Gesundheit, Krankheit und Unfall', f: 'Unsere Augen sind so blau', have: 0, lws: 0 },
+  { n: 11, t: 'In der Stadt unterwegs', f: 'Alles im grünen Bereich', have: 0, lws: 0 },
+  { n: 12, t: 'Kundenservice', f: 'Super Service!', have: 0, lws: 0 },
+  { n: 13, t: 'Neue Kleider', f: 'Das ist aber kalt heute!', have: 0, lws: 0 },
+  { n: 14, t: 'Feste', f: 'Ende gut, alles gut', have: 0, lws: 0 },
+];
+const tag = (l) => `<span class="chip lesson" style="background:${LC[l]}">${l === 'A1.1' ? 'A1.1' : 'L' + l}</span>`;
+
+// Form markup: {x} = stem change (red), [x] = regular ending (blue)
+const fmt = (s) => s.replace(/\{([^}]*)\}/g, '<span class="hl-r">$1</span>').replace(/\[([^\]]*)\]/g, '<span class="hl-b">$1</span>');
+const PRON = ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
+const AUX = { haben: ['habe', 'hast', 'hat', 'haben', 'habt', 'haben'], sein: ['bin', 'bist', 'ist', 'sind', 'seid', 'sind'] };
+const VERBS = {
+  arbeiten: { en: 'to work', type: 'regular', tags: ['A1.1', 8],
+    pr: ['arbeit[e]', 'arbeit[est]', 'arbeit[et]', 'arbeit[en]', 'arbeit[et]', 'arbeit[en]'],
+    pt: ['arbeit[ete]', 'arbeit[etest]', 'arbeit[ete]', 'arbeit[eten]', 'arbeit[etet]', 'arbeit[eten]'],
+    aux: 'haben', p2: '[ge]arbeit[et]', ex: 'Früher arbeitete ich als Koch.', tr: 'I used to work as a cook.',
+    note: 'Stem ends in -t, so an extra -e- is added: du arbeitest, er arbeitete.' },
+  sein: { en: 'to be', type: 'irregular', tags: ['A1.1', 8],
+    pr: ['{bin}', '{bist}', '{ist}', '{sind}', '{seid}', '{sind}'],
+    pt: ['{war}', '{war}[st]', '{war}', '{war}[en]', '{war}[t]', '{war}[en]'],
+    aux: 'sein', p2: '{gewesen}', ex: 'Ich war zwei Jahre in Italien.', tr: 'I was in Italy for two years.',
+    note: 'In speech, sein uses Präteritum (war), not Perfekt (bin gewesen). Lektion 8 teaches war/hatte.' },
+  fahren: { en: 'to drive / to go', type: 'irregular', tags: ['A1.1', 11],
+    pr: ['fahr[e]', 'f{ä}hr[st]', 'f{ä}hr[t]', 'fahr[en]', 'fahr[t]', 'fahr[en]'],
+    pt: ['f{u}hr', 'f{u}hr[st]', 'f{u}hr', 'f{u}hr[en]', 'f{u}hr[t]', 'f{u}hr[en]'],
+    aux: 'sein', p2: '[ge]fahr[en]', ex: 'Wir sind mit dem Zug nach Bern gefahren.', tr: 'We went to Bern by train.',
+    note: 'Movement from A to B takes sein in the Perfekt: ich bin gefahren.' },
+  aufmachen: { en: 'to open', type: 'regular', sep: 'auf', tags: ['A1.1', 12],
+    pr: ['mach[e] auf', 'mach[st] auf', 'mach[t] auf', 'mach[en] auf', 'mach[t] auf', 'mach[en] auf'],
+    pt: ['mach[te] auf', 'mach[test] auf', 'mach[te] auf', 'mach[ten] auf', 'mach[tet] auf', 'mach[ten] auf'],
+    aux: 'haben', p2: 'auf[ge]mach[t]', ex: 'Könnten Sie bitte das Fenster aufmachen?', tr: 'Could you open the window, please?',
+    note: 'Separable: the prefix goes to the end. In the Perfekt, ge- sits between prefix and stem: aufgemacht.' },
+};
+const TYPE_META = { regular: ['Regular', '#dbeafe', '#1e40af'], irregular: ['Irregular', '#fee2e2', '#991b1b'] };
+
+const ART = { Dativ: [['m', 'dem', 'einem'], ['n', 'dem', 'einem'], ['f', 'der', 'einer'], ['Pl', 'den …n', '— …n']],
+              Akkusativ: [['m', 'den', 'einen'], ['n', 'das', 'ein'], ['f', 'die', 'eine'], ['Pl', 'die', '—']] };
+const PREPS = [
+  { w: 'vor', c: 'Dativ', u: ['temporal', 'lokal'], q: 'Wann? · Wo?', l: [8, 11], ex: [['Ich habe <mark>vor</mark> einem Jahr die Ausbildung gemacht.', 'I did the training a year ago.'], ['Das Auto steht <mark>vor</mark> dem Haus.', 'The car is in front of the house.']] },
+  { w: 'seit', c: 'Dativ', u: ['temporal'], q: 'Seit wann? · Wie lange?', l: [8], ex: [['Ich bin <mark>seit</mark> zwei Jahren selbstständig.', 'I have been self-employed for two years.']] },
+  { w: 'für', c: 'Akkusativ', u: ['temporal'], q: 'Für wie lange?', l: [8], ex: [['Ich suche <mark>für</mark> einen Monat eine Arbeit.', 'I am looking for a job for one month.']] },
+  { w: 'bei', c: 'Dativ', u: ['lokal', 'temporal'], q: 'Wo? · Wann?', l: [8, 12], x: 'beim = bei dem', ex: [['Ich arbeite <mark>bei</mark> «Immowohl».', 'I work at Immowohl.'], ['<mark>Beim</mark> Essen lese ich nicht.', 'I don’t read while eating.']] },
+  { w: 'als', c: 'ohne', u: ['modal'], q: 'Als was?', l: [8], ex: [['Ich arbeite <mark>als</mark> Hauswart.', 'I work as a caretaker.']], n: 'No article, no case change: the job title stays as it is.' },
+  { w: 'mit', c: 'Dativ', u: ['modal'], q: 'Womit? · Mit wem?', l: [11], ex: [['Wir fahren <mark>mit</mark> dem Auto.', 'We are going by car.']] },
+  { w: 'nach', c: 'Dativ', u: ['lokal', 'temporal'], q: 'Wohin? · Wann?', l: [11, 12], ex: [['Ich fahre <mark>nach</mark> Bern.', 'I am going to Bern.'], ['<mark>Nach</mark> dem Kurs gehe ich in den Laden.', 'After the course I go to the shop.']] },
+  { w: 'zu', c: 'Dativ', u: ['lokal'], q: 'Wohin?', l: [11], x: 'zum = zu dem · zur = zu der', ex: [['Ich gehe <mark>zum</mark> Zahnarzt.', 'I am going to the dentist.']] },
+  { w: 'in', c: 'Wechsel', u: ['lokal', 'temporal'], q: 'Wo? (Dat) · Wohin? (Akk) · Wann?', l: ['A1.1', 11, 12], x: 'im = in dem · ins = in das', ex: [['Ich bin <mark>im</mark> Park.', 'I am in the park.'], ['Ich gehe <mark>in</mark> den Park.', 'I am going into the park.'], ['<mark>In</mark> einer Stunde.', 'In an hour.']] },
+  { w: 'auf', c: 'Wechsel', u: ['lokal'], q: 'Wo? (Dat) · Wohin? (Akk)', l: [11], ex: [['Wo …? – <mark>Auf</mark> dem Parkplatz.', 'Where …? – In the car park.']] },
+  { w: 'ab', c: 'Dativ', u: ['temporal'], q: 'Ab wann?', l: [12], ex: [['<mark>Ab</mark> morgen habe ich Ferien.', 'From tomorrow I’m on holiday.']] },
+  { w: 'bis', c: 'Akkusativ', u: ['temporal'], q: 'Bis wann?', l: [12], ex: [['Ich arbeite <mark>bis</mark> Freitag.', 'I work until Friday.']], n: 'Usually no article: bis Freitag, bis morgen. With an article it joins zu: bis zum Montag.' },
+];
+
+const GRAMMAR = [
+  { id: 'wortbildung', t: 'Nomen: Wortbildung', ug: 'UG 11.01', rel: [['nomen', 'Arzt'], ['nomen', 'Hauswart']],
+    blocks: [
+      { type: 'rule', text: 'Most jobs: add <b>-in</b> for the female form. Plural: <b>-innen</b>.' },
+      { type: 'table', head: ['♂ der', '♀ die (-in)'], rows: [['der Mechatroniker', 'die Mechatroniker<b>in</b>'], ['der Arzt', 'die <b>Ä</b>rzt<b>in</b>'], ['⚠ der Hausmann', 'die Haus<b>frau</b>'], ['⚠ der Pflegefachmann', 'die Pflegefach<b>frau</b>']] },
+      { type: 'examples', items: [['Er ist Arzt von Beruf.', 'He is a doctor.'], ['Sie ist Ärztin von Beruf.', 'She is a doctor.']] } ] },
+  { id: 'bei-als', t: 'bei (lokal) · als (modal)', ug: 'UG 6.03', rel: [['prep', 'bei'], ['prep', 'als']],
+    blocks: [
+      { type: 'table', head: ['Wo arbeiten Sie?', ''], rows: [['Ich arbeite', '<b>als</b> Hauswart.'], ['Ich arbeite', '<b>bei</b> «Immowohl».']] },
+      { type: 'rule', text: '<b>als</b> + job (no article) · <b>bei</b> + company / person.' } ] },
+  { id: 'vor-seit', t: 'vor, seit + Dativ', ug: 'UG 6.01', rel: [['prep', 'vor'], ['prep', 'seit']],
+    blocks: [
+      { type: 'qtable', head: ['', 'm', 'n', 'f', 'Pl', ''], rows: [
+        { q: 'Wann?', cells: ['Ich habe <b>vor</b>', 'einem Monat', 'einem Jahr', 'einer Woche', 'zwei Monaten', 'die Ausbildung gemacht.'] },
+        { q: 'Seit wann? / Wie lange?', cells: ['Ich bin <b>seit</b>', 'einem Monat', 'einem Jahr', 'einer Woche', 'zwei Jahren', 'selbstständig.'] } ] },
+      { type: 'rule', text: '<b>vor</b> = a point in the past (ago). <b>seit</b> = started in the past and still true. Plural dative adds <b>-n</b>: Jahre<b>n</b>, Monate<b>n</b>.' } ] },
+  { id: 'fuer', t: 'für + Akkusativ', ug: 'UG 6.01', rel: [['prep', 'für']],
+    blocks: [
+      { type: 'qtable', head: ['', 'm', 'n', 'f', 'Pl', ''], rows: [
+        { q: 'Für wie lange?', cells: ['Ich suche <b>für</b>', 'einen Monat', 'ein Jahr', 'eine Woche', 'zwei Wochen', 'eine Arbeit.'] } ] },
+      { type: 'examples', items: [['Ich möchte gern für ein Jahr in Italien sein.', 'I would like to be in Italy for a year.']] } ] },
+  { id: 'praeteritum', t: 'Präteritum: sein und haben', ug: 'UG 5.06', rel: [['verb', 'sein'], ['verb', 'haben']],
+    blocks: [
+      { type: 'table', head: ['', 'sein', 'Prät.', 'haben', 'Prät.'], rows: PRON.map((p, i) => [p, ['bin', 'bist', 'ist', 'sind', 'seid', 'sind'][i], '<b style="color:var(--red)">' + ['war', 'warst', 'war', 'waren', 'wart', 'waren'][i] + '</b>', AUX.haben[i], '<b style="color:var(--red)">' + ['hatte', 'hattest', 'hatte', 'hatten', 'hattet', 'hatten'][i] + '</b>']) },
+      { type: 'examples', items: [['Früher war ich Koch. Heute bin ich Hauswart.', 'I used to be a cook. Today I am a caretaker.'], ['Früher hatte ich kein Auto.', 'I used to have no car.']] } ] },
+];
+
+const L8 = {
+  sections: [['A', 'Ich bin Physiotherapeutin.', 'Berufe benennen und erfragen · über die berufliche Situation sprechen'],
+    ['B', 'Wann hast du die Ausbildung gemacht?', 'private und berufliche Informationen über Vergangenheit und Gegenwart austauschen'],
+    ['C', 'Ich hatte ja noch keine Berufserfahrung.', 'von Ereignissen und Aktivitäten in der Vergangenheit berichten'],
+    ['D', 'Inserate', 'Stellenanzeigen verstehen · Telefongespräch zu einem Stellenangebot · ein Stellengesuch schreiben']],
+  verbs: [['arbeiten', 'to work'], ['sein', 'to be'], ['haben', 'to have'], ['suchen', 'to look for'], ['machen', 'to do / make'], ['sich bewerben', 'to apply']],
+  nouns: [['der', 'Beruf', 'job'], ['der', 'Arzt', 'doctor'], ['die', 'Ärztin', 'doctor (f)'], ['die', 'Ausbildung', 'training'], ['die', 'Stelle', 'position'], ['das', 'Inserat', 'job ad'], ['der', 'Hauswart', 'caretaker'], ['die', 'Erfahrung', 'experience']],
+  adjs: [['selbstständig', 'self-employed'], ['arbeitslos', 'unemployed'], ['berufstätig', 'employed']],
+  advs: [['früher', 'in the past'], ['heute', 'today'], ['damals', 'back then']],
+  preps: ['vor', 'seit', 'für', 'bei', 'als'],
+  phrases: [['Was sind Sie von Beruf?', 'What do you do?'], ['Wo arbeiten Sie?', 'Where do you work?'], ['Ich arbeite als …', 'I work as …'], ['Ich suche eine Stelle als …', 'I’m looking for a job as …']],
+};
+
+// ── Screens ─────────────────────────────────────────────────────────────────
+const NAV = [['lessons', 'Lektionen', 1], ['verbs', 'Verben'], ['nouns', 'Nomen'], ['adj', 'Adjektive'], ['phrases', 'Redemittel'], ['preps', 'Präpositionen', 1], ['grammar', 'Grammatik', 1], ['satzbau', 'Satzbau'], ['practice', 'Üben']];
+const SCREENS = [['home', 'Home'], ['search', 'Suche „Lektion 8“'], ['lessons', 'Lektionen'], ['lesson', 'Lektion 8'], ['verbs', 'Verben · 3 Zeiten'], ['preps', 'Präpositionen'], ['grammar', 'Grammatik'], ['practice', 'Üben'], ['vocab', 'Wortschatz-Check']];
+const state = { screen: 'home', verb: 'arbeiten', tense: 'pt', caseF: 'Alle', useF: 'Alle', openPrep: 'seit', topic: 'vor-seit', mode: 'fall', drill: 0, picked: null, conjTense: 'pt', conjIn: '', conjRes: null, vocabDone: { tag: false, miss: false } };
+
+const header = (eyebrow, title, sub) => `<div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p class="sub">${sub}</p>`;
+
+function home() {
+  const t = [
+    ['lessons', 'Lektionen', 'Lessons', 'Everything from one book lesson on one page: words, grammar, practice.', 1],
+    ['verbs', 'Verben', 'Verbs', 'Präsens, Präteritum and Perfekt, with stem-change highlighting.', 2],
+    ['nouns', 'Nomen', 'Nouns', 'Gender, plural and female job forms (Arzt → Ärztin).', 2],
+    ['adj', 'Adjektive', 'Adjectives', 'Common adjectives and their opposites.'],
+    ['phrases', 'Redemittel', 'Phrases', 'Question words, connectors and conversation strategies.'],
+    ['preps', 'Präpositionen', 'Prepositions', 'Which case (Dativ, Akkusativ or both) and when to use each one.', 1],
+    ['grammar', 'Grammatik', 'Grammar', 'The grammar summary from the end of each lesson.', 1],
+    ['satzbau', 'Satzbau', 'Sentence structure', 'Word order, verb position and separable-verb patterns.'],
+    ['practice', 'Üben', 'Practice', 'Flashcards and drills, for everything or one lesson.', 2],
+  ];
+  return header('A1 · A1.2 · Lern-Werkzeuge', 'Deutsch Lernen', 'Choose a lesson or a tool.') +
+    `<div class="stack">${t.map(([id, de, en, b, s]) => `<button class="tile ${s === 1 ? 'new' : ''}" data-go="${id}">
+      <div class="tile-top"><span class="tile-title">${de}${s === 1 ? '<span class="neu">NEU</span>' : s === 2 ? '<span class="neu">ERWEITERT</span>' : ''}</span><span class="tile-en">${en}</span></div>
+      <div class="tile-blurb">${b}</div></button>`).join('')}</div>`;
+}
+
+function search() {
+  return header('Globale Suche', 'Suche nach Lektion', 'Type “Lektion 8”, “L8” or “l08” in the search box.') +
+    `<div class="search" style="margin-bottom:10px"><input value="lektion 8" aria-label="Suchbeispiel" style="width:100%;font-size:15px;padding:10px 14px" readonly></div>
+    <div class="dd new">
+      <button class="dd-row" data-go="lesson" style="padding:12px 16px;background:var(--canvas)">
+        <span style="display:flex;gap:10px;align-items:center">${tag(8)}<span><b style="font-family:var(--serif);font-size:16px">Lektion 8 · Beruf und Arbeit</b><br><small>A1.2 · Folge 8: Total fotogen · 41 Einträge</small></span></span><span style="color:var(--muted)">→</span></button>
+      ${[['Verben', L8.verbs.slice(0, 3).map(([a, b]) => [a, b, 'verbs'])], ['Nomen', L8.nouns.slice(0, 3).map(([a, n, g]) => [`<span class="art-${a}">${a}</span> ${n}`, g, 'nouns'])], ['Präpositionen', [['vor + Dativ', 'ago', 'preps'], ['seit + Dativ', 'since / for', 'preps'], ['für + Akkusativ', 'for (duration)', 'preps']]], ['Grammatik', GRAMMAR.slice(2, 5).map((g) => [g.t, g.ug, 'grammar'])]]
+        .map(([g, rows]) => `<div class="dd-group">${g}</div>${rows.map(([a, b, go]) => `<button class="dd-row" data-go="${go}"><span>${a}</span><small>${b}</small></button>`).join('')}`).join('')}
+      <div class="dd-group" style="text-align:center;padding:10px">+ 29 weitere · <button class="pill" data-go="lesson" style="padding:2px 9px;font-size:11px">Alle auf der Lektionsseite</button></div>
+    </div>
+    <p class="muted" style="margin-top:14px">Normal word search still works as before. Swiss spelling: “gross” and “groß” find the same word.</p>`;
+}
+
+function lessons() {
+  const card = (l) => `<button class="tile" data-go="${l.n === 8 ? 'lesson' : 'lessons'}" style="display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;padding:0;overflow:hidden">
+      <span style="background:${LC[l.n]};color:#fff;font:700 28px var(--sans);height:100%;display:grid;place-items:center;min-height:74px">${l.n}</span>
+      <span style="padding:12px 16px 12px 0"><span class="tile-title" style="font-size:17px">${l.t}</span>
+      <span class="tile-blurb" style="display:block">Folge ${l.n}: ${l.f}</span>
+      ${l.lws ? `<span style="display:flex;gap:8px;align-items:center;margin-top:7px"><span class="bar" style="flex:1"><span style="width:${Math.round(l.have / l.lws * 100)}%;background:${LC[l.n]}"></span></span><span class="muted" style="font-size:11.5px;font-variant-numeric:tabular-nums">${l.have}/${l.lws} Wörter</span></span>` : '<span class="muted" style="font-size:11.5px;display:block;margin-top:6px">Wortschatz noch nicht geprüft</span>'}</span></button>`;
+  return header('Kursbuch', 'Lektionen', 'Pick a lesson to see everything it covers.') +
+    `<div class="new" style="border-radius:14px"><h2 style="margin-top:0">A1.2 · Lektion 8–14</h2><div class="stack">${LESSONS.map(card).join('')}</div>
+    <h2>A1.1</h2><button class="tile" data-go="lessons"><div class="tile-top"><span class="tile-title" style="font-size:17px">Alles aus A1.1</span>${tag('A1.1')}</div><div class="tile-blurb">Everything already in the app, in one bucket. Can be split into Lektion 1–7 later.</div></button></div>`;
+}
+
+function lesson() {
+  const sec = (title, inner, goId) => `<h2>${title}</h2><div class="pills">${inner}</div>`;
+  return `<button class="pill" data-go="lessons" style="margin-bottom:12px">← Lektionen</button>
+  <div class="card new">
+    <div class="lband" style="background:${LC[8]}"><span class="lnum">8</span><div><div class="ltitle">Beruf und Arbeit</div><div class="lfolge">A1.2 · Folge 8: Total fotogen · Kursbuch S. 10</div></div></div>
+    <div class="goals">${L8.sections.map(([k, t, g]) => `<div class="goal"><span class="k">${k}</span><div><div class="t">${t}</div><div class="g">${g}</div></div></div>`).join('')}</div>
+    <dl class="meta"><dt>Wortfelder</dt><dd>Berufe · Arbeit</dd><dt>Phonetik</dt><dd>Vokale e / ä · -e und -er am Wortende</dd><dt>Prüfung</dt><dd>Sprechen, Teil 2</dd><dt>Fokus</dt><dd>Ein Inserat schreiben · Nach der Aufgabenverteilung fragen</dd></dl>
+    <div style="padding:14px 22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+      <div style="flex:1;min-width:180px"><div class="muted" style="font-size:12px;margin-bottom:5px">Lernwortschatz (S. 178): <b style="font-variant-numeric:tabular-nums">118 / 142</b> Wörter in der App</div><div class="bar"><span style="width:83%;background:${LC[8]}"></span></div></div>
+      <button class="btn" data-go="practice">Diese Lektion üben →</button></div>
+  </div>
+  ${sec('Grammatik', GRAMMAR.map((g) => `<button class="item-chip" data-topic="${g.id}">${g.t}<small>${g.ug}</small></button>`).join(''))}
+  ${sec('Verben', L8.verbs.map(([v, e]) => `<button class="item-chip" data-verb="${VERBS[v] ? v : 'arbeiten'}">${v}<small>${e}</small></button>`).join(''))}
+  ${sec('Nomen', L8.nouns.map(([a, n, e]) => `<button class="item-chip"><span class="art-${a}">${a}</span> ${n}<small>${e}</small></button>`).join(''))}
+  ${sec('Adjektive', L8.adjs.map(([a, e]) => `<button class="item-chip">${a}<small>${e}</small></button>`).join(''))}
+  ${sec('Adverbien', L8.advs.map(([a, e]) => `<button class="item-chip">${a}<small>${e}</small></button>`).join(''))}
+  ${sec('Präpositionen', L8.preps.map((w) => { const p = PREPS.find((x) => x.w === w); return `<button class="item-chip" data-prep="${w}">${w} <span class="case ${p.c}" style="font-size:9px;padding:2px 6px">${p.c === 'ohne' ? 'ohne Fall' : p.c}</span></button>`; }).join(''))}
+  ${sec('Redemittel', L8.phrases.map(([a, e]) => `<button class="item-chip">${a}<small>${e}</small></button>`).join(''))}`;
+}
+
+function verbs() {
+  const v = VERBS[state.verb]; const [lbl, bg, fg] = TYPE_META[v.type];
+  const tenses = [['pr', 'Präsens'], ['pt', 'Präteritum'], ['pf', 'Perfekt']];
+  let body;
+  if (state.tense === 'pf') {
+    body = `<div class="caption">Perfekt = <b>${v.aux}</b> (Präsens) + Partizip II <b>${fmt(v.p2).replace(/<[^>]+>/g, '')}</b> · built automatically</div>
+      <div class="tscroll"><table><thead><tr><th>Pronoun</th><th>${v.aux}</th><th>Partizip II</th></tr></thead><tbody>
+      ${PRON.map((p, i) => `<tr><td class="pron">${p}</td><td class="aux">${AUX[v.aux][i]}</td><td class="form">${fmt(v.p2)}</td></tr>`).join('')}</tbody></table></div>`;
+  } else {
+    const forms = state.tense === 'pr' ? v.pr : v.pt;
+    body = `<div class="caption">Stem: <b style="color:var(--muted)">${state.verb.replace(/^auf/, '').replace(/en$/, '')}-</b>${v.sep ? ' · separable prefix <b>' + v.sep + '-</b>' : ''}</div>
+      <div class="tscroll"><table><thead><tr><th>Pronoun</th><th>Conjugated form</th></tr></thead><tbody>
+      ${PRON.map((p, i) => `<tr><td class="pron">${p}</td><td class="form">${fmt(forms[i])}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+  return header('A1 · Verb-Konjugation', 'Verben', 'Pick a verb, then a tense.') +
+    `<div class="pills" style="margin-bottom:6px">${Object.keys(VERBS).map((k) => `<button class="pill" data-verb="${k}" aria-pressed="${k === state.verb}">${k}</button>`).join('')}<span class="muted" style="align-self:center">+ 69 more</span></div>
+    <div class="seg new" role="group" aria-label="Zeitform">${tenses.map(([k, l]) => `<button data-tense="${k}" aria-pressed="${k === state.tense}">${l}</button>`).join('')}</div>
+    <div class="card"><div class="card-head"><div><div class="big">${state.verb}</div><div class="gloss">${v.en}</div></div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end"><span class="case" style="background:${bg};color:${fg}">${lbl}</span><div class="tags new" style="border-radius:99px">${v.tags.map(tag).join('')}</div></div></div>
+      ${body}
+      <div class="ex" style="padding:12px 22px"><div class="ex-de">${v.ex}</div><div class="ex-en">${v.tr}</div></div>
+      <div class="note-row">💡 ${v.note}</div></div>`;
+}
+
+function preps() {
+  const caseOpts = ['Alle', 'Dativ', 'Akkusativ', 'Wechsel', 'ohne'];
+  const useOpts = ['Alle', 'temporal', 'lokal', 'modal'];
+  const list = PREPS.filter((p) => (state.caseF === 'Alle' || p.c === state.caseF) && (state.useF === 'Alle' || p.u.includes(state.useF)));
+  const artTable = (c) => !ART[c] ? '' : `<div class="tscroll" style="border-top:1px solid var(--line)"><table class="gtable"><thead><tr><th>${c}</th><th>bestimmt</th><th>unbestimmt</th></tr></thead><tbody>${ART[c].map(([g, d, u]) => `<tr><td class="pron" style="width:auto">${g}</td><td>${d}</td><td>${u}</td></tr>`).join('')}</tbody></table></div>`;
+  const wechsel = `<div class="gblock" style="background:var(--wech-bg);color:var(--wech)"><b>Wo?</b> → Dativ (im Park) · <b>Wohin?</b> → Akkusativ (in den Park)</div>`;
+  return header('A1 · Präpositionen', 'Präpositionen', 'Filter by case or by use. Tap a card for articles and examples.') +
+    `<div class="new" style="border-radius:14px">
+    <div class="muted" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px">Fall</div>
+    <div class="pills" style="margin-bottom:10px">${caseOpts.map((c) => `<button class="pill" data-case="${c}" aria-pressed="${c === state.caseF}">${c === 'ohne' ? 'ohne Fall' : c}</button>`).join('')}</div>
+    <div class="muted" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px">Gebrauch</div>
+    <div class="pills" style="margin-bottom:16px">${useOpts.map((c) => `<button class="pill" data-use="${c}" aria-pressed="${c === state.useF}">${c}</button>`).join('')}</div>
+    <div class="stack">${list.map((p) => { const open = p.w === state.openPrep; return `<div class="prep">
+      <button class="prep-head" data-open="${p.w}" style="width:100%;border:0;background:none;text-align:left;color:inherit" aria-expanded="${open}">
+        <span><span class="prep-word">${p.w}</span><div class="prep-q">${p.q} · ${p.u.join(', ')}</div></span>
+        <span style="display:flex;flex-direction:column;gap:5px;align-items:flex-end"><span class="case ${p.c}">${p.c === 'ohne' ? 'ohne Fall' : '+ ' + p.c}</span><span class="tags">${p.l.map(tag).join('')}</span></span></button>
+      ${open ? `<div class="prep-body">${p.c === 'Wechsel' ? wechsel : artTable(p.c)}${p.ex.map(([d, e]) => `<div class="ex"><div class="ex-de">${d}</div><div class="ex-en">${e}</div></div>`).join('')}${p.x ? `<div class="note-row" style="padding:10px 18px">🔗 ${p.x}</div>` : ''}${p.n ? `<div class="note-row" style="padding:10px 18px">💡 ${p.n}</div>` : ''}</div>` : ''}</div>`; }).join('') || '<p class="muted">Keine Präposition mit diesem Filter.</p>'}</div></div>`;
+}
+
+function grammar() {
+  const g = GRAMMAR.find((x) => x.id === state.topic);
+  const block = (b) => {
+    if (b.type === 'rule') return `<div class="gblock">📌 ${b.text}</div>`;
+    if (b.type === 'examples') return b.items.map(([d, e]) => `<div class="ex" style="padding:10px 22px"><div class="ex-de">${d}</div><div class="ex-en">${e}</div></div>`).join('');
+    if (b.type === 'table') return `<div class="tscroll" style="border-top:1px solid var(--line)"><table class="gtable"><thead><tr>${b.head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    return `<div class="tscroll" style="border-top:1px solid var(--line)"><table class="gtable" style="min-width:520px"><thead><tr>${b.head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${b.rows.map((r) => `<tr><td class="q" colspan="6" style="border-top:1px solid var(--line);background:var(--raise)">${r.q}</td></tr><tr>${r.cells.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  };
+  const relChip = ([k, w]) => `<button class="item-chip" ${k === 'prep' ? `data-prep="${w}"` : k === 'verb' ? `data-verb="${VERBS[w] ? w : 'sein'}"` : ''}>${k === 'prep' ? 'Präposition' : k === 'verb' ? 'Verb' : 'Nomen'}: <b>${w}</b></button>`;
+  return header('A1.2 · Grammatik', 'Grammatik', 'Topics from the “Grammatik und Kommunikation” page of each lesson.') +
+    `<div class="pills" style="margin-bottom:6px"><span class="muted" style="align-self:center;margin-right:4px">Lektion</span>${[8, 9, 10, 11, 12, 13, 14].map((n) => `<button class="pill" aria-pressed="${n === 8}" style="${n === 8 ? `background:${LC[8]};border-color:${LC[8]}` : ''}">${n}</button>`).join('')}</div>
+    <div class="pills" style="margin:10px 0 14px">${GRAMMAR.map((x) => `<button class="pill" data-topic="${x.id}" aria-pressed="${x.id === state.topic}">${x.t}</button>`).join('')}</div>
+    <div class="card new"><div class="card-head"><div><div class="big" style="font-size:22px;letter-spacing:-.4px">${g.t}</div><div class="gloss">${g.ug} · Lektion 8</div></div>${tag(8)}</div>
+    ${g.blocks.map(block).join('')}
+    <div class="note-row"><span style="margin-right:6px">🔗</span>Verwandt: <span class="pills" style="display:inline-flex;margin-left:4px">${g.rel.map(relChip).join('')}</span></div></div>`;
+}
+
+const DRILL = [
+  { s: 'Ich wohne seit ___ Jahr in Zürich.', o: ['einem', 'einen', 'ein', 'einer'], a: 'einem', why: 'seit + Dativ · das Jahr → einem Jahr' },
+  { s: 'Ich suche für ___ Monat eine Wohnung.', o: ['einem', 'einen', 'ein', 'einer'], a: 'einen', why: 'für + Akkusativ · der Monat → einen Monat' },
+  { s: 'Sie hat vor ___ Woche angefangen.', o: ['einem', 'eine', 'einer', 'einen'], a: 'einer', why: 'vor + Dativ · die Woche → einer Woche' },
+];
+function practice() {
+  const modes = [['flash', 'Karteikarten'], ['quiz', 'Quiz'], ['article', 'Artikel'], ['conj', 'Konjugation'], ['fall', 'Welcher Fall?', 1]];
+  let play = '';
+  if (state.mode === 'fall') {
+    const d = DRILL[state.drill % DRILL.length];
+    play = `<div class="card new"><div class="card-head"><div><div class="muted" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase">Welcher Fall? · ${state.drill % DRILL.length + 1} / ${DRILL.length}</div>
+      <div style="font-size:22px;font-weight:700;margin-top:8px;line-height:1.35">${d.s.replace('___', `<span style="border-bottom:2px solid var(--ink);padding:0 6px">${state.picked ? (state.picked === d.a ? d.a : '&nbsp;?&nbsp;') : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</span>`)}</div></div></div>
+      <div style="padding:16px 22px" class="grid2">${d.o.map((o) => `<button class="opt ${state.picked ? (o === d.a ? 'right' : o === state.picked ? 'wrong' : '') : ''}" data-pick="${o}" ${state.picked ? 'disabled' : ''}>${o}</button>`).join('')}</div>
+      ${state.picked ? `<div class="note-row" style="display:flex;justify-content:space-between;gap:10px;align-items:center"><span>${state.picked === d.a ? '✅ Richtig!' : '❌ Nicht ganz.'} ${d.why}</span><button class="btn" data-next>Weiter</button></div>` : ''}</div>`;
+  } else if (state.mode === 'conj') {
+    const want = { pr: 'fährst', pt: 'fuhrst', pf: 'bist gefahren' }[state.conjTense];
+    play = `<div class="seg new">${[['pr', 'Präsens'], ['pt', 'Präteritum'], ['pf', 'Perfekt']].map(([k, l]) => `<button data-ct="${k}" aria-pressed="${k === state.conjTense}">${l}</button>`).join('')}</div>
+      <div class="card"><div class="card-head"><div><div class="muted" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase">Konjugation</div><div style="font-size:24px;font-weight:700;margin-top:6px"><span style="color:var(--faint);font-style:italic;font-weight:400">du</span> · fahren</div></div></div>
+      <form id="conjf" style="padding:16px 22px;display:flex;gap:8px"><input id="conjIn" value="${state.conjIn}" placeholder="${state.conjTense === 'pf' ? 'z.B. bist gefahren' : 'Form eingeben'}" style="flex:1;min-width:0;font:18px var(--serif);padding:10px 12px;border:1px solid var(--border);border-radius:10px" autocomplete="off"><button class="btn">Prüfen</button></form>
+      ${state.conjRes ? `<div class="note-row">${state.conjRes === 'ok' ? '✅ Richtig: <b>' + want + '</b>' : '❌ Richtig wäre: <b>' + want + '</b>'}</div>` : ''}</div>`;
+  } else {
+    play = `<div class="card"><div style="padding:28px 22px;text-align:center"><div class="muted">This mode works as today, on the filtered deck.</div><div style="font-size:26px;font-weight:700;margin-top:10px"><span class="art-die">die</span> Ausbildung</div><div class="gloss">tap to reveal</div></div></div>`;
+  }
+  return header('Üben', 'Üben', 'Practise everything, or just one lesson.') +
+    `<div class="new" style="border-radius:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px">
+      <label for="lsel" class="muted">Lektion</label>
+      <select id="lsel" style="font:13.5px var(--sans);padding:7px 10px;border-radius:10px;border:1px solid var(--border);background:var(--white)"><option>Alle Lektionen</option><option>A1.1</option><option selected>A1.2 · L8 Beruf und Arbeit</option><option>A1.2 · L9 Ämter</option></select>
+      <span class="muted">41 Karten</span></div>
+    <div class="pills" style="margin-bottom:14px">${modes.map(([k, l, n]) => `<button class="pill" data-mode="${k}" aria-pressed="${k === state.mode}">${l}${n ? '<span class="neu">NEU</span>' : k === 'conj' ? '<span class="neu">+ ZEITEN</span>' : ''}</button>`).join('')}</div>
+    ${play}`;
+}
+
+function vocab() {
+  const have = ['Beruf', 'Stelle', 'Chef', 'Kollege', 'Kollegin', 'Termin', 'Vertrag', 'arbeiten', 'suchen', 'machen'];
+  const miss = ['der Arzt, -¨e', 'die Ärztin, -nen', 'der Hauswart, -e', 'die Ausbildung, -en', 'das Inserat, -e', 'der Lohn, -¨e', 'die Erfahrung, -en', 'sich bewerben', 'selbstständig', 'arbeitslos', 'früher', 'damals'];
+  return header('Arbeitsablauf · Claude + du', 'Wortschatz-Check', 'What happens when you send a Lernwortschatz photo. This is a report Claude shows you, not an app screen.') +
+    `<div class="term">$ npm run vocab:check -- A1.2-L08
+Lernwortschatz L8 (S. 178–182): 142 Einträge aus content/lws/A1.2-L08.txt</div>
+    <div class="card new" style="margin-top:12px">
+      <div class="vgroup"><div class="vhead"><span>✅ Schon da, mit L8-Tag</span><span class="muted">96</span></div><span class="vword v-ok">Büro</span><span class="vword v-ok">E-Mail</span><span class="vword v-ok">Computer</span><span class="muted">… 93 more</span></div>
+      <div class="vgroup"><div class="vhead"><span>🏷️ Schon da, aber ohne L8-Tag</span><span class="muted">${have.length}</span></div>
+        ${have.map((w) => `<span class="vword ${state.vocabDone.tag ? 'v-ok' : 'v-tag'}">${w}</span>`).join('')}
+        <div style="margin-top:8px"><button class="btn ghost" data-vocab="tag" ${state.vocabDone.tag ? 'disabled' : ''}>${state.vocabDone.tag ? 'Tags gesetzt ✓' : 'OK, Tags setzen'}</button></div></div>
+      <div class="vgroup"><div class="vhead"><span>❌ Fehlt in der App</span><span class="muted">${miss.length}</span></div>
+        ${miss.map((w) => `<span class="vword ${state.vocabDone.miss ? 'v-ok' : 'v-miss'}">${w}</span>`).join('')}
+        <div class="muted" style="font-size:12px;margin:4px 0 8px">Each word gets added with article, plural, example sentence, translation, Swiss spelling and the L8 tag. New verbs get all 3 tenses.</div>
+        <button class="btn" data-vocab="miss" ${state.vocabDone.miss ? 'disabled' : ''}>${state.vocabDone.miss ? 'Hinzugefügt ✓' : 'OK, hinzufügen'}</button></div>
+    </div>
+    <p class="muted" style="margin-top:12px">The words here are made-up examples. The real lists come from your photos.</p>`;
+}
+
+const NOTES = {
+  home: ['What changes', `<ul><li>Three new tools: <b>Lektionen</b>, <b>Präpositionen</b>, <b>Grammatik</b>.</li><li>Verben, Nomen and Üben get bigger (tenses, female job forms, lesson filter).</li><li>The old “Präpositionen” group inside Redemittel moves to its own tool.</li></ul>`,
+    `<b>Steer?</b> The top nav grows from 6 to 9 links. On a phone that is a long row. Option: fold Präpositionen into Grammatik. I’d keep them separate, because prepositions are words you drill and grammar is tables you read.`],
+  search: ['Search by lesson', `<p>“lektion 8”, “L8” and “l08” all show a <b>lesson hit</b> at the top. Below it are that lesson’s items, grouped by type. A plain “8” stays a normal text search, so it doesn’t get noisy.</p><p>Plan §4.2.</p>`,
+    `<b>Steer?</b> Should the dropdown list the lesson’s items at all, or only show the lesson hit? I’d keep the short preview (3 per group), because it saves a click.`],
+  lessons: ['Lesson list', `<p>One card per lesson, in the book’s colours. The bar shows how much of that lesson’s Lernwortschatz is in the app. It fills in as you send photos.</p><p>Everything already in the app sits in one <b>A1.1</b> bucket (your choice D3).</p>`,
+    `<b>Steer?</b> Book colours or plain cards? I’d keep the colours, because they match the book in your hands.`],
+  lesson: ['Lesson page', `<p>Top: straight from the book’s table of contents (parts A–D, Wortfelder, Phonetik, Prüfung, Fokus). Below: everything tagged L8, grouped by word type. Every chip jumps to that word in its tool.</p><p>Try it: tap a grammar topic, a verb or a preposition.</p><p>Plan §4.1.</p>`,
+    `<b>Steer?</b> Should words be grouped by the book’s parts A–E instead of by word type? The book’s vocabulary list isn’t split by part, so I’d group by word type.`],
+  verbs: ['Verbs · 3 tenses', `<ul><li>New switch: <b>Präsens · Präteritum · Perfekt</b>.</li><li>Präteritum is stored in full, with the same red/blue highlighting.</li><li>Perfekt is built from <i>haben/sein</i> + Partizip II, so it is never typed in twice.</li><li>Lesson tags at the top right.</li></ul><p>Try <b>fahren → Perfekt</b> (uses <i>sein</i>) and <b>aufmachen → Perfekt</b> (auf<b>ge</b>macht).</p>`,
+    `<b>Steer?</b> Show all 3 tenses side by side instead of a switch? On a phone that makes a wide table, so I’d keep the switch.`],
+  preps: ['Prepositions', `<p>Each preposition carries its <b>case</b> (Dativ / Akkusativ / Wechsel) and its <b>use</b> (temporal / lokal / modal). Opening a card shows the article table for that case and examples from the book.</p><p>Try the filters: <b>Dativ + temporal</b> gives vor, seit, bei, nach, ab.</p>`,
+    `<b>Plan fix found:</b> <i>als</i> (L8) takes no case. The plan only allows Dativ / Akkusativ / Wechsel, so I added <b>“ohne Fall”</b> here. The plan now includes it (§3.5).`],
+  grammar: ['Grammar', `<p>Each lesson’s grammar summary becomes topics. They use 3 building blocks: <b>table</b>, <b>rule</b> and <b>examples</b>. The 5 topics here are the real ones from your L8 photo.</p><p>“Verwandt” links jump to the matching verb or preposition, so the word itself is stored only once.</p>`,
+    `<b>Steer?</b> Keep English explanations (like the rest of the app), or German only like the book? I’d keep short English rules next to the German tables.`],
+  practice: ['Practice', `<ul><li>New <b>Lektion</b> filter works with every mode.</li><li>Konjugation gets a <b>tense switch</b>. Perfekt accepts the full form (“bist gefahren”).</li><li>New drill <b>Welcher Fall?</b>: pick the right article after a preposition.</li></ul><p>Try both: answer the drill, then switch to Konjugation.</p>`,
+    `<b>Steer?</b> The lesson filter could be a list of lessons you tick (L8 + L9 together) instead of one choice. I’d start with one choice (simpler) and add ticking later if you miss it.`],
+  vocab: ['Vocab check', `<p>This happens in our chat, not in the app. You send photos, I write them to a text file, and a script sorts every word into 3 groups. <b>Nothing gets added until you say OK</b> (your choice D4).</p><p>Try the two buttons.</p>`,
+    `<b>Steer?</b> Should the word list also appear in the app (e.g. a “Lernwortschatz” tab on the lesson page with ✅/❌)? I left it out of the plan. It would be handy for checking yourself, but it’s extra work.`],
+};
+
+const RENDER = { home, search, lessons, lesson, verbs, preps, grammar, practice, vocab };
+const ALIAS = { nouns: 'lesson', adj: 'lesson', phrases: 'lesson', satzbau: 'home' };
+
+function render() {
+  const s = state.screen;
+  document.getElementById('screen').innerHTML = RENDER[s]();
+  const [h, body, steer] = NOTES[s];
+  document.getElementById('notes').innerHTML = `<div class="note"><h3>${h}</h3>${body}<div class="steer">${steer}</div></div><div class="legend"><i></i> dashed amber = new or changed</div>`;
+  document.getElementById('mockbar').innerHTML = '<b>Mock · screens</b>' + SCREENS.map(([k, l]) => `<button data-go="${k}" aria-pressed="${k === s}">${l}</button>`).join('') +
+    `<label><input type="checkbox" id="notesT" ${document.body.classList.contains('hide-notes') ? '' : 'checked'}> Notes</label>`;
+  document.getElementById('links').innerHTML = NAV.map(([k, l, n]) => `<button data-go="${k}" class="${k === s || (s === 'lesson' && k === 'lessons') ? 'active' : ''} ${n ? 'is-new' : ''}">${l}</button>`).join('');
+  const f = document.getElementById('conjf');
+  if (f) f.addEventListener('submit', (e) => { e.preventDefault(); const v = document.getElementById('conjIn').value.trim().toLowerCase().replace(/\s+/g, ' ');
+    const want = { pr: 'fährst', pt: 'fuhrst', pf: 'bist gefahren' }[state.conjTense]; state.conjIn = v; state.conjRes = v === want ? 'ok' : 'no'; render(); });
+}
+function go(s) { state.screen = ALIAS[s] || s; state.picked = null; render(); window.scrollTo({ top: 0 }); }
+
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('button, input[type=checkbox]'); if (!b) return;
+  const d = b.dataset;
+  if (b.id === 'notesT') { document.body.classList.toggle('hide-notes', !b.checked); return; }
+  if (d.go) return go(d.go);
+  if (d.verb) { state.verb = d.verb; if (state.screen !== 'verbs') go('verbs'); else render(); return; }
+  if (d.tense) { state.tense = d.tense; return render(); }
+  if (d.prep) { state.openPrep = d.prep; state.caseF = 'Alle'; state.useF = 'Alle'; return go('preps'); }
+  if (d.case) { state.caseF = d.case; return render(); }
+  if (d.use) { state.useF = d.use; return render(); }
+  if (d.open) { state.openPrep = state.openPrep === d.open ? null : d.open; return render(); }
+  if (d.topic) { state.topic = d.topic; if (state.screen !== 'grammar') go('grammar'); else render(); return; }
+  if (d.mode) { state.mode = d.mode; state.picked = null; state.conjRes = null; return render(); }
+  if (d.pick) { state.picked = d.pick; return render(); }
+  if ('next' in d) { state.drill++; state.picked = null; return render(); }
+  if (d.ct) { state.conjTense = d.ct; state.conjRes = null; state.conjIn = ''; return render(); }
+  if (d.vocab) { state.vocabDone[d.vocab] = true; return render(); }
+});
+document.getElementById('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') go('search'); });
+document.getElementById('q').addEventListener('focus', () => go('search'));
+render();
+</script>
+</body>
+</html>
