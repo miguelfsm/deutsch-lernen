@@ -2,6 +2,8 @@ import { type ReactElement } from 'react'
 import { HashRouter, Routes, Route, NavLink, Link } from 'react-router-dom'
 import { tools } from './tools/registry.js'
 import Home from './pages/Home.jsx'
+import LessonsIndex from './pages/LessonsIndex.jsx'
+import LessonPage from './pages/LessonPage.jsx'
 import GermanVerbs from './tools/verbs/GermanVerbs.jsx'
 import GermanNouns from './tools/nouns/GermanNouns.jsx'
 import GermanAdjectives from './tools/adjectives/GermanAdjectives.jsx'
@@ -14,6 +16,7 @@ import GlobalSearch from './components/GlobalSearch.jsx'
 // Route path → tool component. Kept beside the registry so adding a tool is a
 // two-line change (registry entry + element) and touches no existing tool.
 const ELEMENTS: Record<string, ReactElement> = {
+  '/lektionen': <LessonsIndex />,
   '/verben': <GermanVerbs />,
   '/nomen': <GermanNouns />,
   '/adjektive': <GermanAdjectives />,
@@ -98,6 +101,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/suchen" element={<GlobalSearch />} />
+        {/* Not tied to the tools loop below: it's a drill-down from the
+            Lektionen index/cards and from search/practice, not a nav link. */}
+        <Route path="/lektionen/:id" element={<LessonPage />} />
         {tools.map((t) => (
           <Route key={t.path} path={t.path} element={ELEMENTS[t.path]} />
         ))}

@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import Header from '../../components/Header'
 import SpeakButton from '../../components/SpeakButton'
 import { font, color } from '../../lib/theme'
 import { tools } from '../registry'
 import { catalog } from '../../lib/catalog'
+import { lessons, type LessonId } from '../../content/lessons'
 import {
   createSession,
   filterByTools,
+  filterByLesson,
   currentCard,
   isComplete,
   isEmpty,
@@ -43,6 +45,15 @@ const PRESENT = new Set(catalog.map((e) => e.toolId))
 const CONTENT_SETS = tools
   .map((t) => ({ id: t.path.replace(/^\//, ''), label: t.label }))
   .filter((c) => PRESENT.has(c.id))
+
+// Lesson filter options (plan §4.4, mock U4: single-select for now). A blank
+// selection (`undefined`) means "every lesson" — the default, unchanged
+// behaviour. Label mirrors the mock's "A1.2 · L8 Beruf und Arbeit" style.
+const LESSON_OPTIONS: { id: LessonId; label: string }[] = lessons.map((l) => ({
+  id: l.id,
+  label: l.number !== undefined ? `${l.level} · L${l.number} ${l.title}` : l.level,
+}))
+const KNOWN_LESSON_IDS = new Set<LessonId>(lessons.map((l) => l.id))
 
 const DIRECTIONS: { id: Direction; label: string }[] = [
   { id: 'de-en', label: 'Deutsch → English' },
@@ -120,6 +131,17 @@ export default function PracticeTool() {
     totals(loadProgress()),
   )
 
+  // `?lektion=` preselects the filter (the lesson page's "Diese Lektion üben"
+  // button links here) — seeded via lazy initial state, same pattern as
+  // useDeepSelect, so the very first render already has it. Lazy `useState`
+  // (not a mount effect) so it isn't clobbered by a re-render before the
+  // user's own pick takes over.
+  const [searchParams] = useSearchParams()
+  const [lessonFilter, setLessonFilter] = useState<LessonId | undefined>(() => {
+    const param = searchParams.get('lektion')
+    return param && KNOWN_LESSON_IDS.has(param as LessonId) ? (param as LessonId) : undefined
+  })
+
   // Re-tapping the "Üben" nav link while already on /uben doesn't remount this
   // component, so a running round would otherwise stay put. Each nav click mints a
   // fresh location.key (react-router does a history.replace even for the same
@@ -138,7 +160,7 @@ export default function PracticeTool() {
   // "Welcher Fall?" only has drill sentences for some prepositions (see
   // drills.ts coverage note), so its deck narrows further to those.
   const buildDeck = (): CatalogEntry[] => {
-    const base = filterByTools(catalog, deckSets)
+    const base = filterByLesson(filterByTools(catalog, deckSets), lessonFilter)
     return mode === 'fall' ? base.filter((c) => fallDrillFor(c.term) !== undefined) : base
   }
   const deckSize = buildDeck().length
@@ -192,6 +214,8 @@ export default function PracticeTool() {
           deckSize={deckSize}
           onStart={start}
           lifetime={lifetime}
+          lessonFilter={lessonFilter}
+          onLessonFilter={setLessonFilter}
         />
       )}
 
@@ -257,6 +281,8 @@ function SetupScreen({
   deckSize,
   onStart,
   lifetime,
+  lessonFilter,
+  onLessonFilter,
 }: {
   selected: Set<string>
   onToggle: (id: string) => void
@@ -268,6 +294,8 @@ function SetupScreen({
   deckSize: number
   onStart: () => void
   lifetime: ProgressEntry
+  lessonFilter: LessonId | undefined
+  onLessonFilter: (id: LessonId | undefined) => void
 }) {
   // Drills pick their own content set and have no DE↔EN direction, so those
   // fields are hidden — and their deck is never empty, so no empty-state applies.
@@ -275,6 +303,34 @@ function SetupScreen({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+      <Field label="Lektion">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <select
+            value={lessonFilter ?? ''}
+            onChange={(e) => onLessonFilter(e.target.value === '' ? undefined : (e.target.value as LessonId))}
+            style={{
+              fontFamily: font.sans,
+              fontSize: 13.5,
+              padding: '7px 10px',
+              borderRadius: 10,
+              border: `1px solid ${color.cardBorder}`,
+              background: '#ffffff',
+              color: color.ink,
+            }}
+          >
+            <option value="">Alle Lektionen</option>
+            {LESSON_OPTIONS.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+          <span style={{ fontFamily: font.sans, fontSize: 12.5, color: color.faint }}>
+            {deckSize} Karten
+          </span>
+        </div>
+      </Field>
+
       <Field label="Modus · Mode">
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {MODES.map((m) => (
