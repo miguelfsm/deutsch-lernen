@@ -45,6 +45,12 @@ export const tools: Tool[] = [
     blurb: 'Which case (Dativ, Akkusativ or both) and when to use each one.',
   },
   {
+    path: '/grammatik',
+    label: 'Grammatik',
+    english: 'Grammar',
+    blurb: 'The grammar summary from the end of each lesson.',
+  },
+  {
     path: '/satzbau',
     label: 'Satzbau',
     english: 'Sentence structure',
