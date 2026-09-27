@@ -118,6 +118,9 @@ a `*.test.ts(x)` may show a stray red squiggle in the editor even though its own
   report, then add the approved items with the lesson tag.
 - **Change the app icon:** edit `public/icon.svg`, then regenerate the PWA
   rasters with `node scripts/gen-icons.mjs`.
+- **Lesson pages need no per-lesson code:** `/lektionen` and `/lektionen/:id`
+  are driven entirely by `src/content/lessons.ts` + each item's `lessons: []`
+  tags — adding a lesson is one registry entry, never a page edit.
 
 ## Cloud sessions & Azure
 

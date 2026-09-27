@@ -9,6 +9,12 @@ export interface Tool {
 
 export const tools: Tool[] = [
   {
+    path: '/lektionen',
+    label: 'Lektionen',
+    english: 'Lessons',
+    blurb: 'Everything from one book lesson on one page: words, grammar, practice.',
+  },
+  {
     path: '/verben',
     label: 'Verben',
     english: 'Verbs',

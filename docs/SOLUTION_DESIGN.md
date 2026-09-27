@@ -68,6 +68,9 @@ DeutschLernen/
 ├── src/
 │   ├── main.tsx               # app entry, router mount
 │   ├── App.tsx                # nav shell + route definitions
+│   ├── vite-env.d.ts          # `/// <reference types="vite/client" />` (import.meta.glob typing)
+│   ├── content/                # lessons.ts (registry), lws.ts (build-time loader for content/lws/*.txt) — Phase 1/4
+│   ├── pages/                  # Home.tsx, LessonsIndex.tsx (/lektionen), LessonPage.tsx (/lektionen/:id) — Phase 4
 │   ├── components/            # shared UI (Header, Pill, Card, Note) — Phase 6
 │   ├── tools/                 # one folder per learning tool
 │   │   ├── verbs/      { GermanVerbs.tsx, data.ts, catalog.ts }
@@ -77,10 +80,13 @@ DeutschLernen/
 │   │   ├── prepositions/ { GermanPrepositions.tsx, data.ts, catalog.ts, filter.ts, drills.ts, WelcherFallPlay.tsx } # /praepositionen — Phase 6
 │   │   ├── grammar/    { GermanGrammar.tsx, GrammarTopicView.tsx, data.ts, catalog.ts } # /grammatik — Phase 7
 │   │   ├── satzbau/    { GermanSatzbau.tsx, data.ts, catalog.ts }
-│   │   └── practice/   { PracticeTool.tsx, session.ts, quiz.ts, drills.ts }  # flashcards/quiz/article/conjugation
+│   │   └── practice/   { PracticeTool.tsx, session.ts, quiz.ts, drills.ts }  # flashcards/quiz/article/conjugation, incl. lesson filter — Phase 4
 │   └── lib/                   # shared helpers (theme, highlight, speak,
 │       │                     #   useDeepSelect, progress)
-│       └── catalog/           # CatalogEntry type + static index + search + slug
+│       ├── catalog/           # CatalogEntry type + static index + search + slug
+│       ├── vocab/              # checkVocab (Lernwortschatz matching core) — Phase 3
+│       └── lessons/            # entriesForLesson, parseLessonQuery, searchLessons,
+│                                #   coverage (pure Lernwortschatz-check count), colors — Phase 4
 ├── index.html
 ├── vite.config.ts
 ├── tsconfig.json
@@ -88,7 +94,7 @@ DeutschLernen/
 └── .github/workflows/deploy.yml
 ```
 
-### 3.1 Lesson-aware content model (planned)
+### 3.1 Lesson-aware content model
 
 Detailed in [plans/LESSONS_PLAN_A1_2.md](../plans/LESSONS_PLAN_A1_2.md) §3–4.
 The clickable mock [plans/LESSONS_PLAN_A1_2.mock.html](../plans/LESSONS_PLAN_A1_2.mock.html)
@@ -106,13 +112,28 @@ In short:
   phrase, strategy, pattern, preposition, grammar) so lesson pages group by word
   class, not by tool.
 - **Verbs** add a full `praeteritum` table and `perfekt: { auxiliary, partizip }`;
-  the six Perfekt forms are derived, not stored.
-- **New tools:** `prepositions/` (`/praepositionen`, case + use) and `grammar/`
-  (`/grammatik`, topics built from `table` / `rule` / `examples` blocks).
-- **New pages:** `/lektionen` and `/lektionen/:id`; search recognises lesson
-  queries; practice accepts a lesson filter.
+  the six Perfekt forms are derived, not stored (Phase 5, done).
+- **New tools:** `prepositions/` (`/praepositionen`, case + use — Phase 6, done)
+  and `grammar/` (`/grammatik`, topics built from `table` / `rule` / `examples`
+  blocks — Phase 7, done).
+- **Lesson pages** (`/lektionen`, `/lektionen/:id` — Phase 4, done): a pure
+  `entriesForLesson` selector groups the catalog by `kind` for one lesson —
+  `grammar` first, then the word-class groups — the page just renders it. It
+  also renders the registry's own section/meta fields, a coverage line, a
+  "Diese Lektion üben" link into practice, and a deep-linking chip per item
+  (including each grammar topic, to `/grammatik?sel=<topic>`). No per-lesson
+  code is needed — a new lesson is one registry entry.
+- **Search recognises lesson queries** ("lektion 8", "l8", "L08", "a1.2 l8"):
+  `parseLessonQuery` (pure) feeds `searchLessons`, which the search UI composes
+  with the ordinary `searchCatalog` — a lesson hit links to the lesson page,
+  followed by a 3-per-kind preview.
+- **Practice accepts a lesson filter** — a single-select dropdown, preselected
+  from `?lektion=`, composes with every existing deck builder via a pure
+  `filterByLesson`.
 - **Vocab check:** `scripts/vocab-check.ts` over committed transcriptions in
-  `content/lws/<LessonId>.txt`.
+  `content/lws/<LessonId>.txt`. The same `checkVocab` core also powers the
+  lesson page's *coverage line* (`tagged / total` words) via a small pure
+  `lessonCoverage` wrapper.
 
 ## 4. Navigation & Page Model
 
@@ -228,6 +249,7 @@ manage Azure resources (e.g. if Azure Static Web Apps is later chosen as host).
 | 2026-07-06 | **Practice mode** (`/uben`) drills the `catalog` directly; pure React-free `session.ts` (deck build/shuffle with an **injected RNG**, direction, mode, advance, tally) and `quiz.ts` (multiple-choice option builder) are split from the view and from persistence. Two modes: self-rated **flashcards** and an objectively-graded **multiple-choice quiz**. Progress is a typed, **version-1-enveloped** `localStorage` wrapper (`src/lib/progress.ts`) keyed by catalog `slug`, guarded for missing storage. Richer drills and the spaced-repetition loop are deferred to [plans/PRACTICE_V2.md](../plans/PRACTICE_V2.md). | SRP/DIP: session/quiz drill `CatalogEntry`, so any tool contributing entries becomes drillable with no edits. Injected RNG keeps shuffle/choice tests deterministic while production stays random. Versioning the envelope from day one lets a future schema change migrate rather than orphan progress; slug (not display term) is the stable key. The quiz's objective grading gives immediate, honest feedback that pure self-rating cannot. |
 | 2026-07-06 | **Targeted drills (Feature F): two new *modes* inside Practice (`/uben`), not new routes.** A `mode` selector adds **Artikel** (guess der/die/das) and **Konjugation** (type the form for a pronoun) beside the unchanged flashcard/quiz flows. Pure checkers in `src/tools/practice/drills.ts` — `checkArticle(noun, guess)` and `checkConjugation(verb, pronoun, input)` (case/whitespace-normalised, returns `{ correct, expected }`). The article drill draws its deck from the noun catalog and resolves the full `Noun` (for its gender) by slug; the **conjugation drill reads `verbData` directly** rather than the catalog. Feedback reuses existing colours: gender `der/die/das` from GermanNouns, and the RED/BLUE stem-change highlight (`getHighlightParts`) from GermanVerbs. Drills reuse the same `Session`/round/summary shell and versioned `localStorage` progress, keyed by catalog slug. | **Data-path (was TBD):** verbs are the only conjugating tool, so putting a `forms` table on every `CatalogEntry` would bloat the shared type to serve one consumer — a YAGNI violation. A direct `verbData` import is the honest seam; the drill deck is still catalog-driven (so progress stays slug-keyed and the round shell is untouched), and only the per-card conjugation table is read from source. The two drills are *modes*, not routes, so they compose the existing deck/tally/persistence machinery instead of duplicating it (composition + DRY-of-behaviour); the pure checkers earn tests because the fact under test is the stored gender/form, not the comparison. Flashcards/quiz are behaviourally unchanged (the drill modes only add branches). |
 | 2026-07-06 | **Cross-linking (Feature D): spike-gated decision → DISCIPLINED AUTO-SCAN, not a hand-maintained link table.** `src/lib/catalog/resolver.ts` exposes pure `findEntryBySlug` / `findNoun` (exact, **never** case-folded on the German side) and `linksForText(text)`. `linksForText` scans an example sentence and links **only verb and noun** headwords, gated by part-of-speech-aware casing: a **verb** matches only a **lowercase** surface token carrying a real inflectional ending (stem + `e/st/t/en/…`, empty ending excluded); a **noun** matches only a **capitalised** token by exact fold or a tight plural fold. `<CrossLinks entries={…} />` renders the results as `#/route?sel=slug` chips; card views strip their own item via `linksForCard`. | **Spike over the real 411-sentence corpus:** light-normalisation auto-scan reached **high recall** on inflection (`lernst→lernen`, `kommt→kommen`, `arbeitet→arbeiten`), disproving the "finds almost nothing" fear — but a naive scan also emitted two error classes: **function-word chip-spam** (119/438 candidates were phrases-tool links on `in`/`und`/`sehr`/`nicht`) and, critically, **cross-POS homograph links** — the noun `Essen`→verb `essen`, `Antwort`→`antworten`, `Frage`→`fragen`, `heiß`→`heißen` — the exact identity collision the catalog forbids case-folding to prevent. Restricting targets to verbs+nouns kills the spam; the lowercase-verb POS gate eliminates every capitalised-noun→verb collision; requiring a non-empty inflectional ending drops `heiß`→`heißen`. Result: zero authoring cost, high precision, correct-by-construction chips (unknown slugs render nothing). Residual, accepted trade-offs: rare lowercase homographs and a few tight-plural overreaches (`Reise`→`Reis`) still slip through, and legitimately sentence-initial (capitalised) verbs are not linked — acceptable for a personal A1 app versus the complexity of full morphology. The explicit-`links?: string[]` fallback in the plan was therefore **not** needed. |
+| 2026-09-27 | **Lesson pages (Phase 4): coverage line is read from `content/lws/*.txt` at BUILD time via Vite's `import.meta.glob('…', { query: '?raw', import: 'default', eager: true })`**, isolated in one module (`src/content/lws.ts`), never called from a component. `src/vite-env.d.ts` adds `/// <reference types="vite/client" />` so the glob typechecks without pulling Node globals into the app's `tsconfig.json`. | Zero runtime fetch or server for a small, fully-committed content set; the glob's result is a plain object the rest of the app treats like any other static import. Isolating it in one module (rather than inlining the glob in the lesson page) keeps the one non-pure, Vite-specific piece separate from the pure `lessonCoverage(lines, catalog, lessonId)` selector, which is what actually gets tested — the plan explicitly calls out testing the computation, not the glob, and this split makes that split trivial to keep. |
 
 | 2026-09-27 | **Lesson-aware content: store by word type, tag by lesson.** Each item carries `lessons: LessonId[]`; a lesson registry describes lessons; lesson pages query the catalog by tag. Level-scoped ids (`A1.2-L08`). Existing content tagged `A1.1` for now. | A word recurs across lessons (e.g. *helfen*); one record with many tags avoids copies. Level-scoped ids survive book series that restart numbering per volume. A string-literal `LessonId` union makes a mistyped tag a compile error. |
 | 2026-09-27 | **Swiss spelling (`ss`, no `ß`) in all content.** | Matches the course book. Safe for stored progress: `slugify` already folds `ß→ss`, so slugs (progress keys) do not change. Search folds both ways. |

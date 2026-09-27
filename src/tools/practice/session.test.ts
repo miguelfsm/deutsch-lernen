@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import type { CatalogEntry, EntryKind } from '../../lib/catalog/types'
+import type { LessonId } from '../../content/lessons'
 import {
   shuffle,
   filterByTools,
+  filterByLesson,
   createSession,
   currentCard,
   isEmpty,
@@ -25,6 +27,7 @@ const entry = (
   slug: string,
   term: string,
   gloss: string,
+  lessons: LessonId[] = ['A1.1'],
 ): CatalogEntry => ({
   id: `${toolId}:${slug}`,
   toolId,
@@ -33,7 +36,7 @@ const entry = (
   term,
   gloss,
   kind: KIND_BY_TOOL[toolId] ?? 'phrase',
-  lessons: ['A1.1'],
+  lessons,
 })
 
 const fixture: CatalogEntry[] = [
@@ -76,6 +79,29 @@ describe('filterByTools', () => {
 
   it('returns an empty deck when nothing is selected', () => {
     expect(filterByTools(fixture, new Set())).toEqual([])
+  })
+})
+
+describe('filterByLesson', () => {
+  const withLessons: CatalogEntry[] = [
+    entry('verben', 'arbeiten', 'arbeiten', 'to work', ['A1.2-L08']),
+    entry('verben', 'schlafen', 'schlafen', 'to sleep', ['A1.1']),
+    entry('praepositionen', 'seit', 'seit', 'since', ['A1.2-L08']),
+  ]
+
+  it('keeps only entries tagged with the given lesson', () => {
+    const out = filterByLesson(withLessons, 'A1.2-L08')
+    expect(out.map((e) => e.slug).sort()).toEqual(['arbeiten', 'seit'])
+  })
+
+  it('returns every entry when no lesson is chosen (undefined = all lessons)', () => {
+    expect(filterByLesson(withLessons, undefined)).toHaveLength(withLessons.length)
+  })
+
+  it('does not mutate the input', () => {
+    const copy = [...withLessons]
+    filterByLesson(withLessons, 'A1.2-L08')
+    expect(withLessons).toEqual(copy)
   })
 })
 

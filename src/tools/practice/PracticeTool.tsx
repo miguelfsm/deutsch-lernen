@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import Header from '../../components/Header'
 import SpeakButton from '../../components/SpeakButton'
 import { font, color } from '../../lib/theme'
 import { tools } from '../registry'
 import { catalog } from '../../lib/catalog'
+import { lessons, type LessonId } from '../../content/lessons'
 import {
   createSession,
   filterByTools,
+  filterByLesson,
   currentCard,
   isComplete,
   isEmpty,
@@ -47,6 +49,15 @@ const PRESENT = new Set(catalog.filter((e) => e.kind !== 'grammar').map((e) => e
 const CONTENT_SETS = tools
   .map((t) => ({ id: t.path.replace(/^\//, ''), label: t.label }))
   .filter((c) => PRESENT.has(c.id))
+
+// Lesson filter options (plan §4.4, mock U4: single-select for now). A blank
+// selection (`undefined`) means "every lesson" — the default, unchanged
+// behaviour. Label mirrors the mock's "A1.2 · L8 Beruf und Arbeit" style.
+const LESSON_OPTIONS: { id: LessonId; label: string }[] = lessons.map((l) => ({
+  id: l.id,
+  label: l.number !== undefined ? `${l.level} · L${l.number} ${l.title}` : l.level,
+}))
+const KNOWN_LESSON_IDS = new Set<LessonId>(lessons.map((l) => l.id))
 
 const DIRECTIONS: { id: Direction; label: string }[] = [
   { id: 'de-en', label: 'Deutsch → English' },
@@ -123,6 +134,17 @@ export default function PracticeTool() {
     totals(loadProgress()),
   )
 
+  // `?lektion=` preselects the filter (the lesson page's "Diese Lektion üben"
+  // button links here) — seeded via lazy initial state, same pattern as
+  // useDeepSelect, so the very first render already has it. Lazy `useState`
+  // (not a mount effect) so it isn't clobbered by a re-render before the
+  // user's own pick takes over.
+  const [searchParams] = useSearchParams()
+  const [lessonFilter, setLessonFilter] = useState<LessonId | undefined>(() => {
+    const param = searchParams.get('lektion')
+    return param && KNOWN_LESSON_IDS.has(param as LessonId) ? (param as LessonId) : undefined
+  })
+
   // Re-tapping the "Üben" nav link while already on /uben doesn't remount this
   // component, so a running round would otherwise stay put. Each nav click mints a
   // fresh location.key (react-router does a history.replace even for the same
@@ -141,10 +163,16 @@ export default function PracticeTool() {
   // "Welcher Fall?" only has drill sentences for some prepositions (see
   // drills.ts coverage note), so its deck narrows further to those.
   const buildDeck = (): CatalogEntry[] => {
-    const base = filterByTools(catalog, deckSets)
+    const base = filterByLesson(filterByTools(catalog, deckSets), lessonFilter)
     return mode === 'fall' ? base.filter((c) => fallDrillFor(c.term) !== undefined) : base
   }
   const deckSize = buildDeck().length
+  // The chosen lesson's display label, for the empty-deck note/message below
+  // (e.g. a lesson + mode combination with nothing to drill yet, like L8 +
+  // Artikel before L8 has any nouns tagged).
+  const lessonLabel = lessonFilter
+    ? LESSON_OPTIONS.find((l) => l.id === lessonFilter)?.label
+    : undefined
 
   function toggleSet(id: string) {
     setSelected((prev) => {
@@ -196,6 +224,9 @@ export default function PracticeTool() {
           deckSize={deckSize}
           onStart={start}
           lifetime={lifetime}
+          lessonFilter={lessonFilter}
+          onLessonFilter={setLessonFilter}
+          lessonLabel={lessonLabel}
         />
       )}
 
@@ -210,6 +241,7 @@ export default function PracticeTool() {
           lifetime={lifetime}
           onAgain={start}
           onBack={() => setSession(null)}
+          lessonLabel={lessonLabel}
         />
       )}
     </div>
@@ -269,6 +301,9 @@ function SetupScreen({
   deckSize,
   onStart,
   lifetime,
+  lessonFilter,
+  onLessonFilter,
+  lessonLabel,
 }: {
   selected: Set<string>
   onToggle: (id: string) => void
@@ -280,13 +315,49 @@ function SetupScreen({
   deckSize: number
   onStart: () => void
   lifetime: ProgressEntry
+  lessonFilter: LessonId | undefined
+  onLessonFilter: (id: LessonId | undefined) => void
+  lessonLabel: string | undefined
 }) {
   // Drills pick their own content set and have no DE↔EN direction, so those
   // fields are hidden — and their deck is never empty, so no empty-state applies.
   const nothingSelected = !isDrill && selected.size === 0
+  // A drill/content-set choice can still land on an empty deck once a lesson
+  // filter narrows it further (e.g. L8 + Artikel, since L8 has no nouns
+  // tagged yet) — distinct from `nothingSelected`, which is about the picker
+  // itself being empty.
+  const emptyDeck = !nothingSelected && deckSize === 0
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+      <Field label="Lektion">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <select
+            value={lessonFilter ?? ''}
+            onChange={(e) => onLessonFilter(e.target.value === '' ? undefined : (e.target.value as LessonId))}
+            style={{
+              fontFamily: font.sans,
+              fontSize: 13.5,
+              padding: '7px 10px',
+              borderRadius: 10,
+              border: `1px solid ${color.cardBorder}`,
+              background: '#ffffff',
+              color: color.ink,
+            }}
+          >
+            <option value="">Alle Lektionen</option>
+            {LESSON_OPTIONS.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+          <span style={{ fontFamily: font.sans, fontSize: 12.5, color: color.faint }}>
+            {deckSize} Karten
+          </span>
+        </div>
+      </Field>
+
       <Field label="Modus · Mode">
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {MODES.map((m) => (
@@ -348,15 +419,34 @@ function SetupScreen({
           Nichts ausgewählt — wähle mindestens einen Inhalt zum Üben.
         </p>
       ) : (
-        <button
-          onClick={onStart}
-          style={{
-            ...bigButton('#1c1917', '#faf9f7'),
-            flex: 'unset',
-          }}
-        >
-          {deckSize} Karten üben →
-        </button>
+        <>
+          {emptyDeck && (
+            <p
+              style={{
+                fontFamily: font.sans,
+                fontSize: 14,
+                color: color.faint,
+                fontStyle: 'italic',
+                textAlign: 'center',
+                margin: 0,
+              }}
+            >
+              Keine Karten für {lessonLabel ?? 'diese Auswahl'} in diesem Modus.
+            </p>
+          )}
+          <button
+            onClick={onStart}
+            disabled={emptyDeck}
+            style={{
+              ...bigButton('#1c1917', '#faf9f7'),
+              flex: 'unset',
+              opacity: emptyDeck ? 0.5 : 1,
+              cursor: emptyDeck ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {deckSize} Karten üben →
+          </button>
+        </>
       )}
 
       {lifetime.seen > 0 && (
@@ -751,11 +841,13 @@ function DoneScreen({
   lifetime,
   onAgain,
   onBack,
+  lessonLabel,
 }: {
   session: Session
   lifetime: ProgressEntry
   onAgain: () => void
   onBack: () => void
+  lessonLabel: string | undefined
 }) {
   const s = summary(session)
   const empty = s.total === 0
@@ -787,7 +879,9 @@ function DoneScreen({
               margin: 0,
             }}
           >
-            Kein Deck — wähle Inhalte zum Üben.
+            {lessonLabel
+              ? `Keine Karten für ${lessonLabel} in diesem Modus.`
+              : 'Kein Deck — wähle Inhalte zum Üben.'}
           </p>
         ) : (
           <>

@@ -1,4 +1,5 @@
 import type { CatalogEntry } from '../../lib/catalog/types'
+import type { LessonId } from '../../content/lessons'
 
 // Pure, React-free session logic for the practice tool. A "session" is one round
 // through a shuffled deck of catalog entries: reveal, self-rate, advance, and a
@@ -50,6 +51,17 @@ export function filterByTools(
   toolIds: ReadonlySet<string>,
 ): CatalogEntry[] {
   return entries.filter((e) => toolIds.has(e.toolId))
+}
+
+// Narrow the deck to one lesson (plan §4.4, mock U4: single-select for now).
+// `undefined` means "every lesson" — every deck builder composes this the
+// same way, so a new mode gets the filter for free.
+export function filterByLesson(
+  entries: readonly CatalogEntry[],
+  lessonId: LessonId | undefined,
+): CatalogEntry[] {
+  if (!lessonId) return entries.slice()
+  return entries.filter((e) => e.lessons.includes(lessonId))
 }
 
 export function createSession(

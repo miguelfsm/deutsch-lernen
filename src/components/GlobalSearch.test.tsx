@@ -41,4 +41,14 @@ describe('GlobalSearch', () => {
     await user.type(screen.getByLabelText('Alles durchsuchen'), 'zzzznope')
     expect(screen.getByText(/Keine Treffer/)).toBeInTheDocument()
   })
+
+  it('a lesson query shows a lesson hit linking to the lesson page, and no "no match" hint', async () => {
+    const user = userEvent.setup()
+    renderSearch()
+    await user.type(screen.getByLabelText('Alles durchsuchen'), 'lektion 8')
+
+    const lessonLink = screen.getByRole('link', { name: /Lektion 8 · Beruf und Arbeit/ })
+    expect(lessonLink).toHaveAttribute('href', '#/lektionen/A1.2-L08')
+    expect(screen.queryByText(/Keine Treffer/)).not.toBeInTheDocument()
+  })
 })
