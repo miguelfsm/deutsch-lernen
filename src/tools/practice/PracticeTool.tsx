@@ -39,7 +39,11 @@ import {
 // labelled from the registry. A new searchable tool becomes drillable here with
 // zero edits (it just appears in this list). Computed once — catalog/tools are
 // static module data.
-const PRESENT = new Set(catalog.map((e) => e.toolId))
+//
+// Grammar topics (kind 'grammar') are excluded: they are tables/rules, not
+// term↔gloss word pairs, so a topic title and its summary are not a sensible
+// flashcard/quiz question — see plans/LESSONS_PLAN_A1_2.md §3.6.
+const PRESENT = new Set(catalog.filter((e) => e.kind !== 'grammar').map((e) => e.toolId))
 const CONTENT_SETS = tools
   .map((t) => ({ id: t.path.replace(/^\//, ''), label: t.label }))
   .filter((c) => PRESENT.has(c.id))
