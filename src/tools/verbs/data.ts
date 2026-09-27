@@ -11,6 +11,14 @@ export interface Conjugation {
 
 export type VerbType = 'regular' | 'irregular' | 'modal'
 
+// Perfekt is stored as just the auxiliary + Partizip II — the six full forms
+// ("ich habe gearbeitet") are DERIVED by tenses.ts from the Präsens table of
+// haben/sein below, so the aux conjugation exists once (DRY by knowledge).
+export interface Perfekt {
+  auxiliary: 'haben' | 'sein'
+  partizip: string
+}
+
 export interface Verb {
   infinitive: string
   english: string
@@ -18,6 +26,13 @@ export interface Verb {
   note: string
   customStem?: string
   conjugations: Conjugation[]
+  // Präteritum, 6 persons, full forms (irregular stems can't be derived
+  // reliably). Backfill is complete, so every verb carries it.
+  praeteritum: Conjugation[]
+  perfekt: Perfekt
+  // Separable prefix (e.g. 'auf' for aufmachen) — only present when the verb
+  // is actually separable.
+  separable?: string
   // A1 example sentence using the verb + its English translation. Required: the
   // backfill is complete, so the compiler now forces every verb to carry both.
   example: string
@@ -33,6 +48,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich bin sehr müde.", translation: "I am very tired.",
     note: "Fully suppletive — every form is unpredictable. Memorise each one individually.",
+    praeteritum: [
+      { pronoun: "ich", form: "war", stemChange: true },
+      { pronoun: "du", form: "warst", stemChange: true },
+      { pronoun: "er/sie/es", form: "war", stemChange: true },
+      { pronoun: "wir", form: "waren", stemChange: true },
+      { pronoun: "ihr", form: "wart", stemChange: true },
+      { pronoun: "sie/Sie", form: "waren", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "gewesen" },
     conjugations: [
       { pronoun: "ich",      form: "bin",   stemChange: true  },
       { pronoun: "du",       form: "bist",  stemChange: true  },
@@ -47,6 +71,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich habe einen Bruder.", translation: "I have a brother.",
     note: "The -b- drops in du/er forms: habe → hast / hat.",
+    praeteritum: [
+      { pronoun: "ich", form: "hatte", stemChange: true },
+      { pronoun: "du", form: "hattest", stemChange: true },
+      { pronoun: "er/sie/es", form: "hatte", stemChange: true },
+      { pronoun: "wir", form: "hatten", stemChange: true },
+      { pronoun: "ihr", form: "hattet", stemChange: true },
+      { pronoun: "sie/Sie", form: "hatten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gehabt" },
     conjugations: [
       { pronoun: "ich",      form: "habe",  stemChange: false },
       { pronoun: "du",       form: "hast",  stemChange: true  },
@@ -61,6 +94,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Es wird kalt.", translation: "It is getting cold.",
     note: "Vowel change e → i in du/er forms. Also the future & passive auxiliary.",
+    praeteritum: [
+      { pronoun: "ich", form: "wurde", stemChange: true },
+      { pronoun: "du", form: "wurdest", stemChange: true },
+      { pronoun: "er/sie/es", form: "wurde", stemChange: true },
+      { pronoun: "wir", form: "wurden", stemChange: true },
+      { pronoun: "ihr", form: "wurdet", stemChange: true },
+      { pronoun: "sie/Sie", form: "wurden", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "geworden" },
     conjugations: [
       { pronoun: "ich",      form: "werde",  stemChange: false },
       { pronoun: "du",       form: "wirst",  stemChange: true  },
@@ -75,6 +117,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich kann gut kochen.", translation: "I can cook well.",
     note: "Modal: no ending for ich/er. Vowel change ö → a in singular forms.",
+    praeteritum: [
+      { pronoun: "ich", form: "konnte", stemChange: true },
+      { pronoun: "du", form: "konntest", stemChange: true },
+      { pronoun: "er/sie/es", form: "konnte", stemChange: true },
+      { pronoun: "wir", form: "konnten", stemChange: true },
+      { pronoun: "ihr", form: "konntet", stemChange: true },
+      { pronoun: "sie/Sie", form: "konnten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gekonnt" },
     conjugations: [
       { pronoun: "ich",      form: "kann",   stemChange: true  },
       { pronoun: "du",       form: "kannst", stemChange: true  },
@@ -89,6 +140,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich muss jetzt gehen.", translation: "I have to go now.",
     note: "Modal: no ending for ich/er. Umlaut ü drops in singular forms.",
+    praeteritum: [
+      { pronoun: "ich", form: "musste", stemChange: true },
+      { pronoun: "du", form: "musstest", stemChange: true },
+      { pronoun: "er/sie/es", form: "musste", stemChange: true },
+      { pronoun: "wir", form: "mussten", stemChange: true },
+      { pronoun: "ihr", form: "musstet", stemChange: true },
+      { pronoun: "sie/Sie", form: "mussten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gemusst" },
     conjugations: [
       { pronoun: "ich",      form: "muss",   stemChange: true  },
       { pronoun: "du",       form: "musst",  stemChange: true  },
@@ -103,6 +163,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich sage die Wahrheit.", translation: "I tell the truth.",
     note: "Fully regular. Pattern: stem + -e / -st / -t / -en / -t / -en.",
+    praeteritum: [
+      { pronoun: "ich", form: "sagte", stemChange: false },
+      { pronoun: "du", form: "sagtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "sagte", stemChange: false },
+      { pronoun: "wir", form: "sagten", stemChange: false },
+      { pronoun: "ihr", form: "sagtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "sagten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gesagt" },
     conjugations: [
       { pronoun: "ich",      form: "sage",  stemChange: false },
       { pronoun: "du",       form: "sagst", stemChange: false },
@@ -117,6 +186,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich mache meine Hausaufgaben.", translation: "I do my homework.",
     note: "Fully regular. A perfect model verb for learning the standard pattern.",
+    praeteritum: [
+      { pronoun: "ich", form: "machte", stemChange: false },
+      { pronoun: "du", form: "machtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "machte", stemChange: false },
+      { pronoun: "wir", form: "machten", stemChange: false },
+      { pronoun: "ihr", form: "machtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "machten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gemacht" },
     conjugations: [
       { pronoun: "ich",      form: "mache",  stemChange: false },
       { pronoun: "du",       form: "machst", stemChange: false },
@@ -131,6 +209,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich gehe nach Hause.", translation: "I am going home.",
     note: "Regular in Präsens. In Perfekt it takes 'sein': ich bin gegangen.",
+    praeteritum: [
+      { pronoun: "ich", form: "ging", stemChange: true },
+      { pronoun: "du", form: "gingst", stemChange: true },
+      { pronoun: "er/sie/es", form: "ging", stemChange: true },
+      { pronoun: "wir", form: "gingen", stemChange: true },
+      { pronoun: "ihr", form: "gingt", stemChange: true },
+      { pronoun: "sie/Sie", form: "gingen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "gegangen" },
     conjugations: [
       { pronoun: "ich",      form: "gehe",  stemChange: false },
       { pronoun: "du",       form: "gehst", stemChange: false },
@@ -145,6 +232,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich komme aus Portugal.", translation: "I come from Portugal.",
     note: "Regular in Präsens. Double -mm- stays in all forms.",
+    praeteritum: [
+      { pronoun: "ich", form: "kam", stemChange: true },
+      { pronoun: "du", form: "kamst", stemChange: true },
+      { pronoun: "er/sie/es", form: "kam", stemChange: true },
+      { pronoun: "wir", form: "kamen", stemChange: true },
+      { pronoun: "ihr", form: "kamt", stemChange: true },
+      { pronoun: "sie/Sie", form: "kamen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "gekommen" },
     conjugations: [
       { pronoun: "ich",      form: "komme",  stemChange: false },
       { pronoun: "du",       form: "kommst", stemChange: false },
@@ -159,6 +255,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Du sollst mehr Wasser trinken.", translation: "You should drink more water.",
     note: "The most regular modal — no vowel change! No ending for ich/er.",
+    praeteritum: [
+      { pronoun: "ich", form: "sollte", stemChange: false },
+      { pronoun: "du", form: "solltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "sollte", stemChange: false },
+      { pronoun: "wir", form: "sollten", stemChange: false },
+      { pronoun: "ihr", form: "solltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "sollten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gesollt" },
     conjugations: [
       { pronoun: "ich",      form: "soll",   stemChange: false },
       { pronoun: "du",       form: "sollst", stemChange: false },
@@ -173,6 +278,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich will einen Kaffee.", translation: "I want a coffee.",
     note: "Modal: no ending for ich/er. Vowel change o → i in singular forms.",
+    praeteritum: [
+      { pronoun: "ich", form: "wollte", stemChange: false },
+      { pronoun: "du", form: "wolltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "wollte", stemChange: false },
+      { pronoun: "wir", form: "wollten", stemChange: false },
+      { pronoun: "ihr", form: "wolltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "wollten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gewollt" },
     conjugations: [
       { pronoun: "ich",      form: "will",   stemChange: true  },
       { pronoun: "du",       form: "willst", stemChange: true  },
@@ -187,6 +301,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich weiss die Antwort nicht.", translation: "I don't know the answer.",
     note: "Behaves like a modal in singular: wiss → weiss, no ending for ich/er.",
+    praeteritum: [
+      { pronoun: "ich", form: "wusste", stemChange: true },
+      { pronoun: "du", form: "wusstest", stemChange: true },
+      { pronoun: "er/sie/es", form: "wusste", stemChange: true },
+      { pronoun: "wir", form: "wussten", stemChange: true },
+      { pronoun: "ihr", form: "wusstet", stemChange: true },
+      { pronoun: "sie/Sie", form: "wussten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gewusst" },
     conjugations: [
       { pronoun: "ich",      form: "weiss",   stemChange: true  },
       { pronoun: "du",       form: "weisst",  stemChange: true  },
@@ -201,6 +324,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich sehe einen Vogel.", translation: "I see a bird.",
     note: "Vowel change e → ie in du/er forms (a common pattern: lesen, geben, nehmen…).",
+    praeteritum: [
+      { pronoun: "ich", form: "sah", stemChange: true },
+      { pronoun: "du", form: "sahst", stemChange: true },
+      { pronoun: "er/sie/es", form: "sah", stemChange: true },
+      { pronoun: "wir", form: "sahen", stemChange: true },
+      { pronoun: "ihr", form: "saht", stemChange: true },
+      { pronoun: "sie/Sie", form: "sahen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gesehen" },
     conjugations: [
       { pronoun: "ich",      form: "sehe",   stemChange: false },
       { pronoun: "du",       form: "siehst", stemChange: true  },
@@ -215,6 +347,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich lasse die Tür offen.", translation: "I am leaving the door open.",
     note: "Vowel change a → ä (umlaut) in du/er forms: lasse → lässt.",
+    praeteritum: [
+      { pronoun: "ich", form: "liess", stemChange: true },
+      { pronoun: "du", form: "liessest", stemChange: true },
+      { pronoun: "er/sie/es", form: "liess", stemChange: true },
+      { pronoun: "wir", form: "liessen", stemChange: true },
+      { pronoun: "ihr", form: "liesst", stemChange: true },
+      { pronoun: "sie/Sie", form: "liessen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gelassen" },
     conjugations: [
       { pronoun: "ich",      form: "lasse",  stemChange: false },
       { pronoun: "du",       form: "lässt",  stemChange: true  },
@@ -228,7 +369,16 @@ export const verbData: Verb[] = [
     infinitive: "stehen", english: "to stand", type: "regular",
     lessons: ["A1.1"],
     example: "Der Stuhl steht in der Küche.", translation: "The chair is in the kitchen.",
-    note: "Regular in Präsens.",
+    note: "Regular in Präsens. Southern German, Austrian and Swiss usage takes sein in the Perfekt (ist gestanden), unlike standard German (hat gestanden).",
+    praeteritum: [
+      { pronoun: "ich", form: "stand", stemChange: true },
+      { pronoun: "du", form: "standest", stemChange: true },
+      { pronoun: "er/sie/es", form: "stand", stemChange: true },
+      { pronoun: "wir", form: "standen", stemChange: true },
+      { pronoun: "ihr", form: "standet", stemChange: true },
+      { pronoun: "sie/Sie", form: "standen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "gestanden" },
     conjugations: [
       { pronoun: "ich",      form: "stehe",  stemChange: false },
       { pronoun: "du",       form: "stehst", stemChange: false },
@@ -243,6 +393,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich finde den Film gut.", translation: "I think the film is good.",
     note: "Stem ends in -d: an -e- is inserted before -st and -t → findest, findet.",
+    praeteritum: [
+      { pronoun: "ich", form: "fand", stemChange: true },
+      { pronoun: "du", form: "fandest", stemChange: true },
+      { pronoun: "er/sie/es", form: "fand", stemChange: true },
+      { pronoun: "wir", form: "fanden", stemChange: true },
+      { pronoun: "ihr", form: "fandet", stemChange: true },
+      { pronoun: "sie/Sie", form: "fanden", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gefunden" },
     conjugations: [
       { pronoun: "ich",      form: "finde",   stemChange: false },
       { pronoun: "du",       form: "findest", stemChange: false },
@@ -257,6 +416,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich bleibe heute zu Hause.", translation: "I am staying home today.",
     note: "Regular in Präsens. Perfekt uses 'sein': ich bin geblieben.",
+    praeteritum: [
+      { pronoun: "ich", form: "blieb", stemChange: true },
+      { pronoun: "du", form: "bliebst", stemChange: true },
+      { pronoun: "er/sie/es", form: "blieb", stemChange: true },
+      { pronoun: "wir", form: "blieben", stemChange: true },
+      { pronoun: "ihr", form: "bliebt", stemChange: true },
+      { pronoun: "sie/Sie", form: "blieben", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "geblieben" },
     conjugations: [
       { pronoun: "ich",      form: "bleibe",  stemChange: false },
       { pronoun: "du",       form: "bleibst", stemChange: false },
@@ -270,7 +438,16 @@ export const verbData: Verb[] = [
     infinitive: "liegen", english: "to lie / to be located", type: "regular",
     lessons: ["A1.1"],
     example: "Das Buch liegt auf dem Tisch.", translation: "The book is lying on the table.",
-    note: "Regular in Präsens.",
+    note: "Regular in Präsens. Southern German, Austrian and Swiss usage takes sein in the Perfekt (ist gelegen), unlike standard German (hat gelegen).",
+    praeteritum: [
+      { pronoun: "ich", form: "lag", stemChange: true },
+      { pronoun: "du", form: "lagst", stemChange: true },
+      { pronoun: "er/sie/es", form: "lag", stemChange: true },
+      { pronoun: "wir", form: "lagen", stemChange: true },
+      { pronoun: "ihr", form: "lagt", stemChange: true },
+      { pronoun: "sie/Sie", form: "lagen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "gelegen" },
     conjugations: [
       { pronoun: "ich",      form: "liege",  stemChange: false },
       { pronoun: "du",       form: "liegst", stemChange: false },
@@ -285,6 +462,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich heisse Miguel.", translation: "My name is Miguel.",
     note: "Stem ends in -ss: du heisst (not heissst — -st contracts to -t after ss/s/z).",
+    praeteritum: [
+      { pronoun: "ich", form: "hiess", stemChange: true },
+      { pronoun: "du", form: "hiessest", stemChange: true },
+      { pronoun: "er/sie/es", form: "hiess", stemChange: true },
+      { pronoun: "wir", form: "hiessen", stemChange: true },
+      { pronoun: "ihr", form: "hiesst", stemChange: true },
+      { pronoun: "sie/Sie", form: "hiessen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geheissen" },
     conjugations: [
       { pronoun: "ich",      form: "heisse",  stemChange: false },
       { pronoun: "du",       form: "heisst",  stemChange: false },
@@ -299,6 +485,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich denke oft an dich.", translation: "I often think of you.",
     note: "Regular in Präsens. Note: Perfekt is irregular → hat gedacht.",
+    praeteritum: [
+      { pronoun: "ich", form: "dachte", stemChange: true },
+      { pronoun: "du", form: "dachtest", stemChange: true },
+      { pronoun: "er/sie/es", form: "dachte", stemChange: true },
+      { pronoun: "wir", form: "dachten", stemChange: true },
+      { pronoun: "ihr", form: "dachtet", stemChange: true },
+      { pronoun: "sie/Sie", form: "dachten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gedacht" },
     conjugations: [
       { pronoun: "ich",      form: "denke",  stemChange: false },
       { pronoun: "du",       form: "denkst", stemChange: false },
@@ -313,6 +508,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich brauche deine Hilfe.", translation: "I need your help.",
     note: "Fully regular. Very common in everyday speech: Ich brauche Hilfe — I need help.",
+    praeteritum: [
+      { pronoun: "ich", form: "brauchte", stemChange: false },
+      { pronoun: "du", form: "brauchtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "brauchte", stemChange: false },
+      { pronoun: "wir", form: "brauchten", stemChange: false },
+      { pronoun: "ihr", form: "brauchtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "brauchten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gebraucht" },
     conjugations: [
       { pronoun: "ich",      form: "brauche",  stemChange: false },
       { pronoun: "du",       form: "brauchst", stemChange: false },
@@ -327,6 +531,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich schreibe eine E-Mail.", translation: "I am writing an email.",
     note: "Regular in Präsens. Strong verb — vowel changes only in Präteritum/Perfekt (schrieb, geschrieben).",
+    praeteritum: [
+      { pronoun: "ich", form: "schrieb", stemChange: true },
+      { pronoun: "du", form: "schriebst", stemChange: true },
+      { pronoun: "er/sie/es", form: "schrieb", stemChange: true },
+      { pronoun: "wir", form: "schrieben", stemChange: true },
+      { pronoun: "ihr", form: "schriebt", stemChange: true },
+      { pronoun: "sie/Sie", form: "schrieben", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geschrieben" },
     conjugations: [
       { pronoun: "ich",      form: "schreibe",  stemChange: false },
       { pronoun: "du",       form: "schreibst", stemChange: false },
@@ -341,6 +554,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich höre gern Musik.", translation: "I like listening to music.",
     note: "Fully regular. Also used in hör mal! (hey, listen!) and Ich höre Musik.",
+    praeteritum: [
+      { pronoun: "ich", form: "hörte", stemChange: false },
+      { pronoun: "du", form: "hörtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "hörte", stemChange: false },
+      { pronoun: "wir", form: "hörten", stemChange: false },
+      { pronoun: "ihr", form: "hörtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "hörten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gehört" },
     conjugations: [
       { pronoun: "ich",      form: "höre",  stemChange: false },
       { pronoun: "du",       form: "hörst", stemChange: false },
@@ -355,6 +577,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich spreche ein bisschen Deutsch.", translation: "I speak a little German.",
     note: "Vowel change e → i in du/er forms — same pattern as sehen (e→ie), lesen, geben.",
+    praeteritum: [
+      { pronoun: "ich", form: "sprach", stemChange: true },
+      { pronoun: "du", form: "sprachst", stemChange: true },
+      { pronoun: "er/sie/es", form: "sprach", stemChange: true },
+      { pronoun: "wir", form: "sprachen", stemChange: true },
+      { pronoun: "ihr", form: "spracht", stemChange: true },
+      { pronoun: "sie/Sie", form: "sprachen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gesprochen" },
     conjugations: [
       { pronoun: "ich",      form: "spreche",  stemChange: false },
       { pronoun: "du",       form: "sprichst", stemChange: true  },
@@ -368,7 +599,16 @@ export const verbData: Verb[] = [
     infinitive: "möchten", english: "would like to", type: "modal",
     lessons: ["A1.1"],
     example: "Ich möchte einen Tee.", translation: "I would like a tea.",
-    note: "Konjunktiv II of mögen used as a polite wish. Unlike other modals, ich/er take an -e ending: ich möchte, er möchte.",
+    note: "Konjunktiv II of mögen used as a polite wish. Unlike other modals, ich/er take an -e ending: ich möchte, er möchte. möchten has no Präteritum/Perfekt of its own (it IS the Konjunktiv II of mögen); wollen supplies the missing forms.",
+    praeteritum: [
+      { pronoun: "ich", form: "wollte", stemChange: false },
+      { pronoun: "du", form: "wolltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "wollte", stemChange: false },
+      { pronoun: "wir", form: "wollten", stemChange: false },
+      { pronoun: "ihr", form: "wolltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "wollten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gewollt" },
     conjugations: [
       { pronoun: "ich",      form: "möchte",   stemChange: false },
       { pronoun: "du",       form: "möchtest", stemChange: false },
@@ -383,6 +623,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich trinke Wasser.", translation: "I am drinking water.",
     note: "Regular in Präsens. Strong verb — vowel changes only in past tenses (trank, getrunken).",
+    praeteritum: [
+      { pronoun: "ich", form: "trank", stemChange: true },
+      { pronoun: "du", form: "trankst", stemChange: true },
+      { pronoun: "er/sie/es", form: "trank", stemChange: true },
+      { pronoun: "wir", form: "tranken", stemChange: true },
+      { pronoun: "ihr", form: "trankt", stemChange: true },
+      { pronoun: "sie/Sie", form: "tranken", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "getrunken" },
     conjugations: [
       { pronoun: "ich",      form: "trinke",  stemChange: false },
       { pronoun: "du",       form: "trinkst", stemChange: false },
@@ -397,6 +646,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich suche meinen Schlüssel.", translation: "I am looking for my key.",
     note: "Fully regular. Often paired with nach: Ich suche nach einer Wohnung.",
+    praeteritum: [
+      { pronoun: "ich", form: "suchte", stemChange: false },
+      { pronoun: "du", form: "suchtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "suchte", stemChange: false },
+      { pronoun: "wir", form: "suchten", stemChange: false },
+      { pronoun: "ihr", form: "suchtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "suchten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gesucht" },
     conjugations: [
       { pronoun: "ich",      form: "suche",  stemChange: false },
       { pronoun: "du",       form: "suchst", stemChange: false },
@@ -411,6 +669,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich schliesse das Fenster.", translation: "I am closing the window.",
     note: "Stem ends in -ss: du schliesst (not schliessst — same contraction rule as heissen).",
+    praeteritum: [
+      { pronoun: "ich", form: "schloss", stemChange: true },
+      { pronoun: "du", form: "schlossest", stemChange: true },
+      { pronoun: "er/sie/es", form: "schloss", stemChange: true },
+      { pronoun: "wir", form: "schlossen", stemChange: true },
+      { pronoun: "ihr", form: "schlosst", stemChange: true },
+      { pronoun: "sie/Sie", form: "schlossen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geschlossen" },
     conjugations: [
       { pronoun: "ich",      form: "schliesse", stemChange: false },
       { pronoun: "du",       form: "schliesst", stemChange: false },
@@ -427,6 +694,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich lebe in Zürich.", translation: "I live in Zürich.",
     note: "Fully regular. Use for life in general: Ich lebe in Zürich. Contrast with wohnen (to reside at an address).",
+    praeteritum: [
+      { pronoun: "ich", form: "lebte", stemChange: false },
+      { pronoun: "du", form: "lebtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "lebte", stemChange: false },
+      { pronoun: "wir", form: "lebten", stemChange: false },
+      { pronoun: "ihr", form: "lebtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "lebten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gelebt" },
     conjugations: [
       { pronoun: "ich",      form: "lebe",  stemChange: false },
       { pronoun: "du",       form: "lebst", stemChange: false },
@@ -441,6 +717,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich wohne in der Stadt.", translation: "I live in the city.",
     note: "Fully regular. Use for a specific address or city: Ich wohne in Zürich, Mythenquai.",
+    praeteritum: [
+      { pronoun: "ich", form: "wohnte", stemChange: false },
+      { pronoun: "du", form: "wohntest", stemChange: false },
+      { pronoun: "er/sie/es", form: "wohnte", stemChange: false },
+      { pronoun: "wir", form: "wohnten", stemChange: false },
+      { pronoun: "ihr", form: "wohntet", stemChange: false },
+      { pronoun: "sie/Sie", form: "wohnten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gewohnt" },
     conjugations: [
       { pronoun: "ich",      form: "wohne",  stemChange: false },
       { pronoun: "du",       form: "wohnst", stemChange: false },
@@ -455,6 +740,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich arbeite im Büro.", translation: "I work in the office.",
     note: "Stem ends in -t: an -e- is inserted before -st and -t → arbeitest, arbeitet (same rule as finden).",
+    praeteritum: [
+      { pronoun: "ich", form: "arbeitete", stemChange: false },
+      { pronoun: "du", form: "arbeitetest", stemChange: false },
+      { pronoun: "er/sie/es", form: "arbeitete", stemChange: false },
+      { pronoun: "wir", form: "arbeiteten", stemChange: false },
+      { pronoun: "ihr", form: "arbeitetet", stemChange: false },
+      { pronoun: "sie/Sie", form: "arbeiteten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gearbeitet" },
     conjugations: [
       { pronoun: "ich",      form: "arbeite",   stemChange: false },
       { pronoun: "du",       form: "arbeitest", stemChange: false },
@@ -469,6 +763,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Sie studiert Medizin.", translation: "She studies medicine.",
     note: "Regular. Verbs ending in -ieren never add a ge- prefix in Perfekt: hat studiert.",
+    praeteritum: [
+      { pronoun: "ich", form: "studierte", stemChange: false },
+      { pronoun: "du", form: "studiertest", stemChange: false },
+      { pronoun: "er/sie/es", form: "studierte", stemChange: false },
+      { pronoun: "wir", form: "studierten", stemChange: false },
+      { pronoun: "ihr", form: "studiertet", stemChange: false },
+      { pronoun: "sie/Sie", form: "studierten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "studiert" },
     conjugations: [
       { pronoun: "ich",      form: "studiere",  stemChange: false },
       { pronoun: "du",       form: "studierst", stemChange: false },
@@ -483,6 +786,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich stamme aus Portugal.", translation: "I come from Portugal.",
     note: "Always used with aus: Ich stamme aus Portugal. More formal than kommen aus.",
+    praeteritum: [
+      { pronoun: "ich", form: "stammte", stemChange: false },
+      { pronoun: "du", form: "stammtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "stammte", stemChange: false },
+      { pronoun: "wir", form: "stammten", stemChange: false },
+      { pronoun: "ihr", form: "stammtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "stammten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gestammt" },
     conjugations: [
       { pronoun: "ich",      form: "stamme",  stemChange: false },
       { pronoun: "du",       form: "stammst", stemChange: false },
@@ -499,6 +811,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich kaufe Brot.", translation: "I am buying bread.",
     note: "Fully regular. Opposite: verkaufen (to sell). Ich kaufe ein = I'm shopping (einkaufen).",
+    praeteritum: [
+      { pronoun: "ich", form: "kaufte", stemChange: false },
+      { pronoun: "du", form: "kauftest", stemChange: false },
+      { pronoun: "er/sie/es", form: "kaufte", stemChange: false },
+      { pronoun: "wir", form: "kauften", stemChange: false },
+      { pronoun: "ihr", form: "kauftet", stemChange: false },
+      { pronoun: "sie/Sie", form: "kauften", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gekauft" },
     conjugations: [
       { pronoun: "ich",      form: "kaufe",  stemChange: false },
       { pronoun: "du",       form: "kaufst", stemChange: false },
@@ -513,6 +834,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich bezahle die Rechnung.", translation: "I am paying the bill.",
     note: "Regular. Both bezahlen and zahlen mean to pay; bezahlen is more common at a till.",
+    praeteritum: [
+      { pronoun: "ich", form: "bezahlte", stemChange: false },
+      { pronoun: "du", form: "bezahltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "bezahlte", stemChange: false },
+      { pronoun: "wir", form: "bezahlten", stemChange: false },
+      { pronoun: "ihr", form: "bezahltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "bezahlten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "bezahlt" },
     conjugations: [
       { pronoun: "ich",      form: "bezahle",  stemChange: false },
       { pronoun: "du",       form: "bezahlst", stemChange: false },
@@ -527,6 +857,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Was kostet das?", translation: "How much does that cost?",
     note: "Stem ends in -t: e-insertion in du/er forms → kostest, kostet. Was kostet das?",
+    praeteritum: [
+      { pronoun: "ich", form: "kostete", stemChange: false },
+      { pronoun: "du", form: "kostetest", stemChange: false },
+      { pronoun: "er/sie/es", form: "kostete", stemChange: false },
+      { pronoun: "wir", form: "kosteten", stemChange: false },
+      { pronoun: "ihr", form: "kostetet", stemChange: false },
+      { pronoun: "sie/Sie", form: "kosteten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gekostet" },
     conjugations: [
       { pronoun: "ich",      form: "koste",   stemChange: false },
       { pronoun: "du",       form: "kostest", stemChange: false },
@@ -541,6 +880,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich nehme den Bus.", translation: "I take the bus.",
     note: "Strong vowel change e → i in du/er, and -h- drops: nehme → nimmst / nimmt.",
+    praeteritum: [
+      { pronoun: "ich", form: "nahm", stemChange: true },
+      { pronoun: "du", form: "nahmst", stemChange: true },
+      { pronoun: "er/sie/es", form: "nahm", stemChange: true },
+      { pronoun: "wir", form: "nahmen", stemChange: true },
+      { pronoun: "ihr", form: "nahmt", stemChange: true },
+      { pronoun: "sie/Sie", form: "nahmen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "genommen" },
     conjugations: [
       { pronoun: "ich",      form: "nehme",  stemChange: false },
       { pronoun: "du",       form: "nimmst", stemChange: true  },
@@ -555,6 +903,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Du wählst das Restaurant.", translation: "You choose the restaurant.",
     note: "Fully regular. Also means to vote: Ich wähle die SPD.",
+    praeteritum: [
+      { pronoun: "ich", form: "wählte", stemChange: false },
+      { pronoun: "du", form: "wähltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "wählte", stemChange: false },
+      { pronoun: "wir", form: "wählten", stemChange: false },
+      { pronoun: "ihr", form: "wähltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "wählten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gewählt" },
     conjugations: [
       { pronoun: "ich",      form: "wähle",  stemChange: false },
       { pronoun: "du",       form: "wählst", stemChange: false },
@@ -571,6 +928,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich darf hier parken.", translation: "I am allowed to park here.",
     note: "Modal: no ending for ich/er. Vowel change ü → a in singular. Ich darf nicht = I'm not allowed to.",
+    praeteritum: [
+      { pronoun: "ich", form: "durfte", stemChange: true },
+      { pronoun: "du", form: "durftest", stemChange: true },
+      { pronoun: "er/sie/es", form: "durfte", stemChange: true },
+      { pronoun: "wir", form: "durften", stemChange: true },
+      { pronoun: "ihr", form: "durftet", stemChange: true },
+      { pronoun: "sie/Sie", form: "durften", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gedurft" },
     conjugations: [
       { pronoun: "ich",      form: "darf",   stemChange: true  },
       { pronoun: "du",       form: "darfst", stemChange: true  },
@@ -585,6 +951,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich mag Käse.", translation: "I like cheese.",
     note: "Vowel change ö → a in singular, no ending for ich/er. Different from möchten (would like): Ich mag Käse vs. Ich möchte Käse kaufen.",
+    praeteritum: [
+      { pronoun: "ich", form: "mochte", stemChange: true },
+      { pronoun: "du", form: "mochtest", stemChange: true },
+      { pronoun: "er/sie/es", form: "mochte", stemChange: true },
+      { pronoun: "wir", form: "mochten", stemChange: true },
+      { pronoun: "ihr", form: "mochtet", stemChange: true },
+      { pronoun: "sie/Sie", form: "mochten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gemocht" },
     conjugations: [
       { pronoun: "ich",      form: "mag",   stemChange: true  },
       { pronoun: "du",       form: "magst", stemChange: true  },
@@ -599,6 +974,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich glaube dir.", translation: "I believe you.",
     note: "Fully regular. Used for beliefs and opinions: Ich glaube, dass… (I think that…). Very common in spoken German.",
+    praeteritum: [
+      { pronoun: "ich", form: "glaubte", stemChange: false },
+      { pronoun: "du", form: "glaubtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "glaubte", stemChange: false },
+      { pronoun: "wir", form: "glaubten", stemChange: false },
+      { pronoun: "ihr", form: "glaubtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "glaubten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geglaubt" },
     conjugations: [
       { pronoun: "ich",      form: "glaube",  stemChange: false },
       { pronoun: "du",       form: "glaubst", stemChange: false },
@@ -613,6 +997,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Der Bus hält hier.", translation: "The bus stops here.",
     note: "Vowel change a → ä in du/er forms. Same umlaut pattern as lassen (a→ä).",
+    praeteritum: [
+      { pronoun: "ich", form: "hielt", stemChange: true },
+      { pronoun: "du", form: "hieltst", stemChange: true },
+      { pronoun: "er/sie/es", form: "hielt", stemChange: true },
+      { pronoun: "wir", form: "hielten", stemChange: true },
+      { pronoun: "ihr", form: "hieltet", stemChange: true },
+      { pronoun: "sie/Sie", form: "hielten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gehalten" },
     conjugations: [
       { pronoun: "ich",      form: "halte",  stemChange: false },
       { pronoun: "du",       form: "hältst", stemChange: true  },
@@ -627,6 +1020,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich bringe dir das Buch.", translation: "I am bringing you the book.",
     note: "Regular in Präsens. A mixed verb — irregular only in past tenses: brachte, hat gebracht.",
+    praeteritum: [
+      { pronoun: "ich", form: "brachte", stemChange: true },
+      { pronoun: "du", form: "brachtest", stemChange: true },
+      { pronoun: "er/sie/es", form: "brachte", stemChange: true },
+      { pronoun: "wir", form: "brachten", stemChange: true },
+      { pronoun: "ihr", form: "brachtet", stemChange: true },
+      { pronoun: "sie/Sie", form: "brachten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gebracht" },
     conjugations: [
       { pronoun: "ich",      form: "bringe",  stemChange: false },
       { pronoun: "du",       form: "bringst", stemChange: false },
@@ -641,6 +1043,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich zeige dir mein Haus.", translation: "I am showing you my house.",
     note: "Fully regular. Very common: Kannst du mir zeigen, wo…? (Can you show me where…?)",
+    praeteritum: [
+      { pronoun: "ich", form: "zeigte", stemChange: false },
+      { pronoun: "du", form: "zeigtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "zeigte", stemChange: false },
+      { pronoun: "wir", form: "zeigten", stemChange: false },
+      { pronoun: "ihr", form: "zeigtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "zeigten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gezeigt" },
     conjugations: [
       { pronoun: "ich",      form: "zeige",  stemChange: false },
       { pronoun: "du",       form: "zeigst", stemChange: false },
@@ -657,6 +1068,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Die Brücke verbindet zwei Städte.", translation: "The bridge connects two cities.",
     note: "Stem ends in -d → e-insertion: verbindest, verbindet. Common in exercises: Verbinden Sie die Sätze! (Connect the sentences!)",
+    praeteritum: [
+      { pronoun: "ich", form: "verband", stemChange: true },
+      { pronoun: "du", form: "verbandest", stemChange: true },
+      { pronoun: "er/sie/es", form: "verband", stemChange: true },
+      { pronoun: "wir", form: "verbanden", stemChange: true },
+      { pronoun: "ihr", form: "verbandet", stemChange: true },
+      { pronoun: "sie/Sie", form: "verbanden", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "verbunden" },
     conjugations: [
       { pronoun: "ich",      form: "verbinde",   stemChange: false },
       { pronoun: "du",       form: "verbindest", stemChange: false },
@@ -671,6 +1091,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich ergänze den Satz.", translation: "I complete the sentence.",
     note: "Stem ends in -z: du ergänzt (not ergänzst — same contraction rule as heissen). Used constantly in coursebooks: Ergänzen Sie die Lücken!",
+    praeteritum: [
+      { pronoun: "ich", form: "ergänzte", stemChange: false },
+      { pronoun: "du", form: "ergänztest", stemChange: false },
+      { pronoun: "er/sie/es", form: "ergänzte", stemChange: false },
+      { pronoun: "wir", form: "ergänzten", stemChange: false },
+      { pronoun: "ihr", form: "ergänztet", stemChange: false },
+      { pronoun: "sie/Sie", form: "ergänzten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "ergänzt" },
     conjugations: [
       { pronoun: "ich",      form: "ergänze",  stemChange: false },
       { pronoun: "du",       form: "ergänzt",  stemChange: false },
@@ -685,6 +1114,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich antworte dir sofort.", translation: "I answer you right away.",
     note: "Stem ends in -t → e-insertion: antwortest, antwortet. Takes the dative: Ich antworte dir (not: ich antworte dich).",
+    praeteritum: [
+      { pronoun: "ich", form: "antwortete", stemChange: false },
+      { pronoun: "du", form: "antwortetest", stemChange: false },
+      { pronoun: "er/sie/es", form: "antwortete", stemChange: false },
+      { pronoun: "wir", form: "antworteten", stemChange: false },
+      { pronoun: "ihr", form: "antwortetet", stemChange: false },
+      { pronoun: "sie/Sie", form: "antworteten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geantwortet" },
     conjugations: [
       { pronoun: "ich",      form: "antworte",   stemChange: false },
       { pronoun: "du",       form: "antwortest", stemChange: false },
@@ -699,6 +1137,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich ordne die Wörter.", translation: "I put the words in order.",
     note: "Stem 'ordn-' ends in a consonant cluster → e-insertion: ordnest, ordnet. Used in exercises: Ordnen Sie die Wörter! (Put the words in order!)",
+    praeteritum: [
+      { pronoun: "ich", form: "ordnete", stemChange: false },
+      { pronoun: "du", form: "ordnetest", stemChange: false },
+      { pronoun: "er/sie/es", form: "ordnete", stemChange: false },
+      { pronoun: "wir", form: "ordneten", stemChange: false },
+      { pronoun: "ihr", form: "ordnetet", stemChange: false },
+      { pronoun: "sie/Sie", form: "ordneten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geordnet" },
     conjugations: [
       { pronoun: "ich",      form: "ordne",   stemChange: false },
       { pronoun: "du",       form: "ordnest", stemChange: false },
@@ -713,6 +1160,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Das Bild gefällt mir.", translation: "I like the picture.",
     note: "Works the opposite of English: Das gefällt mir = That pleases me = I like that. The thing you like is the subject. Vowel change a → ä in du/er — same pattern as lassen and halten.",
+    praeteritum: [
+      { pronoun: "ich", form: "gefiel", stemChange: true },
+      { pronoun: "du", form: "gefielst", stemChange: true },
+      { pronoun: "er/sie/es", form: "gefiel", stemChange: true },
+      { pronoun: "wir", form: "gefielen", stemChange: true },
+      { pronoun: "ihr", form: "gefielt", stemChange: true },
+      { pronoun: "sie/Sie", form: "gefielen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gefallen" },
     conjugations: [
       { pronoun: "ich",      form: "gefalle",   stemChange: false },
       { pronoun: "du",       form: "gefällst",  stemChange: true  },
@@ -727,6 +1183,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich spiele Fussball.", translation: "I play football.",
     note: "Fully regular. Works for games, sports and instruments: Ich spiele Fussball / Ich spiele Gitarre.",
+    praeteritum: [
+      { pronoun: "ich", form: "spielte", stemChange: false },
+      { pronoun: "du", form: "spieltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "spielte", stemChange: false },
+      { pronoun: "wir", form: "spielten", stemChange: false },
+      { pronoun: "ihr", form: "spieltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "spielten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gespielt" },
     conjugations: [
       { pronoun: "ich",      form: "spiele",  stemChange: false },
       { pronoun: "du",       form: "spielst", stemChange: false },
@@ -742,6 +1207,16 @@ export const verbData: Verb[] = [
     example: "Ich schaue den Film an.", translation: "I am watching the film.",
     customStem: "schau",
     note: "Separable verb — 'an-' detaches to the end of the clause: Ich schaue den Film an. The base verb schauen conjugates regularly; forms here show the base without the prefix.",
+    separable: "an",
+    praeteritum: [
+      { pronoun: "ich", form: "schaute", stemChange: false },
+      { pronoun: "du", form: "schautest", stemChange: false },
+      { pronoun: "er/sie/es", form: "schaute", stemChange: false },
+      { pronoun: "wir", form: "schauten", stemChange: false },
+      { pronoun: "ihr", form: "schautet", stemChange: false },
+      { pronoun: "sie/Sie", form: "schauten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "angeschaut" },
     conjugations: [
       { pronoun: "ich",      form: "schaue",  stemChange: false },
       { pronoun: "du",       form: "schaust", stemChange: false },
@@ -757,6 +1232,16 @@ export const verbData: Verb[] = [
     example: "Ich mache die Tür auf.", translation: "I am opening the door.",
     customStem: "mach",
     note: "Separable verb — 'auf-' detaches: Ich mache die Tür auf (I open the door). Base verb machen is fully regular and already in this list.",
+    separable: "auf",
+    praeteritum: [
+      { pronoun: "ich", form: "machte", stemChange: false },
+      { pronoun: "du", form: "machtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "machte", stemChange: false },
+      { pronoun: "wir", form: "machten", stemChange: false },
+      { pronoun: "ihr", form: "machtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "machten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "aufgemacht" },
     conjugations: [
       { pronoun: "ich",      form: "mache",  stemChange: false },
       { pronoun: "du",       form: "machst", stemChange: false },
@@ -772,6 +1257,16 @@ export const verbData: Verb[] = [
     example: "Ich kaufe im Supermarkt ein.", translation: "I am shopping at the supermarket.",
     customStem: "kauf",
     note: "Separable verb — 'ein-' detaches: Ich kaufe im Supermarkt ein. Base verb kaufen is already in this list. Contrast: kaufen = to buy one thing; einkaufen = to do the shopping.",
+    separable: "ein",
+    praeteritum: [
+      { pronoun: "ich", form: "kaufte", stemChange: false },
+      { pronoun: "du", form: "kauftest", stemChange: false },
+      { pronoun: "er/sie/es", form: "kaufte", stemChange: false },
+      { pronoun: "wir", form: "kauften", stemChange: false },
+      { pronoun: "ihr", form: "kauftet", stemChange: false },
+      { pronoun: "sie/Sie", form: "kauften", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "eingekauft" },
     conjugations: [
       { pronoun: "ich",      form: "kaufe",  stemChange: false },
       { pronoun: "du",       form: "kaufst", stemChange: false },
@@ -787,6 +1282,16 @@ export const verbData: Verb[] = [
     example: "Ich rufe dich später an.", translation: "I will call you later.",
     customStem: "ruf",
     note: "Separable verb — 'an-' detaches: Ich rufe dich an (I'll call you). Base verb rufen is regular. Very common in everyday German.",
+    separable: "an",
+    praeteritum: [
+      { pronoun: "ich", form: "rief", stemChange: true },
+      { pronoun: "du", form: "riefst", stemChange: true },
+      { pronoun: "er/sie/es", form: "rief", stemChange: true },
+      { pronoun: "wir", form: "riefen", stemChange: true },
+      { pronoun: "ihr", form: "rieft", stemChange: true },
+      { pronoun: "sie/Sie", form: "riefen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "angerufen" },
     conjugations: [
       { pronoun: "ich",      form: "rufe",  stemChange: false },
       { pronoun: "du",       form: "rufst", stemChange: false },
@@ -804,6 +1309,16 @@ export const verbData: Verb[] = [
     example: "Ich stehe früh auf.", translation: "I get up early.",
     customStem: "steh",
     note: "Separable verb — 'auf-' detaches: Lara steht früh auf. Base verb stehen is fully regular and already in this list.",
+    separable: "auf",
+    praeteritum: [
+      { pronoun: "ich", form: "stand", stemChange: true },
+      { pronoun: "du", form: "standest", stemChange: true },
+      { pronoun: "er/sie/es", form: "stand", stemChange: true },
+      { pronoun: "wir", form: "standen", stemChange: true },
+      { pronoun: "ihr", form: "standet", stemChange: true },
+      { pronoun: "sie/Sie", form: "standen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "aufgestanden" },
     conjugations: [
       { pronoun: "ich",      form: "stehe",  stemChange: false },
       { pronoun: "du",       form: "stehst", stemChange: false },
@@ -819,6 +1334,16 @@ export const verbData: Verb[] = [
     example: "Ich räume mein Zimmer auf.", translation: "I am tidying up my room.",
     customStem: "räum",
     note: "Separable verb — 'auf-' detaches: Sie räumt die Küche auf. Base verb räumen is fully regular.",
+    separable: "auf",
+    praeteritum: [
+      { pronoun: "ich", form: "räumte", stemChange: false },
+      { pronoun: "du", form: "räumtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "räumte", stemChange: false },
+      { pronoun: "wir", form: "räumten", stemChange: false },
+      { pronoun: "ihr", form: "räumtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "räumten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "aufgeräumt" },
     conjugations: [
       { pronoun: "ich",      form: "räume",  stemChange: false },
       { pronoun: "du",       form: "räumst", stemChange: false },
@@ -834,6 +1359,16 @@ export const verbData: Verb[] = [
     example: "Ich sehe abends fern.", translation: "I watch TV in the evening.",
     customStem: "seh",
     note: "Separable verb — 'fern-' detaches: Er sieht fern. Base verb sehen has the same e → ie change in du/er as the standalone sehen.",
+    separable: "fern",
+    praeteritum: [
+      { pronoun: "ich", form: "sah", stemChange: true },
+      { pronoun: "du", form: "sahst", stemChange: true },
+      { pronoun: "er/sie/es", form: "sah", stemChange: true },
+      { pronoun: "wir", form: "sahen", stemChange: true },
+      { pronoun: "ihr", form: "saht", stemChange: true },
+      { pronoun: "sie/Sie", form: "sahen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "ferngesehen" },
     conjugations: [
       { pronoun: "ich",      form: "sehe",   stemChange: false },
       { pronoun: "du",       form: "siehst", stemChange: true  },
@@ -848,6 +1383,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich esse einen Apfel.", translation: "I am eating an apple.",
     note: "Vowel change e → i in du/er forms, and both collapse to the same form: isst (du) = isst (er/sie/es).",
+    praeteritum: [
+      { pronoun: "ich", form: "ass", stemChange: true },
+      { pronoun: "du", form: "assest", stemChange: true },
+      { pronoun: "er/sie/es", form: "ass", stemChange: true },
+      { pronoun: "wir", form: "assen", stemChange: true },
+      { pronoun: "ihr", form: "asst", stemChange: true },
+      { pronoun: "sie/Sie", form: "assen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gegessen" },
     conjugations: [
       { pronoun: "ich",      form: "esse",  stemChange: false },
       { pronoun: "du",       form: "isst",  stemChange: true  },
@@ -862,6 +1406,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich frühstücke um acht Uhr.", translation: "I have breakfast at eight o'clock.",
     note: "Fully regular despite the long stem. Ich frühstücke um acht Uhr (I have breakfast at eight).",
+    praeteritum: [
+      { pronoun: "ich", form: "frühstückte", stemChange: false },
+      { pronoun: "du", form: "frühstücktest", stemChange: false },
+      { pronoun: "er/sie/es", form: "frühstückte", stemChange: false },
+      { pronoun: "wir", form: "frühstückten", stemChange: false },
+      { pronoun: "ihr", form: "frühstücktet", stemChange: false },
+      { pronoun: "sie/Sie", form: "frühstückten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gefrühstückt" },
     conjugations: [
       { pronoun: "ich",      form: "frühstücke",  stemChange: false },
       { pronoun: "du",       form: "frühstückst", stemChange: false },
@@ -879,6 +1432,16 @@ export const verbData: Verb[] = [
     example: "Der Kurs fängt um neun an.", translation: "The class starts at nine.",
     customStem: "fang",
     note: "Separable AND stem-changing: 'an-' detaches and a → ä in du/er. Der Kurs fängt um neun an (the class starts at nine).",
+    separable: "an",
+    praeteritum: [
+      { pronoun: "ich", form: "fing", stemChange: true },
+      { pronoun: "du", form: "fingst", stemChange: true },
+      { pronoun: "er/sie/es", form: "fing", stemChange: true },
+      { pronoun: "wir", form: "fingen", stemChange: true },
+      { pronoun: "ihr", form: "fingt", stemChange: true },
+      { pronoun: "sie/Sie", form: "fingen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "angefangen" },
     conjugations: [
       { pronoun: "ich",      form: "fange",  stemChange: false },
       { pronoun: "du",       form: "fängst", stemChange: true  },
@@ -893,6 +1456,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich schlafe acht Stunden.", translation: "I sleep eight hours.",
     note: "Stem change a → ä in du/er forms: du schläfst, er schläft. Wie lange schläfst du am Wochenende?",
+    praeteritum: [
+      { pronoun: "ich", form: "schlief", stemChange: true },
+      { pronoun: "du", form: "schliefst", stemChange: true },
+      { pronoun: "er/sie/es", form: "schlief", stemChange: true },
+      { pronoun: "wir", form: "schliefen", stemChange: true },
+      { pronoun: "ihr", form: "schlieft", stemChange: true },
+      { pronoun: "sie/Sie", form: "schliefen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geschlafen" },
     conjugations: [
       { pronoun: "ich",      form: "schlafe",  stemChange: false },
       { pronoun: "du",       form: "schläfst", stemChange: true  },
@@ -908,6 +1480,16 @@ export const verbData: Verb[] = [
     example: "Die Suppe kühlt schnell ab.", translation: "The soup cools down quickly.",
     customStem: "kühl",
     note: "Separable verb — 'ab-' detaches: Die Suppe kühlt schnell ab. Base verb kühlen is regular; reflexive sich abkühlen = to cool oneself down.",
+    separable: "ab",
+    praeteritum: [
+      { pronoun: "ich", form: "kühlte", stemChange: false },
+      { pronoun: "du", form: "kühltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "kühlte", stemChange: false },
+      { pronoun: "wir", form: "kühlten", stemChange: false },
+      { pronoun: "ihr", form: "kühltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "kühlten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "abgekühlt" },
     conjugations: [
       { pronoun: "ich",      form: "kühle",  stemChange: false },
       { pronoun: "du",       form: "kühlst", stemChange: false },
@@ -922,6 +1504,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich chatte mit meinen Freunden.", translation: "I am chatting with my friends.",
     note: "Regular loanword. The stem ends in -tt, so an -e- is inserted before -st/-t: du chattest, er chattet (same rule as arbeiten).",
+    praeteritum: [
+      { pronoun: "ich", form: "chattete", stemChange: false },
+      { pronoun: "du", form: "chattetest", stemChange: false },
+      { pronoun: "er/sie/es", form: "chattete", stemChange: false },
+      { pronoun: "wir", form: "chatteten", stemChange: false },
+      { pronoun: "ihr", form: "chattetet", stemChange: false },
+      { pronoun: "sie/Sie", form: "chatteten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gechattet" },
     conjugations: [
       { pronoun: "ich",      form: "chatte",   stemChange: false },
       { pronoun: "du",       form: "chattest", stemChange: false },
@@ -936,6 +1527,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich koche heute Abend.", translation: "I am cooking this evening.",
     note: "Fully regular: stem koch- + -e / -st / -t / -en. Ich koche heute Abend (I'm cooking tonight).",
+    praeteritum: [
+      { pronoun: "ich", form: "kochte", stemChange: false },
+      { pronoun: "du", form: "kochtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "kochte", stemChange: false },
+      { pronoun: "wir", form: "kochten", stemChange: false },
+      { pronoun: "ihr", form: "kochtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "kochten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gekocht" },
     conjugations: [
       { pronoun: "ich",      form: "koche",  stemChange: false },
       { pronoun: "du",       form: "kochst", stemChange: false },
@@ -952,6 +1552,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Es gibt hier einen Supermarkt.", translation: "There is a supermarket here.",
     note: "Vowel change e → i in du/er: du gibst, er gibt. Most useful in es gibt = there is / there are (+ accusative).",
+    praeteritum: [
+      { pronoun: "ich", form: "gab", stemChange: true },
+      { pronoun: "du", form: "gabst", stemChange: true },
+      { pronoun: "er/sie/es", form: "gab", stemChange: true },
+      { pronoun: "wir", form: "gaben", stemChange: true },
+      { pronoun: "ihr", form: "gabt", stemChange: true },
+      { pronoun: "sie/Sie", form: "gaben", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gegeben" },
     conjugations: [
       { pronoun: "ich",      form: "gebe",  stemChange: false },
       { pronoun: "du",       form: "gibst", stemChange: true  },
@@ -966,6 +1575,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich fahre mit dem Bus.", translation: "I go by bus.",
     note: "Stem change a → ä in du/er: du fährst, er fährt. Ich fahre mit dem Bus (I go by bus).",
+    praeteritum: [
+      { pronoun: "ich", form: "fuhr", stemChange: true },
+      { pronoun: "du", form: "fuhrst", stemChange: true },
+      { pronoun: "er/sie/es", form: "fuhr", stemChange: true },
+      { pronoun: "wir", form: "fuhren", stemChange: true },
+      { pronoun: "ihr", form: "fuhrt", stemChange: true },
+      { pronoun: "sie/Sie", form: "fuhren", stemChange: true },
+    ],
+    perfekt: { auxiliary: "sein", partizip: "gefahren" },
     conjugations: [
       { pronoun: "ich",      form: "fahre",  stemChange: false },
       { pronoun: "du",       form: "fährst", stemChange: true  },
@@ -980,6 +1598,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich lese ein Buch.", translation: "I am reading a book.",
     note: "Vowel change e → ie in du/er: du liest, er liest. The stem -s merges with the -st ending, so both forms are 'liest'.",
+    praeteritum: [
+      { pronoun: "ich", form: "las", stemChange: true },
+      { pronoun: "du", form: "lasest", stemChange: true },
+      { pronoun: "er/sie/es", form: "las", stemChange: true },
+      { pronoun: "wir", form: "lasen", stemChange: true },
+      { pronoun: "ihr", form: "last", stemChange: true },
+      { pronoun: "sie/Sie", form: "lasen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gelesen" },
     conjugations: [
       { pronoun: "ich",      form: "lese",  stemChange: false },
       { pronoun: "du",       form: "liest", stemChange: true  },
@@ -994,6 +1621,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich frage den Lehrer.", translation: "I am asking the teacher.",
     note: "Fully regular. The natural counterpart to antworten: Ich frage, du antwortest.",
+    praeteritum: [
+      { pronoun: "ich", form: "fragte", stemChange: false },
+      { pronoun: "du", form: "fragtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "fragte", stemChange: false },
+      { pronoun: "wir", form: "fragten", stemChange: false },
+      { pronoun: "ihr", form: "fragtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "fragten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gefragt" },
     conjugations: [
       { pronoun: "ich",      form: "frage",  stemChange: false },
       { pronoun: "du",       form: "fragst", stemChange: false },
@@ -1008,6 +1644,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich verstehe die Frage nicht.", translation: "I don't understand the question.",
     note: "Inseparable prefix ver- (never detaches); regular endings on the -steh- stem. Ich verstehe nicht = I don't understand.",
+    praeteritum: [
+      { pronoun: "ich", form: "verstand", stemChange: true },
+      { pronoun: "du", form: "verstandest", stemChange: true },
+      { pronoun: "er/sie/es", form: "verstand", stemChange: true },
+      { pronoun: "wir", form: "verstanden", stemChange: true },
+      { pronoun: "ihr", form: "verstandet", stemChange: true },
+      { pronoun: "sie/Sie", form: "verstanden", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "verstanden" },
     conjugations: [
       { pronoun: "ich",      form: "verstehe",  stemChange: false },
       { pronoun: "du",       form: "verstehst", stemChange: false },
@@ -1022,6 +1667,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich lerne Deutsch.", translation: "I am learning German.",
     note: "Fully regular. Ich lerne Deutsch (I'm learning German).",
+    praeteritum: [
+      { pronoun: "ich", form: "lernte", stemChange: false },
+      { pronoun: "du", form: "lerntest", stemChange: false },
+      { pronoun: "er/sie/es", form: "lernte", stemChange: false },
+      { pronoun: "wir", form: "lernten", stemChange: false },
+      { pronoun: "ihr", form: "lerntet", stemChange: false },
+      { pronoun: "sie/Sie", form: "lernten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gelernt" },
     conjugations: [
       { pronoun: "ich",      form: "lerne",  stemChange: false },
       { pronoun: "du",       form: "lernst", stemChange: false },
@@ -1036,6 +1690,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich helfe dir gern.", translation: "I am happy to help you.",
     note: "Stem change e → i in du/er: du hilfst, er hilft. Takes the dative: Ich helfe dir.",
+    praeteritum: [
+      { pronoun: "ich", form: "half", stemChange: true },
+      { pronoun: "du", form: "halfst", stemChange: true },
+      { pronoun: "er/sie/es", form: "half", stemChange: true },
+      { pronoun: "wir", form: "halfen", stemChange: true },
+      { pronoun: "ihr", form: "halft", stemChange: true },
+      { pronoun: "sie/Sie", form: "halfen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geholfen" },
     conjugations: [
       { pronoun: "ich",      form: "helfe",  stemChange: false },
       { pronoun: "du",       form: "hilfst", stemChange: true  },
@@ -1050,6 +1713,15 @@ export const verbData: Verb[] = [
     lessons: ["A1.1"],
     example: "Ich kenne diese Stadt.", translation: "I know this city.",
     note: "Regular. kennen = to know a person/place (Ich kenne Berlin); wissen = to know a fact (Ich weiss das).",
+    praeteritum: [
+      { pronoun: "ich", form: "kannte", stemChange: true },
+      { pronoun: "du", form: "kanntest", stemChange: true },
+      { pronoun: "er/sie/es", form: "kannte", stemChange: true },
+      { pronoun: "wir", form: "kannten", stemChange: true },
+      { pronoun: "ihr", form: "kanntet", stemChange: true },
+      { pronoun: "sie/Sie", form: "kannten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gekannt" },
     conjugations: [
       { pronoun: "ich",      form: "kenne",  stemChange: false },
       { pronoun: "du",       form: "kennst", stemChange: false },
