@@ -29,12 +29,11 @@ export interface Preposition {
 // Content note (Phase 6 handback): the course book's L11 grammar bullet groups
 // "an, auf, bei, hinter, in, neben, über, unter, vor, zwischen" together as one
 // "lokal (Wo?)" list, but grammatically `bei` is Dativ-only (there is no
-// "*bei den Tisch"), so it keeps `case: 'Dativ'` here rather than 'Wechsel'. `vor`
-// keeps `case: 'Dativ'` too: at this level the book only teaches its Dativ uses
-// (temporal "vor einem Jahr", locative "vor dem Haus steht") and never drills an
-// accusative "vor das Haus stellen", so modelling it as Wechsel would claim a use
-// the content never shows. The genuinely two-way preps in that list — an, auf,
-// hinter, in, neben, über, unter, zwischen — are `case: 'Wechsel'`.
+// "*bei den Tisch"), so it keeps `case: 'Dativ'` here rather than 'Wechsel'.
+// Every other word in that list — an, auf, hinter, in, neben, über, unter, vor,
+// zwischen — is genuinely two-way and is `case: 'Wechsel'`; where a word's
+// lokal use is Wechsel but it also has a temporal use that is ALWAYS Dativ (an,
+// in, vor), that's called out in its own `note`.
 export const prepositionData: Preposition[] = [
   {
     word: 'ab',
@@ -43,8 +42,7 @@ export const prepositionData: Preposition[] = [
     question: 'Ab wann?',
     meaning: 'from / starting at',
     examples: [
-      { de: 'Ab Montag bin ich da.', en: "I'm there starting Monday." },
-      { de: 'Ab einer Woche Ferien brauche ich wieder Energie.', en: 'After a week of holiday I need energy again.' },
+      { de: 'Ab Montag arbeite ich wieder.', en: "From Monday I'm working again." },
     ],
     lessons: ['A1.1', 'A1.2-L12'],
   },
@@ -69,6 +67,7 @@ export const prepositionData: Preposition[] = [
       { de: 'Ich wohne an der Bahnhofstrasse.', en: 'I live on Bahnhofstrasse.' },
       { de: 'Am Montag arbeite ich nicht.', en: "I don't work on Mondays." },
     ],
+    note: 'Temporal an (a day) is always Dativ: am Montag. Only the lokal use varies with Wo?/Wohin?.',
     lessons: ['A1.1', 'A1.2-L11'],
   },
   {
@@ -91,7 +90,7 @@ export const prepositionData: Preposition[] = [
       { de: 'Ich arbeite bei «Immowohl».', en: 'I work at Immowohl.' },
       { de: "Beim Essen lese ich nicht.", en: "I don't read while eating." },
     ],
-    lessons: ['A1.2-L08', 'A1.2-L12'],
+    lessons: ['A1.2-L08', 'A1.2-L11', 'A1.2-L12'],
   },
   {
     word: 'bis',
@@ -138,6 +137,7 @@ export const prepositionData: Preposition[] = [
       { de: 'Ich gehe in den Park.', en: 'I am going into the park.' },
       { de: 'In einer Stunde.', en: 'In an hour.' },
     ],
+    note: 'Temporal in (a duration from now) is always Dativ: in einer Stunde. Only the lokal use varies with Wo?/Wohin?.',
     lessons: ['A1.1', 'A1.2-L11', 'A1.2-L12'],
   },
   {
@@ -199,14 +199,15 @@ export const prepositionData: Preposition[] = [
   },
   {
     word: 'vor',
-    case: 'Dativ',
+    case: 'Wechsel',
     use: ['temporal', 'lokal'],
-    question: 'Wann? · Wo?',
+    question: 'Wann? · Wo? (Dativ) · Wohin? (Akkusativ)',
     meaning: 'before / ago · in front of',
     examples: [
       { de: 'Ich habe vor einem Jahr die Ausbildung gemacht.', en: 'I did the training a year ago.' },
       { de: 'Das Auto steht vor dem Haus.', en: 'The car is in front of the house.' },
     ],
+    note: "Temporal vor ('ago') is always Dativ: vor einem Jahr. Only the lokal use varies: Wo? vor dem Haus (Dativ) / Wohin? vor das Haus (Akkusativ).",
     lessons: ['A1.2-L08', 'A1.2-L11', 'A1.2-L12'],
   },
   {

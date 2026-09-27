@@ -6,9 +6,14 @@
 // call.
 //
 // Coverage: one item per Dativ/Akkusativ preposition that has a clear,
-// distinguishing article (plan §5 Phase 6). Wechsel and 'ohne' prepositions are
-// deliberately NOT covered — a single blank can't show a Wo?/Wohin? contrast,
-// and "als" (ohne) takes no article at all to quiz.
+// distinguishing article (plan §5 Phase 6). A Wechsel preposition CAN still get
+// an item — `vor` does — as long as the sentence drills a use that is always
+// one case (vor's temporal "ago" use is always Dativ, never Akkusativ); the
+// item just can't drill the ambiguous Wo?/Wohin? contrast itself. 'ohne'
+// prepositions are excluded ("als" takes no article at all to quiz), and so is
+// `bis`: its own card explains it normally takes NO article (bis Freitag) and
+// only gets one by joining zu (bis zum Montag) — a bare "bis ___ Monat" isn't
+// idiomatic, and für already covers Akkusativ.
 export interface FallDrillItem {
   /** The preposition this item drills — must match a Preposition.word. */
   word: string
@@ -41,7 +46,7 @@ export const fallDrillData: FallDrillItem[] = [
     sentence: 'Sie hat vor ___ Woche angefangen.',
     options: ['einem', 'eine', 'einer', 'einen'],
     answer: 'einer',
-    why: 'vor + Dativ · die Woche → einer Woche',
+    why: 'vor + Dativ (temporal: "ago") · die Woche → einer Woche',
   },
   {
     word: 'bei',
@@ -77,13 +82,6 @@ export const fallDrillData: FallDrillItem[] = [
     options: ['einem', 'einen', 'eine', 'einer'],
     answer: 'einem',
     why: 'zu + Dativ · der Arzt → einem Arzt',
-  },
-  {
-    word: 'bis',
-    sentence: 'Ich bleibe bis ___ Monat hier.',
-    options: ['einen', 'einem', 'eine', 'einer'],
-    answer: 'einen',
-    why: 'bis + Akkusativ · der Monat → einen Monat',
   },
 ]
 

@@ -23,12 +23,19 @@ describe('fallDrillData shape', () => {
     }
   })
 
-  it('covers every Dativ/Akkusativ preposition with a clear article (not Wechsel/ohne)', () => {
-    const clearCase = prepositionData.filter((p) => p.case === 'Dativ' || p.case === 'Akkusativ')
+  it('covers every Dativ/Akkusativ preposition with a clear article, except bis (see drills.ts note: no idiomatic bare-article sentence, and für already covers Akkusativ)', () => {
+    const clearCase = prepositionData.filter(
+      (p) => (p.case === 'Dativ' || p.case === 'Akkusativ') && p.word !== 'bis',
+    )
     const drilled = new Set(fallDrillData.map((d) => d.word))
     for (const p of clearCase) {
       expect(drilled.has(p.word), `missing a drill item for ${p.word}`).toBe(true)
     }
+  })
+
+  it('a Wechsel preposition can still carry a drill item, for a use that is always one case (vor, temporal)', () => {
+    expect(prepositionData.find((p) => p.word === 'vor')?.case).toBe('Wechsel')
+    expect(fallDrillFor('vor')).toBeDefined()
   })
 
   it('has no duplicate words', () => {
