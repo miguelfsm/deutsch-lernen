@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config'
+import { defineConfig, configDefaults } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
@@ -38,5 +38,9 @@ export default defineConfig(({ command }) => ({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setup.ts',
+    // Git-ignored agent worktrees can exist under .claude/worktrees/ (each with
+    // its own src/ + node_modules); exclude the whole .claude tree so a plain
+    // `npm test` never picks up a stray copy of the test suite alongside these.
+    exclude: [...configDefaults.exclude, '**/.claude/**'],
   },
 }))
