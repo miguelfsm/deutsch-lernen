@@ -92,7 +92,12 @@ npm run typecheck  # tsc --noEmit
   deep-select from `?sel=` with `useDeepSelect` (lazy `useState` seed).
 - **Add/edit content** (more verbs, nouns, phrases…): edit the relevant
   `src/tools/<tool>/data.ts`; the data is typed, so `npm run typecheck` catches
-  shape mistakes.
+  shape mistakes. Every item requires a `lessons: LessonId[]` tag (existing
+  content is tagged `['A1.1']`; see
+  [`plans/LESSONS_PLAN_A1_2.md`](./plans/LESSONS_PLAN_A1_2.md)).
+- **Add a lesson:** one entry in `src/content/lessons.ts` plus one new
+  `LessonId` union member there — a typo in a `lessons: [...]` tag is then a
+  compile error.
 - **Change the app icon:** edit `public/icon.svg`, then regenerate the PWA
   rasters with `node scripts/gen-icons.mjs`.
 

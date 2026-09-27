@@ -17,6 +17,8 @@ export function adjectivesCatalog(): CatalogEntry[] {
         gloss: item.meaning,
         category: c.label,
         keywords: item.opposite ? [item.opposite.word] : undefined,
+        kind: 'adjective',
+        lessons: item.lessons,
       }
     }),
   )

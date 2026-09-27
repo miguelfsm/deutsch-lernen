@@ -5,12 +5,17 @@
 // Here the headword (`pattern`) is a short label for the rule; `example` is the
 // German sentence that demonstrates it.
 
+import type { LessonId } from '../../content/lessons'
+
 export interface SatzbauItem {
   pattern: string
   meaning: string
   example: string
   translation: string
   note?: string
+  // Lessons this item belongs to. Every existing item predates lesson tagging,
+  // so all are backfilled to the A1.1 bucket (decision D3).
+  lessons: LessonId[]
 }
 
 export interface SatzbauCategory {
@@ -32,6 +37,7 @@ export const categories: SatzbauCategory[] = [
         example: "Robert macht am Nachmittag Sport.",
         translation: "Robert does sport in the afternoon.",
         note: "In a German statement the conjugated verb is always the second element — no matter what comes first.",
+        lessons: ["A1.1"],
       },
       {
         pattern: "Zeit zuerst → Subjekt nach dem Verb",
@@ -39,6 +45,7 @@ export const categories: SatzbauCategory[] = [
         example: "Am Nachmittag macht Robert Sport.",
         translation: "In the afternoon Robert does sport.",
         note: "Start with a time or place phrase and the verb still stays 2nd, so the subject moves to right after it. Same meaning as 'Robert macht am Nachmittag Sport.'",
+        lessons: ["A1.1"],
       },
       {
         pattern: "Am Mittag isst er mit Nina",
@@ -46,6 +53,7 @@ export const categories: SatzbauCategory[] = [
         example: "Am Mittag isst er mit Nina.",
         translation: "At noon he eats with Nina.",
         note: "Fronted 'am Mittag' → verb 'isst' in position 2 → subject 'er' right after it. (essen → er isst.)",
+        lessons: ["A1.1"],
       },
     ],
   },
@@ -60,6 +68,7 @@ export const categories: SatzbauCategory[] = [
         example: "Am Donnerstag ruft Tim Mama und Papa an.",
         translation: "On Thursday Tim calls Mom and Dad.",
         note: "anrufen → ruft … an. The conjugated part stays in position 2; the prefix lands at the very end of the sentence.",
+        lessons: ["A1.1"],
       },
       {
         pattern: "aufräumen im Satz",
@@ -67,6 +76,7 @@ export const categories: SatzbauCategory[] = [
         example: "Tim räumt sein Zimmer auf.",
         translation: "Tim tidies up his room.",
         note: "aufräumen → räumt … auf. (Corrected from the class note 'ruft … auf', which mixed up aufrufen and aufräumen.)",
+        lessons: ["A1.1"],
       },
       {
         pattern: "gehen + Infinitiv",
@@ -74,6 +84,7 @@ export const categories: SatzbauCategory[] = [
         example: "Er geht spazieren.",
         translation: "He goes for a walk.",
         note: "gehen + an infinitive expresses going to do an activity: spazieren gehen, einkaufen gehen, schlafen gehen.",
+        lessons: ["A1.1"],
       },
     ],
   },
@@ -88,6 +99,7 @@ export const categories: SatzbauCategory[] = [
         example: "Wann stehst du am Wochenende auf?",
         translation: "When do you get up on the weekend?",
         note: "In a W-question the question word comes first and the verb second; a separable prefix still goes to the end (stehst … auf).",
+        lessons: ["A1.1"],
       },
       {
         pattern: "Um wie viel Uhr …?",
@@ -95,6 +107,7 @@ export const categories: SatzbauCategory[] = [
         example: "Um wie viel Uhr gehst du ins Bett?",
         translation: "At what time do you go to bed?",
         note: "Asks for a clock time; answer with um (Um zehn Uhr). ins Bett gehen = to go to bed.",
+        lessons: ["A1.1"],
       },
       {
         pattern: "Wann fängt … an?",
@@ -102,6 +115,7 @@ export const categories: SatzbauCategory[] = [
         example: "Wann fängt der Kurs an?",
         translation: "When does the class start?",
         note: "anfangen → fängt … an (separable + a → ä). Answer: Um neun (Uhr).",
+        lessons: ["A1.1"],
       },
     ],
   },
@@ -116,6 +130,7 @@ export const categories: SatzbauCategory[] = [
         example: "Temporal → Kausal → Modal → Lokal.",
         translation: "time → reason → manner → place.",
         note: "Mnemonic for the order of adverbials: Temporal (wann?), Kausal (warum?), Modal (wie?), Lokal (wo/wohin?). At A1 you mostly meet Temporal and Lokal, so the practical takeaway is simply: time before place.",
+        lessons: ["A1.1"],
       },
       {
         pattern: "Zeit vor Ort",
@@ -123,6 +138,7 @@ export const categories: SatzbauCategory[] = [
         example: "Er ist von acht bis zwölf Uhr im Kurs.",
         translation: "He's at the course from eight to twelve.",
         note: "When a sentence has both a time phrase and a place phrase, time comes first, place comes last — never the other way around.",
+        lessons: ["A1.1"],
       },
       {
         pattern: "Zwei Zeitangaben: allgemein vor genau",
@@ -130,6 +146,7 @@ export const categories: SatzbauCategory[] = [
         example: "Er geht am Abend um zehn Uhr ins Bett.",
         translation: "He goes to bed in the evening at ten o'clock.",
         note: "With two time expressions, the more general one (am Abend) comes before the more specific one (um zehn Uhr), and the place phrase (ins Bett) still comes last.",
+        lessons: ["A1.1"],
       },
       {
         pattern: "Nicht: Ort vor Zeit",
@@ -137,6 +154,7 @@ export const categories: SatzbauCategory[] = [
         example: "Er sieht noch ein bisschen zu Hause fern.",
         translation: "He watches a bit of TV at home still.",
         note: "Separable prefix (fern) still goes last, but notice the place phrase 'zu Hause' comes before it, after the time word 'noch ein bisschen' — fernsehen is separable, so the prefix is always the final word regardless of TeKaMoLo order.",
+        lessons: ["A1.1"],
       },
     ],
   },

@@ -1,3 +1,20 @@
+import type { LessonId } from '../../content/lessons'
+
+// The word class a catalog entry belongs to. Exists because a lesson page
+// groups by word class, not by owning tool (e.g. adverbs live inside the
+// Phrases tool under category `adverbien`, but project as kind: 'adverb'
+// without moving files). See plans/LESSONS_PLAN_A1_2.md §3.3.
+export type EntryKind =
+  | 'verb'
+  | 'noun'
+  | 'adjective'
+  | 'adverb'
+  | 'phrase'
+  | 'strategy'
+  | 'pattern'
+  | 'preposition'
+  | 'grammar'
+
 // The one shape every learnable item across every tool is projected into. Search,
 // practice and cross-linking consume this — they never import a tool's data.ts.
 // See plans/FEATURE_PLAN_2026-07.md → "Shared foundation".
@@ -22,4 +39,8 @@ export interface CatalogEntry {
   category?: string
   /** Extra text to match on in search, e.g. a noun's article "das". */
   keywords?: string[]
+  /** Word class, for grouping a lesson page by kind rather than by tool. */
+  kind: EntryKind
+  /** Lessons this item belongs to, copied from the item by the tool's catalog.ts. */
+  lessons: LessonId[]
 }

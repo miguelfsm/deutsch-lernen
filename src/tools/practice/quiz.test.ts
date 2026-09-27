@@ -1,13 +1,28 @@
 import { describe, it, expect } from 'vitest'
-import type { CatalogEntry } from '../../lib/catalog/types'
+import type { CatalogEntry, EntryKind } from '../../lib/catalog/types'
 import { buildChoices } from './quiz'
+
+const KIND_BY_TOOL: Record<string, EntryKind> = {
+  verben: 'verb',
+  nomen: 'noun',
+  adjektive: 'adjective',
+}
 
 const entry = (
   toolId: string,
   slug: string,
   term: string,
   gloss: string,
-): CatalogEntry => ({ id: `${toolId}:${slug}`, toolId, route: `/${toolId}`, slug, term, gloss })
+): CatalogEntry => ({
+  id: `${toolId}:${slug}`,
+  toolId,
+  route: `/${toolId}`,
+  slug,
+  term,
+  gloss,
+  kind: KIND_BY_TOOL[toolId] ?? 'phrase',
+  lessons: ['A1.1'],
+})
 
 const pool: CatalogEntry[] = [
   entry('verben', 'schlafen', 'schlafen', 'to sleep'),

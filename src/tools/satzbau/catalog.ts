@@ -16,6 +16,8 @@ export function satzbauCatalog(): CatalogEntry[] {
         term: item.pattern,
         gloss: item.meaning,
         category: c.label,
+        kind: 'pattern',
+        lessons: item.lessons,
       }
     }),
   )
