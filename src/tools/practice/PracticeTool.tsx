@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import Header from '../../components/Header'
 import SpeakButton from '../../components/SpeakButton'
@@ -22,10 +22,10 @@ import {
   type Session,
 } from './session'
 import { buildChoices, type Choice } from './quiz'
-import { checkArticle, checkConjugation } from './drills'
+import { checkArticle } from './drills'
+import ConjugationPlay from './ConjugationPlay'
+import type { Tense } from '../verbs/tenses'
 import { nounData, type Article } from '../nouns/data'
-import { verbData } from '../verbs/data'
-import { getHighlightParts } from '../verbs/highlight'
 import { nounSlug } from '../../lib/catalog/slug'
 import { fallDrillFor } from '../prepositions/drills'
 import WelcherFallPlay from '../prepositions/WelcherFallPlay'
@@ -87,11 +87,6 @@ const ARTICLE_COLOR: Record<Article, { bg: string; fg: string; border: string }>
 }
 const ARTICLES: Article[] = ['der', 'die', 'das']
 
-// Stem-change highlight colours reused from GermanVerbs (red = vowel/stem change,
-// blue = regular ending) for the conjugation reveal.
-const STEM_RED = '#e03e2d'
-const STEM_BLUE = '#1d6ef5'
-
 // ─── Shared style helpers ──────────────────────────────────────────────────────
 const pill = (active: boolean) => ({
   padding: '6px 14px',
@@ -127,6 +122,10 @@ export default function PracticeTool() {
   const [mode, setMode] = useState<PracticeMode>('flashcard')
   const [session, setSession] = useState<Session | null>(null)
   const [revealed, setRevealed] = useState(false)
+  // Konjugation's tense picker. Lives here (not inside ConjugationPlay) because
+  // that component remounts every card (keyed on session.index) — this state
+  // must survive across cards within one round.
+  const [conjTense, setConjTense] = useState<Tense>('praesens')
   const [lifetime, setLifetime] = useState<ProgressEntry>(() =>
     totals(loadProgress()),
   )
@@ -183,6 +182,7 @@ export default function PracticeTool() {
   function start() {
     setSession(createSession(buildDeck(), direction, mode))
     setRevealed(false)
+    setConjTense('praesens')
   }
 
   function rate(wasKnown: boolean) {
@@ -229,7 +229,7 @@ export default function PracticeTool() {
       {session !== null &&
         !isComplete(session) &&
         !isEmpty(session) &&
-        renderPlay(session, revealed, setRevealed, rate)}
+        renderPlay(session, revealed, setRevealed, rate, conjTense, setConjTense)}
 
       {session !== null && (isComplete(session) || isEmpty(session)) && (
         <DoneScreen
@@ -251,6 +251,8 @@ function renderPlay(
   revealed: boolean,
   setRevealed: (v: boolean) => void,
   rate: (known: boolean) => void,
+  conjTense: Tense,
+  setConjTense: (t: Tense) => void,
 ) {
   switch (session.mode) {
     case 'flashcard':
@@ -268,7 +270,13 @@ function renderPlay(
       return <ArticlePlay key={session.index} session={session} onAnswer={rate} />
     case 'conjugation':
       return (
-        <ConjugationPlay key={session.index} session={session} onAnswer={rate} />
+        <ConjugationPlay
+          key={session.index}
+          session={session}
+          tense={conjTense}
+          onTense={setConjTense}
+          onAnswer={rate}
+        />
       )
     case 'fall':
       return (
@@ -804,135 +812,9 @@ function ArticlePlay({
   )
 }
 
-// ─── Conjugation drill (type the form) ─────────────────────────────────────────
-function ConjugationPlay({
-  session,
-  onAnswer,
-}: {
-  session: Session
-  onAnswer: (known: boolean) => void
-}) {
-  const card = currentCard(session)
-  const verb = card ? verbData.find((v) => v.infinitive === card.term) : undefined
-  // One pronoun is drilled per card; pick it once so it survives re-renders and
-  // the input's controlled state. Keyed by card via the parent's `key`.
-  const conj = useMemo(
-    () => (verb ? verb.conjugations[Math.floor(Math.random() * verb.conjugations.length)] : undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [card?.id],
-  )
-  const [input, setInput] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-
-  if (!card || !verb || !conj) return null
-
-  const result = checkConjugation(verb, conj.pronoun, input)
-  // On reveal, split the expected form into stem (unchanged) + the highlighted
-  // ending/vowel change, coloured red for a stem change and blue for a regular one.
-  const parts = getHighlightParts(verb.infinitive, result.expected, verb.customStem)
-  const hlColor = conj.stemChange ? STEM_RED : STEM_BLUE
-
-  function submit(e: FormEvent) {
-    e.preventDefault()
-    if (input.trim() === '' || submitted) return
-    setSubmitted(true)
-  }
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <ProgressCounter session={session} />
-
-      <div
-        style={{
-          background: '#ffffff',
-          border: `1px solid ${color.cardBorder}`,
-          borderRadius: 16,
-          boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-          padding: '28px 22px',
-          textAlign: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 6,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          <span style={{ fontSize: 26, fontWeight: 700, color: color.ink, letterSpacing: '-0.5px' }}>
-            {verb.infinitive}
-          </span>
-          <SpeakButton text={verb.infinitive} size={20} />
-        </div>
-        <span style={{ fontFamily: font.sans, fontSize: 16, color: color.muted, fontStyle: 'italic' }}>
-          {conj.pronoun} …
-        </span>
-      </div>
-
-      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <input
-          autoFocus
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={submitted}
-          aria-label={`Konjugation von ${verb.infinitive} für ${conj.pronoun}`}
-          placeholder="Form eingeben…"
-          style={{
-            padding: '12px 16px',
-            borderRadius: 12,
-            border: `1.5px solid ${
-              submitted ? (result.correct ? '#10b981' : '#ef4444') : color.cardBorder
-            }`,
-            background: submitted ? (result.correct ? '#d1fae5' : '#fee2e2') : '#ffffff',
-            color: color.ink,
-            fontSize: 17,
-            fontFamily: font.sans,
-            fontWeight: 600,
-            textAlign: 'center',
-            outline: 'none',
-          }}
-        />
-
-        {!submitted ? (
-          <button
-            type="submit"
-            disabled={input.trim() === ''}
-            style={{
-              ...bigButton('#e7e5e0', '#1c1917'),
-              flex: 'unset',
-              opacity: input.trim() === '' ? 0.5 : 1,
-            }}
-          >
-            Prüfen · Check
-          </button>
-        ) : (
-          <>
-            <div style={{ fontFamily: font.sans, fontSize: 15, textAlign: 'center', color: color.muted }}>
-              {result.correct ? (
-                <span style={{ color: '#065f46', fontWeight: 700 }}>Richtig!</span>
-              ) : (
-                <span>
-                  {conj.pronoun}{' '}
-                  <span style={{ fontWeight: 700, color: color.ink }}>
-                    {parts.unchanged}
-                    <span style={{ color: hlColor }}>{parts.changed}</span>
-                  </span>
-                </span>
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={() => onAnswer(result.correct)}
-              style={{ ...bigButton('#1c1917', '#faf9f7'), flex: 'unset' }}
-            >
-              Weiter →
-            </button>
-          </>
-        )}
-      </form>
-    </div>
-  )
-}
-
-// Shared "Karte n / total" counter used by every play view.
+// Shared "Karte n / total" counter used by every play view. (ConjugationPlay
+// lives in its own file and has an identical-looking counter there — see the
+// note in ConjugationPlay.tsx on why it isn't shared.)
 function ProgressCounter({ session }: { session: Session }) {
   return (
     <div

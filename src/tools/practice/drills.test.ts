@@ -38,6 +38,43 @@ const schlafen: Verb = {
     { pronoun: 'ihr', form: 'schlaft', stemChange: false },
     { pronoun: 'sie/Sie', form: 'schlafen', stemChange: false },
   ],
+  praeteritum: [
+    { pronoun: 'ich', form: 'schlief', stemChange: true },
+    { pronoun: 'du', form: 'schliefst', stemChange: true },
+    { pronoun: 'er/sie/es', form: 'schlief', stemChange: true },
+    { pronoun: 'wir', form: 'schliefen', stemChange: true },
+    { pronoun: 'ihr', form: 'schlieft', stemChange: true },
+    { pronoun: 'sie/Sie', form: 'schliefen', stemChange: true },
+  ],
+  perfekt: { auxiliary: 'haben', partizip: 'geschlafen' },
+}
+
+// A sein-verb, for a Perfekt drill case (full-form answers like "bist gefahren").
+const fahren: Verb = {
+  infinitive: 'fahren',
+  english: 'to drive / to go',
+  type: 'irregular',
+  note: '',
+  example: 'Ich fahre mit dem Bus.',
+  translation: 'I go by bus.',
+  lessons: ['A1.1'],
+  conjugations: [
+    { pronoun: 'ich', form: 'fahre', stemChange: false },
+    { pronoun: 'du', form: 'fährst', stemChange: true },
+    { pronoun: 'er/sie/es', form: 'fährt', stemChange: true },
+    { pronoun: 'wir', form: 'fahren', stemChange: false },
+    { pronoun: 'ihr', form: 'fahrt', stemChange: false },
+    { pronoun: 'sie/Sie', form: 'fahren', stemChange: false },
+  ],
+  praeteritum: [
+    { pronoun: 'ich', form: 'fuhr', stemChange: true },
+    { pronoun: 'du', form: 'fuhrst', stemChange: true },
+    { pronoun: 'er/sie/es', form: 'fuhr', stemChange: true },
+    { pronoun: 'wir', form: 'fuhren', stemChange: true },
+    { pronoun: 'ihr', form: 'fuhrt', stemChange: true },
+    { pronoun: 'sie/Sie', form: 'fuhren', stemChange: true },
+  ],
+  perfekt: { auxiliary: 'sein', partizip: 'gefahren' },
 }
 
 describe('checkArticle', () => {
@@ -72,5 +109,31 @@ describe('checkConjugation', () => {
       correct: true,
       expected: 'schläft',
     })
+  })
+
+  it('defaults to Präsens when no tense is given', () => {
+    expect(checkConjugation(schlafen, 'ich', 'schlafe').expected).toBe('schlafe')
+  })
+
+  it('checks Präteritum against the stored praeteritum table', () => {
+    expect(checkConjugation(schlafen, 'du', 'schliefst', 'praeteritum')).toEqual({
+      correct: true,
+      expected: 'schliefst',
+    })
+    expect(checkConjugation(schlafen, 'du', 'schläfst', 'praeteritum').correct).toBe(false)
+  })
+
+  it('checks Perfekt against the full derived form (aux + partizip)', () => {
+    // haben-verb
+    expect(checkConjugation(schlafen, 'ich', 'habe geschlafen', 'perfekt')).toEqual({
+      correct: true,
+      expected: 'habe geschlafen',
+    })
+    // sein-verb, whitespace/case-normalised
+    expect(checkConjugation(fahren, 'du', '  Bist Gefahren ', 'perfekt')).toEqual({
+      correct: true,
+      expected: 'bist gefahren',
+    })
+    expect(checkConjugation(fahren, 'du', 'hast gefahren', 'perfekt').correct).toBe(false)
   })
 })
