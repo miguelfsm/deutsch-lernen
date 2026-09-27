@@ -6,6 +6,7 @@ import GermanVerbs from './tools/verbs/GermanVerbs.jsx'
 import GermanNouns from './tools/nouns/GermanNouns.jsx'
 import GermanAdjectives from './tools/adjectives/GermanAdjectives.jsx'
 import GermanPhrases from './tools/phrases/GermanPhrases.jsx'
+import GermanPrepositions from './tools/prepositions/GermanPrepositions.jsx'
 import GermanSatzbau from './tools/satzbau/GermanSatzbau.jsx'
 import PracticeTool from './tools/practice/PracticeTool.jsx'
 import GlobalSearch from './components/GlobalSearch.jsx'
@@ -17,6 +18,7 @@ const ELEMENTS: Record<string, ReactElement> = {
   '/nomen': <GermanNouns />,
   '/adjektive': <GermanAdjectives />,
   '/redemittel': <GermanPhrases />,
+  '/praepositionen': <GermanPrepositions />,
   '/satzbau': <GermanSatzbau />,
   '/uben': <PracticeTool />,
 }

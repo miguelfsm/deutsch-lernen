@@ -25,6 +25,9 @@ import { nounData, type Article } from '../nouns/data'
 import { verbData } from '../verbs/data'
 import { getHighlightParts } from '../verbs/highlight'
 import { nounSlug } from '../../lib/catalog/slug'
+import { fallDrillFor } from '../prepositions/drills'
+import WelcherFallPlay from '../prepositions/WelcherFallPlay'
+import type { CatalogEntry } from '../../lib/catalog/types'
 import {
   loadProgress,
   recordAndSave,
@@ -51,14 +54,17 @@ const MODES: { id: PracticeMode; label: string }[] = [
   { id: 'quiz', label: 'Quiz · Multiple choice' },
   { id: 'article', label: 'Artikel · der/die/das' },
   { id: 'conjugation', label: 'Konjugation · type it' },
+  { id: 'fall', label: 'Welcher Fall?' },
 ]
 
-// The two drills bind to exactly one content set each (articles → nouns,
-// conjugation → verbs), so they ignore the direction / content-set pickers. A
-// blank means "not a drill" (flashcards/quiz use the user's picks instead).
+// The three drills bind to exactly one content set each (articles → nouns,
+// conjugation → verbs, fall → prepositions), so they ignore the direction /
+// content-set pickers. A blank means "not a drill" (flashcards/quiz use the
+// user's picks instead).
 const DRILL_TOOL: Partial<Record<PracticeMode, string>> = {
   article: 'nomen',
   conjugation: 'verben',
+  fall: 'praepositionen',
 }
 
 // Gender colours reused from GermanNouns so the article feedback matches the
@@ -129,7 +135,13 @@ export default function PracticeTool() {
   // A drill fixes its deck to one content set; flashcards/quiz use the picks.
   const drillTool = DRILL_TOOL[mode]
   const deckSets = drillTool ? new Set([drillTool]) : selected
-  const deckSize = filterByTools(catalog, deckSets).length
+  // "Welcher Fall?" only has drill sentences for some prepositions (see
+  // drills.ts coverage note), so its deck narrows further to those.
+  const buildDeck = (): CatalogEntry[] => {
+    const base = filterByTools(catalog, deckSets)
+    return mode === 'fall' ? base.filter((c) => fallDrillFor(c.term) !== undefined) : base
+  }
+  const deckSize = buildDeck().length
 
   function toggleSet(id: string) {
     setSelected((prev) => {
@@ -141,7 +153,7 @@ export default function PracticeTool() {
   }
 
   function start() {
-    setSession(createSession(filterByTools(catalog, deckSets), direction, mode))
+    setSession(createSession(buildDeck(), direction, mode))
     setRevealed(false)
   }
 
@@ -225,6 +237,10 @@ function renderPlay(
     case 'conjugation':
       return (
         <ConjugationPlay key={session.index} session={session} onAnswer={rate} />
+      )
+    case 'fall':
+      return (
+        <WelcherFallPlay key={session.index} session={session} onAnswer={rate} />
       )
   }
 }

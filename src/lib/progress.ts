@@ -14,12 +14,53 @@ export interface ProgressEntry {
 }
 
 export interface ProgressEnvelope {
-  version: 1
+  version: 2
   data: Record<string, ProgressEntry>
 }
 
-export const PROGRESS_VERSION = 1 as const
+export const PROGRESS_VERSION = 2 as const
 const STORAGE_KEY = 'deutsch-lernen:progress'
+
+// ── v1 → v2 migration (Phase 6: prepositions moved out of Phrases) ─────────
+//
+// Progress is keyed by catalog `slug`, not by id (see recordAndSave callers) —
+// so it is NOT toolId-qualified, and a moved item's stored key changes when its
+// slug does. The `praep` category in Phrases (slug `praep/<phrase>`, built by
+// cardSlug) became the prepositions tool (slug = the bare word). This is the
+// one mapping from an old slug to its new one, applied once when a v1 envelope
+// is loaded. Only items that MOVED are listed — every other slug (verbs,
+// nouns, everything else in Phrases…) passes through unchanged.
+//
+// Content choices behind the mapping (Phase 6 handback): `im`/`am`/`an der`/
+// `zum` were contractions or dative examples of a base preposition and are
+// folded into it (`in`, `an`, `zu`); `bis zum` is dropped — it never became its
+// own preposition entry (it's now just an example + note on `bis`).
+const V1_TO_V2_SLUG: Record<string, string> = {
+  'praep/ab': 'ab',
+  'praep/bis': 'bis',
+  'praep/im': 'in',
+  'praep/in': 'in',
+  'praep/am': 'an',
+  'praep/an-der': 'an',
+  'praep/zum': 'zu',
+}
+const V1_DROPPED_SLUGS = new Set(['praep/bis-zum'])
+
+// Pure: remap/merge a v1 envelope's data into v2 slugs. When two old slugs
+// collapse onto the same new one (im + in → in), their seen/known counts are
+// summed rather than one overwriting the other.
+function migrateV1DataToV2(data: Record<string, ProgressEntry>): Record<string, ProgressEntry> {
+  const out: Record<string, ProgressEntry> = {}
+  for (const [slug, entry] of Object.entries(data)) {
+    if (V1_DROPPED_SLUGS.has(slug)) continue
+    const mapped = V1_TO_V2_SLUG[slug] ?? slug
+    const prev = out[mapped]
+    out[mapped] = prev
+      ? { seen: prev.seen + entry.seen, known: prev.known + entry.known }
+      : { seen: entry.seen, known: entry.known }
+  }
+  return out
+}
 
 export function emptyEnvelope(): ProgressEnvelope {
   return { version: PROGRESS_VERSION, data: {} }
@@ -45,20 +86,22 @@ export function recordResult(
   }
 }
 
-// Pure: coerce arbitrary parsed JSON into a valid envelope. Anything whose version
-// doesn't match — including legacy unversioned blobs — is discarded rather than
+// Pure: coerce arbitrary parsed JSON into a valid envelope. A current-version
+// envelope passes through; a v1 envelope is migrated (see V1_TO_V2_SLUG above).
+// Anything else — including legacy unversioned blobs — is discarded rather than
 // trusted. This is the seam a future migration would extend.
 export function migrate(raw: unknown): ProgressEnvelope {
   if (!raw || typeof raw !== 'object') return emptyEnvelope()
-  const obj = raw as Partial<ProgressEnvelope>
-  if (
-    obj.version !== PROGRESS_VERSION ||
-    typeof obj.data !== 'object' ||
-    obj.data === null
-  ) {
-    return emptyEnvelope()
+  const obj = raw as Partial<ProgressEnvelope> & { version?: unknown }
+  if (typeof obj.data !== 'object' || obj.data === null) return emptyEnvelope()
+  const data = obj.data as Record<string, ProgressEntry>
+  if (obj.version === PROGRESS_VERSION) {
+    return { version: PROGRESS_VERSION, data }
   }
-  return { version: PROGRESS_VERSION, data: obj.data as Record<string, ProgressEntry> }
+  if (obj.version === 1) {
+    return { version: PROGRESS_VERSION, data: migrateV1DataToV2(data) }
+  }
+  return emptyEnvelope()
 }
 
 function getStorage(): Storage | null {

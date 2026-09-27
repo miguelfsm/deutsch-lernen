@@ -72,7 +72,7 @@ describe('live catalog', () => {
     expect(catalog.length).toBeGreaterThan(0)
     const toolIds = new Set(catalog.map((e) => e.toolId))
     expect(toolIds).toEqual(
-      new Set(['verben', 'nomen', 'adjektive', 'redemittel', 'satzbau']),
+      new Set(['verben', 'nomen', 'adjektive', 'redemittel', 'praepositionen', 'satzbau']),
     )
   })
 
@@ -132,7 +132,7 @@ describe('catalog lesson tagging', () => {
     }
   })
 
-  it('maps phrases categories to the right kind (adverb/strategy/preposition/phrase)', () => {
+  it('maps phrases categories to the right kind (adverb/strategy/phrase)', () => {
     const kindByCategoryLabel = new Map(
       catalog
         .filter((e) => e.toolId === 'redemittel')
@@ -140,15 +140,17 @@ describe('catalog lesson tagging', () => {
     )
     expect(kindByCategoryLabel.get('Adverbien (Häufigkeit & Grad)')).toBe('adverb')
     expect(kindByCategoryLabel.get('Gesprächsstrategien')).toBe('strategy')
-    expect(kindByCategoryLabel.get('Präpositionen')).toBe('preposition')
+    // Prepositions moved out of Phrases in Phase 6 — the category no longer exists here.
+    expect(kindByCategoryLabel.has('Präpositionen')).toBe(false)
     // Everything else in Phrases (e.g. W-Fragen) stays a plain phrase.
     expect(kindByCategoryLabel.get('W-Fragen')).toBe('phrase')
   })
 
-  it('maps verbs, nouns, adjectives and satzbau to their kind', () => {
+  it('maps verbs, nouns, adjectives, prepositions and satzbau to their kind', () => {
     expect(catalog.filter((e) => e.toolId === 'verben').every((e) => e.kind === 'verb')).toBe(true)
     expect(catalog.filter((e) => e.toolId === 'nomen').every((e) => e.kind === 'noun')).toBe(true)
     expect(catalog.filter((e) => e.toolId === 'adjektive').every((e) => e.kind === 'adjective')).toBe(true)
+    expect(catalog.filter((e) => e.toolId === 'praepositionen').every((e) => e.kind === 'preposition')).toBe(true)
     expect(catalog.filter((e) => e.toolId === 'satzbau').every((e) => e.kind === 'pattern')).toBe(true)
   })
 })

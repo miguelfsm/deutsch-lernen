@@ -3,6 +3,7 @@ import { verbsCatalog } from '../../tools/verbs/catalog'
 import { nounsCatalog } from '../../tools/nouns/catalog'
 import { adjectivesCatalog } from '../../tools/adjectives/catalog'
 import { phrasesCatalog } from '../../tools/phrases/catalog'
+import { prepositionsCatalog } from '../../tools/prepositions/catalog'
 import { satzbauCatalog } from '../../tools/satzbau/catalog'
 
 // The ONE place edited when adding a tool: one import + one spread below. Search,
@@ -18,6 +19,7 @@ export const catalog: CatalogEntry[] = [
   ...nounsCatalog(),
   ...adjectivesCatalog(),
   ...phrasesCatalog(),
+  ...prepositionsCatalog(),
   ...satzbauCatalog(),
 ]
 

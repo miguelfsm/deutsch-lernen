@@ -42,21 +42,6 @@ export const categories: PhraseCategory[] = [
     ],
   },
   {
-    id: "praep",
-    label: "Präpositionen",
-    color: { bg: "#fef3c7", fg: "#92400e", dot: "#f59e0b" },
-    items: [
-      { phrase: "ab", meaning: "from / starting at", example: "Ab Montag bin ich da.", translation: "I'm there starting Monday.", lessons: ["A1.1"] },
-      { phrase: "bis", meaning: "until", example: "Bis morgen!", translation: "See you tomorrow! (lit. until tomorrow)", lessons: ["A1.1"] },
-      { phrase: "bis zum", meaning: "until the (bis + zu dem)", example: "Bis zum nächsten Mal.", translation: "Until next time.", lessons: ["A1.1"] },
-      { phrase: "im", meaning: "in the (in + dem)", example: "Ich wohne im Zentrum.", translation: "I live in the city centre.", lessons: ["A1.1"] },
-      { phrase: "in", meaning: "in", example: "Ich lebe in Zürich.", translation: "I live in Zurich.", lessons: ["A1.1"] },
-      { phrase: "am", meaning: "on/at the (an + dem)", example: "Am Montag arbeite ich nicht.", translation: "I don't work on Mondays.", lessons: ["A1.1"] },
-      { phrase: "an der", meaning: "at/on the (fem., dative)", example: "Ich wohne an der Bahnhofstrasse.", translation: "I live on Bahnhofstrasse.", lessons: ["A1.1"] },
-      { phrase: "zum", meaning: "to the (zu + dem)", example: "Wie komme ich zum Bahnhof?", translation: "How do I get to the station?", lessons: ["A1.1"] },
-    ],
-  },
-  {
     id: "partikel",
     label: "Konnektoren & Partikeln",
     color: { bg: "#ede9fe", fg: "#5b21b6", dot: "#8b5cf6" },
