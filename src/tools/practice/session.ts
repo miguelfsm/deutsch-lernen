@@ -9,9 +9,10 @@ export type Direction = 'de-en' | 'en-de'
 
 // How a card is drilled. 'flashcard' = reveal + self-rate; 'quiz' = pick from
 // multiple choices; 'article' = guess der/die/das; 'conjugation' = type the form
-// for a pronoun. All four share this deck/round/summary shell — they differ only
-// in the play view. Captured on the session so a round's mode is fixed once started.
-export type PracticeMode = 'flashcard' | 'quiz' | 'article' | 'conjugation'
+// for a pronoun; 'fall' = pick the article after a preposition ("Welcher
+// Fall?"). All five share this deck/round/summary shell — they differ only in
+// the play view. Captured on the session so a round's mode is fixed once started.
+export type PracticeMode = 'flashcard' | 'quiz' | 'article' | 'conjugation' | 'fall'
 
 export interface Session {
   readonly cards: readonly CatalogEntry[]

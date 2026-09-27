@@ -33,6 +33,12 @@ export const tools: Tool[] = [
     blurb: 'Question words, connectors and conversation strategies.',
   },
   {
+    path: '/praepositionen',
+    label: 'Präpositionen',
+    english: 'Prepositions',
+    blurb: 'Which case (Dativ, Akkusativ or both) and when to use each one.',
+  },
+  {
     path: '/satzbau',
     label: 'Satzbau',
     english: 'Sentence structure',
