@@ -75,6 +75,7 @@ npm run preview    # preview the production build
 npm test           # run the test suite (Vitest)
 npm run lint       # ESLint
 npm run typecheck  # tsc --noEmit
+npm run vocab:check -- <LessonId>   # Lernwortschatz check, e.g. A1.2-L08
 ```
 
 ## Common tasks
@@ -98,6 +99,10 @@ npm run typecheck  # tsc --noEmit
 - **Add a lesson:** one entry in `src/content/lessons.ts` plus one new
   `LessonId` union member there — a typo in a `lessons: [...]` tag is then a
   compile error.
+- **Lernwortschatz check** (report first, add only after Miguel's OK): transcribe
+  the vocab-list photo to `content/lws/<LessonId>.txt` (one entry per line, see
+  its `README.md`), run `npm run vocab:check -- <LessonId>`, show Miguel the
+  report, then add the approved items with the lesson tag.
 - **Change the app icon:** edit `public/icon.svg`, then regenerate the PWA
   rasters with `node scripts/gen-icons.mjs`.
 
