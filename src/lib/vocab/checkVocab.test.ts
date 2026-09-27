@@ -21,6 +21,10 @@ const entries: CatalogEntry[] = [
   { id: 'nomen:familie/eltern', toolId: 'nomen', route: '/nomen', slug: 'familie/eltern', term: 'Eltern', gloss: 'parents', category: 'Familie', kind: 'noun', lessons: ['A1.1'] },
   { id: 'nomen:koerper/gross', toolId: 'nomen', route: '/nomen', slug: 'koerper/gross', term: 'Gross', gloss: 'tall (noun use)', category: 'Koerper', kind: 'noun', lessons: ['A1.1'] },
   { id: 'redemittel:praep/seit', toolId: 'redemittel', route: '/redemittel', slug: 'praep/seit', term: 'seit', gloss: 'since', category: 'Präpositionen', kind: 'preposition', lessons: ['A1.2-L08'] },
+  // A real catalog term whose parens are part of the word, not a printed note
+  // to strip (mirrors the live phrases/data.ts entry) — see the "wie viel(e)"
+  // test below.
+  { id: 'redemittel:frage/wieviel', toolId: 'redemittel', route: '/redemittel', slug: 'frage/wieviel', term: 'wie viel(e)', gloss: 'how much / how many', category: 'W-Fragen', kind: 'phrase', lessons: ['A1.1'] },
 ]
 
 describe('checkVocab', () => {
@@ -178,5 +182,23 @@ describe('checkVocab', () => {
 
     const fullInCatalog = checkVocab(['sich freuen'], entries, 'A1.2-L08')
     expect(fullInCatalog.untagged[0]?.entries.map((e) => e.id)).toEqual(['verben:freuen'])
+  })
+
+  // ── Re-review fixes ────────────────────────────────────────────────────
+
+  it('matches a catalog term whose parens are part of the word itself, not a note to strip', () => {
+    // "wie viel(e)" must match as printed — the un-stripped candidate is
+    // tried alongside the paren-stripped one, not instead of it.
+    const result = checkVocab(['wie viel(e)'], entries, 'A1.2-L08')
+    expect(result.untagged[0]?.entries.map((e) => e.id)).toEqual(['redemittel:frage/wieviel'])
+    expect(result.missing).toHaveLength(0)
+  })
+
+  it('still guesses "phrase" for a missing multi-word placeholder line, not "unknown"', () => {
+    // The multi-word signal must come from BEFORE the placeholder strip, so
+    // "etwas Wichtiges" reads as two words rather than collapsing to one
+    // ("Wichtiges") once "etwas" is stripped for matching purposes.
+    const result = checkVocab(['etwas Wichtiges'], entries, 'A1.2-L08')
+    expect(result.missing).toEqual([{ line: 'etwas Wichtiges', form: 'etwas Wichtiges', kind: 'phrase' }])
   })
 })

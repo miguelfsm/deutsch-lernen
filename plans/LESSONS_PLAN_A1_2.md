@@ -37,6 +37,7 @@ What Miguel wants, in his words turned into requirements:
 | D2 Storage | **By word type + lesson tags.** Verbs stay in `verbs/data.ts`, nouns in `nouns/data.ts`… each item gets `lessons: LessonId[]`. A lesson page *queries* by tag. | A word recurs across lessons (e.g. *helfen*: L9 grammar, L13 Dativ verb). One record, many tags, no copies. |
 | D3 Existing content | Tag everything already in the app **`A1.1`** (a level-wide pseudo-lesson). | Precise L1–7 tags can come later by retagging only. |
 | D4 Vocab check | **Report first, add after OK.** | Keeps Miguel in control of what goes in. |
+| D5 Reflexive verb storage | **Open.** `checkVocab` matches a `sich …` line against both `sich X` and bare `X` catalog terms, so either storage works today. | Decide when the first reflexive verb is actually added (Phase 8+ intake), not speculatively now (YAGNI). |
 
 ## 2a. Design & interaction target (the mock)
 

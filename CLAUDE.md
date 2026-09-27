@@ -74,9 +74,18 @@ npm run build      # static build to dist/
 npm run preview    # preview the production build
 npm test           # run the test suite (Vitest)
 npm run lint       # ESLint
-npm run typecheck  # tsc --noEmit
+npm run typecheck  # tsc --noEmit (app), + tests, + scripts — see note below
 npm run vocab:check -- <LessonId>   # Lernwortschatz check, e.g. A1.2-L08
 ```
+
+Three `tsconfig*.json` keep Node globals out of the shipped app: `tsconfig.json`
+(app code in `src/`, no Node types), `tsconfig.test.json` (`*.test.ts(x)` +
+`src/test/`, which run under Vitest/Node), `tsconfig.scripts.json` (`scripts/` +
+`vite.config.ts`, Node-only tooling) — `npm run typecheck` runs all three;
+project references weren't used since they need `composite`, which clashes with
+`noEmit`. Most editors default to `tsconfig.json`, so a file under `scripts/` or
+a `*.test.ts(x)` may show a stray red squiggle in the editor even though its own
+`tsc --noEmit -p <config>` is clean — trust the npm script.
 
 ## Common tasks
 

@@ -83,24 +83,45 @@ function stripPlaceholders(s: string): string {
 }
 
 interface ExtractedForm {
-  /** Candidate strings to compare against `CatalogEntry.term`. Two candidates
-   * (the full reflexive form and the bare infinitive) when the line has a
-   * leading "sich " — the catalog may store either, so both are tried (plan
-   * review: don't bake in a storage convention). */
+  /**
+   * Candidate strings to compare against `CatalogEntry.term`. Several optional
+   * cleanup steps (trailing-parens stripping, valency-placeholder stripping,
+   * the reflexive "sich " prefix) are each tried both applied and un-applied,
+   * since the catalog may store the headword either way — e.g. "wie viel(e)"
+   * is itself a real catalog term (the parens are part of the word, not a
+   * printed note), while "(Pl.)" on another line is a note to strip. Plan
+   * review: don't bake in a single stripping/storage convention.
+   */
   candidates: string[]
   hasArticle: boolean
   hadSich: boolean
-  /** The candidate used to guess a word class when nothing matches. */
+  /** The headword used to guess a word class when nothing matches — parens
+   * stripped (a printed note isn't part of the class signal), but NOT
+   * placeholder-stripped, so a placeholder phrase like "etwas Wichtiges"
+   * still reads as multi-word rather than collapsing to one word. */
   headwordForGuess: string
+}
+
+const collapseWhitespace = (s: string): string => s.replace(/\s+/g, ' ').trim()
+
+/** Every distinct way `s` could plausibly be spelled once its trailing-parens
+ * note and/or its valency placeholders are optionally removed. */
+function candidateVariants(s: string): string[] {
+  const plain = collapseWhitespace(s)
+  const noParens = collapseWhitespace(stripTrailingParens(plain))
+  const noPlaceholders = collapseWhitespace(stripPlaceholders(plain))
+  const noParensNoPlaceholders = collapseWhitespace(stripPlaceholders(noParens))
+  return [...new Set([plain, noParens, noPlaceholders, noParensNoPlaceholders])]
 }
 
 /**
  * Clean one headword ("form") from a Lernwortschatz line: strip a leading
- * article (identifies a noun), everything after the first comma (plural/extra
- * markers, e.g. "der Arzt, -¨e" → "Arzt"), a trailing parenthesised note
- * (e.g. "(Pl.)", "(+ Dat.)"), separable-verb dots/pipes ("an·rufen" /
- * "an|rufen" → "anrufen"), and leading/trailing valency placeholders
- * ("jemandem helfen" → "helfen").
+ * article (identifies a noun) and everything after the first comma
+ * (plural/extra markers, e.g. "der Arzt, -¨e" → "Arzt"), then strip
+ * separable-verb dots/pipes ("an·rufen" / "an|rufen" → "anrufen", always
+ * safe — real German orthography never uses these). What's left is expanded
+ * into candidate variants (see `candidateVariants`), optionally also without
+ * a leading "sich " if the line had one.
  */
 function extractForm(rawForm: string): ExtractedForm {
   const trimmed = rawForm.trim()
@@ -111,21 +132,21 @@ function extractForm(rawForm: string): ExtractedForm {
 
   const commaIndex = rest.indexOf(',')
   rest = (commaIndex >= 0 ? rest.slice(0, commaIndex) : rest).trim()
-
-  rest = stripTrailingParens(rest)
-  rest = rest.replace(/[·|]/g, '')
-  rest = stripPlaceholders(rest)
-  rest = rest.replace(/\s+/g, ' ').trim()
+  rest = collapseWhitespace(rest.replace(/[·|]/g, ''))
 
   const sichMatch = /^sich\s+/i.exec(rest)
   const hadSich = sichMatch !== null
   const bare = hadSich ? rest.slice(sichMatch![0].length).trim() : rest
 
+  const candidates = hadSich
+    ? [...new Set([...candidateVariants(rest), ...candidateVariants(bare)])]
+    : candidateVariants(rest)
+
   return {
-    candidates: hadSich ? [rest, bare] : [rest],
+    candidates,
     hasArticle,
     hadSich,
-    headwordForGuess: bare,
+    headwordForGuess: collapseWhitespace(stripTrailingParens(bare)),
   }
 }
 
@@ -144,15 +165,17 @@ function guessKind(headword: string, hasArticle: boolean, hadSich: boolean): Gue
  * Matching rules (plan §4.3, refined in review): trim; skip blank lines and
  * `#` comments; split a line on " / " into separate headwords (each checked
  * on its own, e.g. "der Kollege, -n / die Kollegin, -nen"); strip a leading
- * article; strip plural/extra markers after the first comma; strip a trailing
- * parenthesised note; strip separable-verb "·"/"|"; strip leading/trailing
- * valency placeholders ("jemandem", "jemanden", "jemand", "etwas"); fold
- * ß↔ss; compare to `CatalogEntry.term` case-sensitively first (German case is
- * meaning), then case-insensitively as a "maybe". A reflexive headword is
- * tried both as printed ("sich bewerben") and as the bare infinitive
- * ("bewerben"), since the catalog may store either. Nouns match on the
- * singular term regardless of category. If several entries match, all are
- * reported.
+ * article; strip plural/extra markers after the first comma; strip
+ * separable-verb "·"/"|" (always — never real orthography); fold ß↔ss;
+ * compare to `CatalogEntry.term` case-sensitively first (German case is
+ * meaning), then case-insensitively as a "maybe". A trailing parenthesised
+ * note (e.g. "(Pl.)", "(+ Dat.)"), leading/trailing valency placeholders
+ * ("jemandem", "jemanden", "jemand", "etwas"), and a leading reflexive
+ * "sich " are each tried BOTH stripped and un-stripped as match candidates —
+ * the catalog may store either form (e.g. "wie viel(e)" keeps its parens as
+ * part of the word), so nothing here assumes one storage convention. Nouns
+ * match on the singular term regardless of category. If several entries
+ * match, all are reported.
  */
 export function checkVocab(
   lines: string[],
