@@ -77,3 +77,57 @@ describe('ConjugationPlay tense picker', () => {
     expect(onAnswer).toHaveBeenCalledWith(true)
   })
 })
+
+// essen: Präsens "ich esse" is regular (stemChange: false), but Präteritum
+// "ich ass" is a strong-verb stem change (stemChange: true) — the two tenses
+// disagree, so grading/colouring Präteritum must read ITS OWN table, not
+// reuse the Präsens flag (the bug this test guards against).
+const essenCard: CatalogEntry = {
+  id: 'verben:essen',
+  toolId: 'verben',
+  route: '/verben',
+  slug: 'essen',
+  term: 'essen',
+  gloss: 'to eat',
+  kind: 'verb',
+  lessons: ['A1.1'],
+}
+
+const essenSession: Session = {
+  cards: [essenCard],
+  direction: 'de-en',
+  mode: 'conjugation',
+  index: 0,
+  known: 0,
+  unknown: 0,
+}
+
+// jsdom normalises inline hex colours to rgb() when serialising style.
+const STEM_RED = 'rgb(224, 62, 45)'
+const STEM_BLUE = 'rgb(29, 110, 245)'
+
+describe('ConjugationPlay per-tense highlight colour', () => {
+  it('reveals essen/ich in Präteritum as a stem change (red), not the Präsens regular colour (blue)', async () => {
+    const user = userEvent.setup()
+    // Force the drilled pronoun to "ich" (verb.conjugations[0]).
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0)
+
+    const { container } = render(
+      <ConjugationPlay session={essenSession} tense="praeteritum" onTense={vi.fn()} onAnswer={vi.fn()} />,
+    )
+
+    expect(screen.getByText('ich …')).toBeInTheDocument()
+
+    const input = screen.getByPlaceholderText('Form eingeben…')
+    await user.type(input, 'esste') // wrong, forces the reveal
+    await user.click(screen.getByRole('button', { name: 'Prüfen · Check' }))
+
+    // Reveal shows the correct Präteritum form "ass" in the STEM-CHANGE
+    // colour, never the Präsens (regular, blue) colour.
+    expect(container.innerHTML).toContain(STEM_RED)
+    expect(container.innerHTML).not.toContain(STEM_BLUE)
+    expect(screen.getAllByText('ass').length).toBeGreaterThan(0)
+
+    randomSpy.mockRestore()
+  })
+})

@@ -349,7 +349,7 @@ export const verbData: Verb[] = [
     note: "Vowel change a → ä (umlaut) in du/er forms: lasse → lässt.",
     praeteritum: [
       { pronoun: "ich", form: "liess", stemChange: true },
-      { pronoun: "du", form: "liesst", stemChange: true },
+      { pronoun: "du", form: "liessest", stemChange: true },
       { pronoun: "er/sie/es", form: "liess", stemChange: true },
       { pronoun: "wir", form: "liessen", stemChange: true },
       { pronoun: "ihr", form: "liesst", stemChange: true },
@@ -369,7 +369,7 @@ export const verbData: Verb[] = [
     infinitive: "stehen", english: "to stand", type: "regular",
     lessons: ["A1.1"],
     example: "Der Stuhl steht in der Küche.", translation: "The chair is in the kitchen.",
-    note: "Regular in Präsens. Swiss usage takes sein in the Perfekt (ist gestanden), unlike standard German (hat gestanden).",
+    note: "Regular in Präsens. Southern German, Austrian and Swiss usage takes sein in the Perfekt (ist gestanden), unlike standard German (hat gestanden).",
     praeteritum: [
       { pronoun: "ich", form: "stand", stemChange: true },
       { pronoun: "du", form: "standest", stemChange: true },
@@ -438,7 +438,7 @@ export const verbData: Verb[] = [
     infinitive: "liegen", english: "to lie / to be located", type: "regular",
     lessons: ["A1.1"],
     example: "Das Buch liegt auf dem Tisch.", translation: "The book is lying on the table.",
-    note: "Regular in Präsens. Swiss usage takes sein in the Perfekt (ist gelegen), unlike standard German (hat gelegen).",
+    note: "Regular in Präsens. Southern German, Austrian and Swiss usage takes sein in the Perfekt (ist gelegen), unlike standard German (hat gelegen).",
     praeteritum: [
       { pronoun: "ich", form: "lag", stemChange: true },
       { pronoun: "du", form: "lagst", stemChange: true },
@@ -464,7 +464,7 @@ export const verbData: Verb[] = [
     note: "Stem ends in -ss: du heisst (not heissst — -st contracts to -t after ss/s/z).",
     praeteritum: [
       { pronoun: "ich", form: "hiess", stemChange: true },
-      { pronoun: "du", form: "hiesst", stemChange: true },
+      { pronoun: "du", form: "hiessest", stemChange: true },
       { pronoun: "er/sie/es", form: "hiess", stemChange: true },
       { pronoun: "wir", form: "hiessen", stemChange: true },
       { pronoun: "ihr", form: "hiesst", stemChange: true },

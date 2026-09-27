@@ -1,7 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import SpeakButton from '../../components/SpeakButton'
 import { font, color } from '../../lib/theme'
-import { verbData } from '../verbs/data'
+import { verbData, type Verb } from '../verbs/data'
 import { getHighlightParts } from '../verbs/highlight'
 import type { Tense } from '../verbs/tenses'
 import { checkConjugation } from './drills'
@@ -20,6 +20,21 @@ const TENSES: { id: Tense; label: string }[] = [
   { id: 'praeteritum', label: 'Präteritum' },
   { id: 'perfekt', label: 'Perfekt' },
 ]
+
+// Whether the reveal for this pronoun/tense should use the red (stem change)
+// or blue (regular ending) highlight. Präsens/Präteritum each carry their own
+// per-pronoun `stemChange` flag — grading Präteritum must NOT reuse the
+// Präsens table's flag, since the two tenses can disagree (e.g. essen: ich
+// "esse" is regular in Präsens but "ass" is a strong-verb stem change in
+// Präteritum). Perfekt has no per-pronoun flag (the aux form comes from
+// haben/sein's own Präsens table, which is regular either way); its colour
+// follows the Partizip II's own ending instead, the same heuristic
+// GermanVerbs.tsx uses (-en = strong/irregular, -t = weak/regular).
+function stemChangeFor(verb: Verb, pronoun: string, tense: Tense): boolean {
+  if (tense === 'perfekt') return verb.perfekt.partizip.endsWith('en')
+  const table = tense === 'praeteritum' ? verb.praeteritum : verb.conjugations
+  return table.find((c) => c.pronoun === pronoun)?.stemChange ?? false
+}
 
 const bigButton = (bg: string, fg: string) => ({
   flex: 1,
@@ -83,12 +98,15 @@ export default function ConjugationPlay({
   const result = checkConjugation(verb, conj.pronoun, input, tense)
   // On reveal, Präsens/Präteritum split into stem (unchanged) + the highlighted
   // ending/vowel change; Perfekt's expected is a two-word phrase ("bist
-  // gefahren"), so it's just shown in full rather than char-diffed.
+  // gefahren"), so it's split on the space into aux + partizip instead (the
+  // partizip is always a single token, so this is exact, not a heuristic).
   const parts =
     tense !== 'perfekt'
       ? getHighlightParts(verb.infinitive, result.expected, verb.customStem)
       : null
-  const hlColor = conj.stemChange ? STEM_RED : STEM_BLUE
+  const perfektReveal =
+    tense === 'perfekt' ? { aux: result.expected.slice(0, -verb.perfekt.partizip.length - 1), partizip: verb.perfekt.partizip } : null
+  const hlColor = stemChangeFor(verb, conj.pronoun, tense) ? STEM_RED : STEM_BLUE
 
   function submit(e: FormEvent) {
     e.preventDefault()
@@ -214,7 +232,12 @@ export default function ConjugationPlay({
                       <span style={{ color: hlColor }}>{parts.changed}</span>
                     </span>
                   ) : (
-                    <span style={{ fontWeight: 700, color: color.ink }}>{result.expected}</span>
+                    perfektReveal && (
+                      <span style={{ fontWeight: 700, color: color.ink }}>
+                        {perfektReveal.aux}{' '}
+                        <span style={{ color: hlColor }}>{perfektReveal.partizip}</span>
+                      </span>
+                    )
                   )}
                 </span>
               )}
