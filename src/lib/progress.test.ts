@@ -63,6 +63,43 @@ describe('migrate (version envelope)', () => {
   })
 })
 
+describe('migrate v1 → v2 (Phase 6: prepositions moved out of Phrases)', () => {
+  it('remaps a moved slug to its new preposition slug, unchanged stats', () => {
+    const v1 = { version: 1, data: { 'praep/ab': { seen: 3, known: 2 } } }
+    expect(migrate(v1)).toEqual({
+      version: PROGRESS_VERSION,
+      data: { ab: { seen: 3, known: 2 } },
+    })
+  })
+
+  it('merges two old slugs that collapse onto the same new one (im + in → in)', () => {
+    const v1 = {
+      version: 1,
+      data: {
+        'praep/im': { seen: 2, known: 1 },
+        'praep/in': { seen: 1, known: 1 },
+      },
+    }
+    expect(migrate(v1)).toEqual({
+      version: PROGRESS_VERSION,
+      data: { in: { seen: 3, known: 2 } },
+    })
+  })
+
+  it('drops a slug for an item that no longer exists (bis zum)', () => {
+    const v1 = { version: 1, data: { 'praep/bis-zum': { seen: 5, known: 5 } } }
+    expect(migrate(v1)).toEqual({ version: PROGRESS_VERSION, data: {} })
+  })
+
+  it('leaves non-praep slugs untouched', () => {
+    const v1 = { version: 1, data: { 'verben:schlafen': { seen: 4, known: 3 } } }
+    expect(migrate(v1)).toEqual({
+      version: PROGRESS_VERSION,
+      data: { 'verben:schlafen': { seen: 4, known: 3 } },
+    })
+  })
+})
+
 describe('load/save round-trip', () => {
   it('writes then reads back the same envelope', () => {
     const env = recordResult(emptyEnvelope(), 'nomen:familie/bild', true)

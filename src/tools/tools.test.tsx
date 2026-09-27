@@ -6,6 +6,7 @@ import GermanVerbs from './verbs/GermanVerbs.jsx'
 import GermanNouns from './nouns/GermanNouns.jsx'
 import GermanAdjectives from './adjectives/GermanAdjectives.jsx'
 import GermanPhrases from './phrases/GermanPhrases.jsx'
+import GermanPrepositions from './prepositions/GermanPrepositions.jsx'
 import GermanSatzbau from './satzbau/GermanSatzbau.jsx'
 
 // Tools read `?sel=` via useSearchParams (deep-select), so they need a Router in
@@ -43,6 +44,13 @@ describe('learning tools render their first item', () => {
     expect(
       screen.getByRole('heading', { name: /Connectors & Strategies/i }),
     ).toBeInTheDocument()
+  })
+
+  it('Prepositions renders with the case/use filter pills', () => {
+    renderInRouter(<GermanPrepositions />)
+    expect(screen.getByRole('heading', { name: /Präpositionen/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Dativ' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'temporal' })).toBeInTheDocument()
   })
 
   it('Satzbau renders', () => {

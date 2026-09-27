@@ -3,6 +3,8 @@ import { catalog } from '../lib/catalog'
 import { categories as adjectiveCategories } from '../tools/adjectives/data'
 import { nounData } from '../tools/nouns/data'
 import { categories as phraseCategories } from '../tools/phrases/data'
+import { prepositionData } from '../tools/prepositions/data'
+import { fallDrillData } from '../tools/prepositions/drills'
 import { categories as satzbauCategories } from '../tools/satzbau/data'
 import { verbData } from '../tools/verbs/data'
 import { lessons } from './lessons'
@@ -42,6 +44,8 @@ describe('Swiss spelling content guard (plan D1: no ß anywhere)', () => {
     assertNoSs('adjectives.categories', adjectiveCategories)
     assertNoSs('nouns.nounData', nounData)
     assertNoSs('phrases.categories', phraseCategories)
+    assertNoSs('prepositions.prepositionData', prepositionData)
+    assertNoSs('prepositions.fallDrillData', fallDrillData)
     assertNoSs('satzbau.categories', satzbauCategories)
     assertNoSs('verbs.verbData', verbData)
   })

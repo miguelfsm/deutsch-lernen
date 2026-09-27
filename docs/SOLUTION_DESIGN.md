@@ -74,6 +74,7 @@ DeutschLernen/
 │   │   ├── nouns/      { GermanNouns.tsx, data.ts, catalog.ts }
 │   │   ├── adjectives/ { GermanAdjectives.tsx, data.ts, catalog.ts }
 │   │   ├── phrases/    { GermanPhrases.tsx, data.ts, catalog.ts }
+│   │   ├── prepositions/ { GermanPrepositions.tsx, data.ts, catalog.ts, filter.ts, drills.ts, WelcherFallPlay.tsx } # /praepositionen — Phase 6
 │   │   ├── satzbau/    { GermanSatzbau.tsx, data.ts, catalog.ts }
 │   │   └── practice/   { PracticeTool.tsx, session.ts, quiz.ts, drills.ts }  # flashcards/quiz/article/conjugation
 │   └── lib/                   # shared helpers (theme, highlight, speak,
