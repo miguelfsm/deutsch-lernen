@@ -29,3 +29,14 @@ export function lessonCoverage(
   const { tagged } = checkVocab(lines, catalog, lessonId)
   return { tagged: tagged.length, total }
 }
+
+/**
+ * `tagged/total` as a whole-number percentage for a coverage bar, clamped to
+ * 0–100. A checkVocab "form" can outnumber its source line (e.g. a line split
+ * by " / " into two headwords, both tagged), so `tagged` can exceed `total` —
+ * clamping keeps the bar from overflowing past 100% in that case.
+ */
+export function coveragePercent({ tagged, total }: LessonCoverage): number {
+  if (total <= 0) return 0
+  return Math.min(100, Math.round((tagged / total) * 100))
+}

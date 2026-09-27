@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import PracticeTool from './PracticeTool'
 
@@ -41,5 +42,22 @@ describe('Practice lesson filter', () => {
     )
     const select = screen.getByRole('combobox') as HTMLSelectElement
     expect(select.value).toBe('')
+  })
+
+  // Regression: L8 + Artikel is a real empty combination today (L8 has no
+  // nouns tagged yet, only prepositions) — Start must be disabled with an
+  // inline note, not silently create a 0-card round.
+  it('disables Start and shows an inline note for a lesson + mode with no cards', async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={['/uben?lektion=A1.2-L08']}>
+        <PracticeTool />
+      </MemoryRouter>,
+    )
+
+    await user.click(screen.getByRole('button', { name: /Artikel/ }))
+
+    expect(screen.getByText(/Keine Karten für .* in diesem Modus/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /0 Karten üben/ })).toBeDisabled()
   })
 })

@@ -4,7 +4,7 @@ import { font, color } from '../lib/theme'
 import { lessons } from '../content/lessons'
 import { lwsFiles } from '../content/lws'
 import { catalog } from '../lib/catalog'
-import { lessonCoverage } from '../lib/lessons/coverage'
+import { lessonCoverage, coveragePercent } from '../lib/lessons/coverage'
 import { lessonColor } from '../lib/lessons/colors'
 import { entriesForLesson } from '../lib/lessons/entriesForLesson'
 
@@ -163,7 +163,9 @@ export default function LessonPage() {
                     display: 'block',
                     height: '100%',
                     borderRadius: 99,
-                    width: `${coverage.total > 0 ? Math.round((coverage.tagged / coverage.total) * 100) : 0}%`,
+                    // Clamped to ≤100% — a checkVocab "form" can outnumber its
+                    // source line, so tagged can exceed total (see coveragePercent).
+                    width: `${coveragePercent(coverage)}%`,
                     background: bg,
                   }}
                 />

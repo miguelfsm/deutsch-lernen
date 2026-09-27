@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import type { CatalogEntry } from '../catalog/types'
-import { lessonCoverage } from './coverage'
+import { lessonCoverage, coveragePercent } from './coverage'
 
 const entries: CatalogEntry[] = [
   { id: 'verben:arbeiten', toolId: 'verben', route: '/verben', slug: 'arbeiten', term: 'arbeiten', gloss: 'to work', kind: 'verb', lessons: ['A1.2-L08'] },
@@ -27,5 +27,20 @@ describe('lessonCoverage', () => {
 
   it('an entry present but tagged for a different lesson does not count as tagged', () => {
     expect(lessonCoverage(['der Arzt, -¨e'], entries, 'A1.2-L08')).toEqual({ tagged: 0, total: 1 })
+  })
+})
+
+describe('coveragePercent', () => {
+  it('rounds tagged/total to a whole-number percentage', () => {
+    expect(coveragePercent({ tagged: 1, total: 2 })).toBe(50)
+    expect(coveragePercent({ tagged: 2, total: 3 })).toBe(67)
+  })
+
+  it('is 0 when total is 0 (not-yet-checked lesson)', () => {
+    expect(coveragePercent({ tagged: 0, total: 0 })).toBe(0)
+  })
+
+  it('clamps to 100 when tagged exceeds total (a " / "-split line can tag more forms than source lines)', () => {
+    expect(coveragePercent({ tagged: 5, total: 4 })).toBe(100)
   })
 })

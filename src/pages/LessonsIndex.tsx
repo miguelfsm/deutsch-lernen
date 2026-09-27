@@ -4,7 +4,7 @@ import { font, color } from '../lib/theme'
 import { lessons } from '../content/lessons'
 import { lwsFiles } from '../content/lws'
 import { catalog } from '../lib/catalog'
-import { lessonCoverage } from '../lib/lessons/coverage'
+import { lessonCoverage, coveragePercent } from '../lib/lessons/coverage'
 import { lessonColor } from '../lib/lessons/colors'
 
 // Index of every lesson (plan §4.1, mock screen *Lektionen*): one card per
@@ -88,7 +88,9 @@ export default function LessonsIndex() {
                           display: 'block',
                           height: '100%',
                           borderRadius: 99,
-                          width: `${cov.total > 0 ? Math.round((cov.tagged / cov.total) * 100) : 0}%`,
+                          // Clamped to ≤100% — a checkVocab "form" can outnumber its
+                          // source line, so tagged can exceed total (see coveragePercent).
+                          width: `${coveragePercent(cov)}%`,
                           background: lessonColor(l.id),
                         }}
                       />

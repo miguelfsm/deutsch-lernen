@@ -164,6 +164,12 @@ export default function PracticeTool() {
     return mode === 'fall' ? base.filter((c) => fallDrillFor(c.term) !== undefined) : base
   }
   const deckSize = buildDeck().length
+  // The chosen lesson's display label, for the empty-deck note/message below
+  // (e.g. a lesson + mode combination with nothing to drill yet, like L8 +
+  // Artikel before L8 has any nouns tagged).
+  const lessonLabel = lessonFilter
+    ? LESSON_OPTIONS.find((l) => l.id === lessonFilter)?.label
+    : undefined
 
   function toggleSet(id: string) {
     setSelected((prev) => {
@@ -216,6 +222,7 @@ export default function PracticeTool() {
           lifetime={lifetime}
           lessonFilter={lessonFilter}
           onLessonFilter={setLessonFilter}
+          lessonLabel={lessonLabel}
         />
       )}
 
@@ -230,6 +237,7 @@ export default function PracticeTool() {
           lifetime={lifetime}
           onAgain={start}
           onBack={() => setSession(null)}
+          lessonLabel={lessonLabel}
         />
       )}
     </div>
@@ -283,6 +291,7 @@ function SetupScreen({
   lifetime,
   lessonFilter,
   onLessonFilter,
+  lessonLabel,
 }: {
   selected: Set<string>
   onToggle: (id: string) => void
@@ -296,10 +305,16 @@ function SetupScreen({
   lifetime: ProgressEntry
   lessonFilter: LessonId | undefined
   onLessonFilter: (id: LessonId | undefined) => void
+  lessonLabel: string | undefined
 }) {
   // Drills pick their own content set and have no DE↔EN direction, so those
   // fields are hidden — and their deck is never empty, so no empty-state applies.
   const nothingSelected = !isDrill && selected.size === 0
+  // A drill/content-set choice can still land on an empty deck once a lesson
+  // filter narrows it further (e.g. L8 + Artikel, since L8 has no nouns
+  // tagged yet) — distinct from `nothingSelected`, which is about the picker
+  // itself being empty.
+  const emptyDeck = !nothingSelected && deckSize === 0
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
@@ -392,15 +407,34 @@ function SetupScreen({
           Nichts ausgewählt — wähle mindestens einen Inhalt zum Üben.
         </p>
       ) : (
-        <button
-          onClick={onStart}
-          style={{
-            ...bigButton('#1c1917', '#faf9f7'),
-            flex: 'unset',
-          }}
-        >
-          {deckSize} Karten üben →
-        </button>
+        <>
+          {emptyDeck && (
+            <p
+              style={{
+                fontFamily: font.sans,
+                fontSize: 14,
+                color: color.faint,
+                fontStyle: 'italic',
+                textAlign: 'center',
+                margin: 0,
+              }}
+            >
+              Keine Karten für {lessonLabel ?? 'diese Auswahl'} in diesem Modus.
+            </p>
+          )}
+          <button
+            onClick={onStart}
+            disabled={emptyDeck}
+            style={{
+              ...bigButton('#1c1917', '#faf9f7'),
+              flex: 'unset',
+              opacity: emptyDeck ? 0.5 : 1,
+              cursor: emptyDeck ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {deckSize} Karten üben →
+          </button>
+        </>
       )}
 
       {lifetime.seen > 0 && (
@@ -921,11 +955,13 @@ function DoneScreen({
   lifetime,
   onAgain,
   onBack,
+  lessonLabel,
 }: {
   session: Session
   lifetime: ProgressEntry
   onAgain: () => void
   onBack: () => void
+  lessonLabel: string | undefined
 }) {
   const s = summary(session)
   const empty = s.total === 0
@@ -957,7 +993,9 @@ function DoneScreen({
               margin: 0,
             }}
           >
-            Kein Deck — wähle Inhalte zum Üben.
+            {lessonLabel
+              ? `Keine Karten für ${lessonLabel} in diesem Modus.`
+              : 'Kein Deck — wähle Inhalte zum Üben.'}
           </p>
         ) : (
           <>
