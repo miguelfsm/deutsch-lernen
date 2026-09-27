@@ -88,7 +88,7 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Grossvater",  english: "grandfather",         article: "der", plural: "Grossväter",
+    singular: "Grossvater", english: "grandfather",         article: "der", plural: "Grossväter",
     example: "Mein Grossvater wohnt auf dem Land.", translation: "My grandfather lives in the countryside.",
     category: "Familie",
     note: "Compound: gross + Vater. The plural follows Vater → Väter.",
@@ -714,7 +714,7 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Fuss",        english: "foot",                article: "der", plural: "Füsse",
+    singular: "Fuss",       english: "foot",                article: "der", plural: "Füsse",
     example: "Ich gehe zu Fuss.", translation: "I go on foot.",
     category: "Körper",
     note: "Umlaut + -e. Common phrase: zu Fuss gehen (to go on foot).",
@@ -1000,7 +1000,7 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Fussball",      english: "football / soccer",     article: "der", plural: "Fussbälle",
+    singular: "Fussball",     english: "football / soccer",     article: "der", plural: "Fussbälle",
     example: "Der Fussball ist rund.", translation: "The football is round.",
     category: "Freizeit",
     note: "Umlaut + -e. Can mean the sport (kein Plural) or the ball itself: der Fussball → die Fussbälle.",
@@ -1383,7 +1383,7 @@ export const nounData: Noun[] = [
     lessons: ["A1.1"],
   },
   {
-    singular: "Strasse",       english: "street / road",         article: "die", plural: "Strassen",
+    singular: "Strasse",      english: "street / road",         article: "die", plural: "Strassen",
     example: "Die Strasse ist lang.", translation: "The street is long.",
     category: "Geografie",
     note: "Adds -n. The most common word for a street — appears in nearly every German address.",
