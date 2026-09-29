@@ -5,7 +5,7 @@ import SpeakButton from "../../components/SpeakButton";
 import { verbData, type Verb, type VerbType } from "./data.js";
 import { getStem, getHighlightParts } from "./highlight.js";
 import { filterVerbs } from "./filter.js";
-import { perfektForms, type Tense } from "./tenses.js";
+import { IMPERATIV_PRONOUNS, perfektForms, type Tense } from "./tenses.js";
 import { font, color } from "../../lib/theme";
 import { useDeepSelect } from "../../lib/useDeepSelect";
 import { verbSlug } from "../../lib/catalog/slug";
@@ -28,6 +28,7 @@ const TENSES: { id: Tense; label: string }[] = [
   { id: "praesens", label: "Präsens" },
   { id: "praeteritum", label: "Präteritum" },
   { id: "perfekt", label: "Perfekt" },
+  { id: "imperativ", label: "Imperativ" },
 ];
 const VALID_TENSES = new Set<string>(TENSES.map((t) => t.id));
 
@@ -209,7 +210,7 @@ export default function GermanVerbs() {
         )}
       </div>
 
-      {/* ── Tense switch (Präsens · Präteritum · Perfekt) ── */}
+      {/* ── Tense switch (Präsens · Präteritum · Perfekt · Imperativ) ── */}
       <div
         role="group"
         aria-label="Zeitform"
@@ -377,6 +378,38 @@ export default function GermanVerbs() {
               </tbody>
             </table>
           </>
+        ) : tense === "imperativ" ? (
+          selected.imperativ ? (
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ background: "#f9f7f4" }}>
+                  <th style={{ ...TH_STYLE, width: "38%" }}>Pronoun</th>
+                  <th style={TH_STYLE}>Imperativ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {IMPERATIV_PRONOUNS.map((p, i) => (
+                  <tr key={p} style={{
+                    borderTop: "1px solid #f0ede8",
+                    background: i % 2 === 0 ? "#ffffff" : "#fdfcfb",
+                  }}>
+                    <td style={TD_PRONOUN_STYLE}>{p}</td>
+                    <td style={TD_FORM_STYLE}>{selected.imperativ![p]}!</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div style={{
+              padding: "18px 22px",
+              fontSize: 14,
+              color: "#78716c",
+              fontStyle: "italic",
+              fontFamily: font.sans,
+            }}>
+              Kein gebräuchlicher Imperativ für {selected.infinitive}.
+            </div>
+          )
         ) : (
           <>
             {/* Stem reference row */}

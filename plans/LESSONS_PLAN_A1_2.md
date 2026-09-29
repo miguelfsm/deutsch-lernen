@@ -153,7 +153,7 @@ this they project as `kind: 'adverb'` without moving files).
 Nothing that consumes the catalog (search, practice, cross-links) imports a
 tool's `data.ts` — that rule stays.
 
-### 3.4 Verbs: three tenses — `src/tools/verbs/data.ts`
+### 3.4 Verbs: three tenses + Imperativ — `src/tools/verbs/data.ts`
 
 ```ts
 export interface Verb {
@@ -163,6 +163,7 @@ export interface Verb {
   conjugations: Conjugation[]          // Präsens (unchanged name → no churn)
   praeteritum: Conjugation[]           // 6 persons, stemChange-highlighted
   perfekt: { auxiliary: 'haben' | 'sein'; partizip: string }
+  imperativ?: { du: string; ihr: string; Sie: string }  // e.g. 'warte' / 'wartet' / 'warten Sie'
   separable?: string                   // prefix, e.g. 'auf' (aufmachen) — from L12
   governs?: 'Dativ' | 'Akkusativ'      // gefallen/gehören/passen/helfen — L13
   lessons: LessonId[]
@@ -175,10 +176,21 @@ export interface Verb {
   reuses the Präsens table of *haben*/*sein*. DRY by knowledge: the aux
   conjugation exists once.
 - **Präteritum is stored in full** (irregular stems can't be derived reliably).
-- UI: a tense switch (Präsens · Präteritum · Perfekt) above the existing table.
-  Deep links: `?sel=schlafen&tense=perfekt` (optional param, default Präsens).
+- **Imperativ is stored in full**, as written sentence-initially, without "!" and
+  without the pronoun for du/ihr; Sie keeps it (`warten Sie`); separable verbs
+  carry the prefix (`mach auf`). It is optional for exactly the verbs on the
+  exported `VERBS_WITHOUT_IMPERATIV` list (the modals plus gefallen, kosten, stammen); a guard test
+  enforces "complete imperativ or on the list".
+- UI: a four-way switch (Präsens · Präteritum · Perfekt · Imperativ) above the
+  existing table; Imperativ shows a du/ihr/Sie table, or a "Kein gebräuchlicher Imperativ" note.
+  Deep links: `?sel=schlafen&tense=perfekt|imperativ` (optional param, default Präsens).
 - Practice: the conjugation drill gets a tense picker. `checkConjugation`
-  takes a tense; Perfekt accepts the full form ("habe gearbeitet").
+  takes a tense; Perfekt accepts the full form ("habe gearbeitet"); Imperativ
+  drills du/ihr/Sie, accepts the form with or without "!", and the deck is
+  skips (without rating or changing the deck) cards of verbs that have no
+  imperative when Imperativ is the active tense.
+- `mitbringen` → `A1.2-L14` is provisional: confirm via `vocab:check` when the
+  L14 list is transcribed.
 
 ### 3.5 Prepositions — new tool `src/tools/prepositions/` → `/praepositionen`
 

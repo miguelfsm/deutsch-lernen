@@ -3,7 +3,7 @@ import SpeakButton from '../../components/SpeakButton'
 import { font, color } from '../../lib/theme'
 import { verbData, type Verb } from '../verbs/data'
 import { getHighlightParts } from '../verbs/highlight'
-import type { Tense } from '../verbs/tenses'
+import { IMPERATIV_PRONOUNS, type Tense } from '../verbs/tenses'
 import { checkConjugation } from './drills'
 import type { Session } from './session'
 
@@ -19,6 +19,7 @@ const TENSES: { id: Tense; label: string }[] = [
   { id: 'praesens', label: 'Präsens' },
   { id: 'praeteritum', label: 'Präteritum' },
   { id: 'perfekt', label: 'Perfekt' },
+  { id: 'imperativ', label: 'Imperativ' },
 ]
 
 // Whether the reveal for this pronoun/tense should use the red (stem change)
@@ -32,6 +33,7 @@ const TENSES: { id: Tense; label: string }[] = [
 // GermanVerbs.tsx uses (-en = strong/irregular, -t = weak/regular).
 function stemChangeFor(verb: Verb, pronoun: string, tense: Tense): boolean {
   if (tense === 'perfekt') return verb.perfekt.partizip.endsWith('en')
+  if (tense === 'imperativ') return false // no per-form flag; reveal is uncoloured
   const table = tense === 'praeteritum' ? verb.praeteritum : verb.conjugations
   return table.find((c) => c.pronoun === pronoun)?.stemChange ?? false
 }
@@ -81,19 +83,35 @@ export default function ConjugationPlay({
 }) {
   const card = session.cards[session.index]
   const verb = card ? verbData.find((v) => v.infinitive === card.term) : undefined
-  // One pronoun is drilled per card; pick it once so it survives re-renders and
-  // the input's controlled state. Keyed by card via the parent's `key`. The
-  // pronoun set is the same across all three tenses, so Präsens's table is a
-  // fine source regardless of which tense is being drilled.
-  const conj = useMemo(
-    () => (verb ? verb.conjugations[Math.floor(Math.random() * verb.conjugations.length)] : undefined),
+  // One person is drilled per card; the random pick is made once so it survives
+  // re-renders and the input's controlled state (keyed by card via the parent's
+  // `key`). It's a 0–1 fraction, mapped onto the tense's own pronoun set below,
+  // so switching tense mid-card stays valid (Imperativ is du/ihr/Sie only).
+  const pick = useMemo(
+    () => Math.random(),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [card?.id],
   )
+  const conj = verb
+    ? tense === 'imperativ'
+      ? { pronoun: IMPERATIV_PRONOUNS[Math.floor(pick * IMPERATIV_PRONOUNS.length)] }
+      : verb.conjugations[Math.floor(pick * verb.conjugations.length)]
+    : undefined
   const [input, setInput] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  // Switching tense mid-card starts the answer afresh (a typed "fährst" makes no
+  // sense once the tense is Imperativ). State-adjust-during-render, no effect.
+  const [seenTense, setSeenTense] = useState(tense)
+  if (seenTense !== tense) {
+    setSeenTense(tense)
+    setInput('')
+    setSubmitted(false)
+  }
 
   if (!card || !verb || !conj) return null
+  // Deck is narrowed to verbs with an imperative when Imperativ is picked (see
+  // PracticeTool); this only guards a stray card.
+  if (tense === 'imperativ' && !verb.imperativ) return null
 
   const result = checkConjugation(verb, conj.pronoun, input, tense)
   // On reveal, Präsens/Präteritum split into stem (unchanged) + the highlighted
@@ -101,7 +119,7 @@ export default function ConjugationPlay({
   // gefahren"), so it's split on the space into aux + partizip instead (the
   // partizip is always a single token, so this is exact, not a heuristic).
   const parts =
-    tense !== 'perfekt'
+    tense === 'praesens' || tense === 'praeteritum'
       ? getHighlightParts(verb.infinitive, result.expected, verb.customStem)
       : null
   const perfektReveal =
@@ -178,8 +196,15 @@ export default function ConjugationPlay({
           <SpeakButton text={verb.infinitive} size={20} />
         </div>
         <span style={{ fontFamily: font.sans, fontSize: 16, color: color.muted, fontStyle: 'italic' }}>
-          {conj.pronoun} …
+          {tense === 'imperativ' ? `Imperativ – du / ihr / Sie · ${conj.pronoun} …` : `${conj.pronoun} …`}
         </span>
+        {tense === 'imperativ' && (
+          <span style={{ fontFamily: font.sans, fontSize: 12, color: color.faint }}>
+            {conj.pronoun === 'Sie' ? 'mit „Sie“' : ''}
+            {conj.pronoun === 'Sie' && verb.separable ? ' · ' : ''}
+            {verb.separable ? `trennbar: „${verb.separable}“ mitschreiben` : ''}
+          </span>
+        )}
       </div>
 
       <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -188,8 +213,10 @@ export default function ConjugationPlay({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={submitted}
-          aria-label={`Konjugation von ${verb.infinitive} für ${conj.pronoun}`}
-          placeholder={tense === 'perfekt' ? 'z.B. bist gefahren' : 'Form eingeben…'}
+          aria-label={`${tense === 'imperativ' ? 'Imperativ' : 'Konjugation'} von ${verb.infinitive} für ${conj.pronoun}`}
+          placeholder={
+            tense === 'perfekt' ? 'z.B. bist gefahren' : tense === 'imperativ' ? 'z.B. komm' : 'Form eingeben…'
+          }
           style={{
             padding: '12px 16px',
             borderRadius: 12,
@@ -231,6 +258,8 @@ export default function ConjugationPlay({
                       {parts.unchanged}
                       <span style={{ color: hlColor }}>{parts.changed}</span>
                     </span>
+                  ) : tense === 'imperativ' ? (
+                    <span style={{ fontWeight: 700, color: color.ink }}>{result.expected}</span>
                   ) : (
                     perfektReveal && (
                       <span style={{ fontWeight: 700, color: color.ink }}>

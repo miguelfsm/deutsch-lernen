@@ -1,10 +1,12 @@
 import type { Verb } from './data'
 import { verbData } from './data'
 
-// The three tenses shown in the UI's segmented switch. 'praesens' matches the
+// The tenses (and the Imperativ mood) shown in the UI's segmented switch. 'praesens' matches the
 // existing `conjugations` field name (kept unrenamed to avoid churn).
-export type Tense = 'praesens' | 'praeteritum' | 'perfekt'
+export type Tense = 'praesens' | 'praeteritum' | 'perfekt' | 'imperativ'
 
+// Imperativ pronouns, in display order (stored keys of `Verb.imperativ`).
+export const IMPERATIV_PRONOUNS = ['du', 'ihr', 'Sie'] as const
 export interface PerfektForm {
   pronoun: string
   auxForm: string

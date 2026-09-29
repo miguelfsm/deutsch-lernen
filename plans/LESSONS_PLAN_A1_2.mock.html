@@ -208,22 +208,44 @@ const VERBS = {
     pr: ['arbeit[e]', 'arbeit[est]', 'arbeit[et]', 'arbeit[en]', 'arbeit[et]', 'arbeit[en]'],
     pt: ['arbeit[ete]', 'arbeit[etest]', 'arbeit[ete]', 'arbeit[eten]', 'arbeit[etet]', 'arbeit[eten]'],
     aux: 'haben', p2: '[ge]arbeit[et]', ex: 'Früher arbeitete ich als Koch.', tr: 'I used to work as a cook.',
+    im: ['arbeite', 'arbeitet', 'arbeiten Sie'],
     note: 'Stem ends in -t, so an extra -e- is added: du arbeitest, er arbeitete.' },
   sein: { en: 'to be', type: 'irregular', tags: ['A1.1', 8],
     pr: ['{bin}', '{bist}', '{ist}', '{sind}', '{seid}', '{sind}'],
     pt: ['{war}', '{war}[st]', '{war}', '{war}[en]', '{war}[t]', '{war}[en]'],
     aux: 'sein', p2: '{gewesen}', ex: 'Ich war zwei Jahre in Italien.', tr: 'I was in Italy for two years.',
+    im: ['sei', 'seid', 'seien Sie'],
     note: 'In speech, sein uses Präteritum (war), not Perfekt (bin gewesen). Lektion 8 teaches war/hatte.' },
   fahren: { en: 'to drive / to go', type: 'irregular', tags: ['A1.1', 11],
     pr: ['fahr[e]', 'f{ä}hr[st]', 'f{ä}hr[t]', 'fahr[en]', 'fahr[t]', 'fahr[en]'],
     pt: ['f{u}hr', 'f{u}hr[st]', 'f{u}hr', 'f{u}hr[en]', 'f{u}hr[t]', 'f{u}hr[en]'],
     aux: 'sein', p2: '[ge]fahr[en]', ex: 'Wir sind mit dem Zug nach Bern gefahren.', tr: 'We went to Bern by train.',
+    im: ['fahr', 'fahrt', 'fahren Sie'],
     note: 'Movement from A to B takes sein in the Perfekt: ich bin gefahren.' },
   aufmachen: { en: 'to open', type: 'regular', sep: 'auf', tags: ['A1.1', 12],
     pr: ['mach[e] auf', 'mach[st] auf', 'mach[t] auf', 'mach[en] auf', 'mach[t] auf', 'mach[en] auf'],
     pt: ['mach[te] auf', 'mach[test] auf', 'mach[te] auf', 'mach[ten] auf', 'mach[tet] auf', 'mach[ten] auf'],
     aux: 'haben', p2: 'auf[ge]mach[t]', ex: 'Könnten Sie bitte das Fenster aufmachen?', tr: 'Could you open the window, please?',
+    im: ['mach auf', 'macht auf', 'machen Sie auf'],
     note: 'Separable: the prefix goes to the end. In the Perfekt, ge- sits between prefix and stem: aufgemacht.' },
+  nehmen: { en: 'to take', type: 'irregular', tags: ['A1.1'],
+    pr: ['nehm[e]', 'n{i}mm[st]', 'n{i}mm[t]', 'nehm[en]', 'nehm[t]', 'nehm[en]'],
+    pt: ['n{a}hm', 'n{a}hm[st]', 'n{a}hm', 'n{a}hm[en]', 'n{a}hm[t]', 'n{a}hm[en]'],
+    aux: 'haben', p2: '[ge]{nomm}[en]', ex: 'Nehmen Sie bitte Platz.', tr: 'Please take a seat.',
+    im: ['nimm', 'nehmt', 'nehmen Sie'],
+    note: 'e → i in du/er, and the du-imperative keeps it: nimm! (not nehm!).' },
+  warten: { en: 'to wait', type: 'regular', tags: [9],
+    pr: ['wart[e]', 'wart[est]', 'wart[et]', 'wart[en]', 'wart[et]', 'wart[en]'],
+    pt: ['wart[ete]', 'wart[etest]', 'wart[ete]', 'wart[eten]', 'wart[etet]', 'wart[eten]'],
+    aux: 'haben', p2: '[ge]wart[et]', ex: 'Warten Sie bitte hier.', tr: 'Please wait here.',
+    im: ['warte', 'wartet', 'warten Sie'],
+    note: 'Stem ends in -t, so an extra -e- is added: du wartest, ihr wartet, Warte!' },
+  können: { en: 'can / to be able to', type: 'irregular', tags: ['A1.1'],
+    pr: ['{kann}', '{kann}[st]', '{kann}', 'könn[en]', 'könn[t]', 'könn[en]'],
+    pt: ['{konn}[te]', '{konn}[test]', '{konn}[te]', '{konn}[ten]', '{konn}[tet]', '{konn}[ten]'],
+    aux: 'haben', p2: '[ge]{konn}[t]', ex: 'Ich kann gut schwimmen.', tr: 'I can swim well.',
+    im: null,
+    note: 'Modal verb: no imperative (nobody says “Kann!”). Use a form like Versuchen Sie es!' },
 };
 const TYPE_META = { regular: ['Regular', '#dbeafe', '#1e40af'], irregular: ['Irregular', '#fee2e2', '#991b1b'] };
 
@@ -286,7 +308,7 @@ const L8 = {
 
 // ── Screens ─────────────────────────────────────────────────────────────────
 const NAV = [['lessons', 'Lektionen', 1], ['verbs', 'Verben'], ['nouns', 'Nomen'], ['adj', 'Adjektive'], ['phrases', 'Redemittel'], ['preps', 'Präpositionen', 1], ['grammar', 'Grammatik', 1], ['satzbau', 'Satzbau'], ['practice', 'Üben']];
-const SCREENS = [['home', 'Home'], ['search', 'Suche „Lektion 8“'], ['lessons', 'Lektionen'], ['lesson', 'Lektion 8'], ['verbs', 'Verben · 3 Zeiten'], ['preps', 'Präpositionen'], ['grammar', 'Grammatik'], ['practice', 'Üben'], ['vocab', 'Wortschatz-Check']];
+const SCREENS = [['home', 'Home'], ['search', 'Suche „Lektion 8“'], ['lessons', 'Lektionen'], ['lesson', 'Lektion 8'], ['verbs', 'Verben · 3 Zeiten + Imperativ'], ['preps', 'Präpositionen'], ['grammar', 'Grammatik'], ['practice', 'Üben'], ['vocab', 'Wortschatz-Check']];
 const state = { screen: 'home', verb: 'arbeiten', tense: 'pt', caseF: 'Alle', useF: 'Alle', openPrep: 'seit', topic: 'vor-seit', mode: 'fall', drill: 0, picked: null, conjTense: 'pt', conjIn: '', conjRes: null, vocabDone: { tag: false, miss: false } };
 
 const header = (eyebrow, title, sub) => `<div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p class="sub">${sub}</p>`;
@@ -355,9 +377,13 @@ function lesson() {
 
 function verbs() {
   const v = VERBS[state.verb]; const [lbl, bg, fg] = TYPE_META[v.type];
-  const tenses = [['pr', 'Präsens'], ['pt', 'Präteritum'], ['pf', 'Perfekt']];
+  const tenses = [['pr', 'Präsens'], ['pt', 'Präteritum'], ['pf', 'Perfekt'], ['im', 'Imperativ']];
   let body;
-  if (state.tense === 'pf') {
+  if (state.tense === 'im') {
+    body = v.im ? `<div class="tscroll"><table><thead><tr><th>Pronoun</th><th>Imperativ</th></tr></thead><tbody>
+      ${['du', 'ihr', 'Sie'].map((p, i) => `<tr><td class="pron">${p}</td><td class="form">${v.im[i]}!</td></tr>`).join('')}</tbody></table></div>`
+      : `<div class="caption" style="font-style:italic">Kein gebräuchlicher Imperativ für ${state.verb}.</div>`;
+  } else if (state.tense === 'pf') {
     body = `<div class="caption">Perfekt = <b>${v.aux}</b> (Präsens) + Partizip II <b>${fmt(v.p2).replace(/<[^>]+>/g, '')}</b> · built automatically</div>
       <div class="tscroll"><table><thead><tr><th>Pronoun</th><th>${v.aux}</th><th>Partizip II</th></tr></thead><tbody>
       ${PRON.map((p, i) => `<tr><td class="pron">${p}</td><td class="aux">${AUX[v.aux][i]}</td><td class="form">${fmt(v.p2)}</td></tr>`).join('')}</tbody></table></div>`;
@@ -368,7 +394,7 @@ function verbs() {
       ${PRON.map((p, i) => `<tr><td class="pron">${p}</td><td class="form">${fmt(forms[i])}</td></tr>`).join('')}</tbody></table></div>`;
   }
   return header('A1 · Verb-Konjugation', 'Verben', 'Pick a verb, then a tense.') +
-    `<div class="pills" style="margin-bottom:6px">${Object.keys(VERBS).map((k) => `<button class="pill" data-verb="${k}" aria-pressed="${k === state.verb}">${k}</button>`).join('')}<span class="muted" style="align-self:center">+ 69 more</span></div>
+    `<div class="pills" style="margin-bottom:6px">${Object.keys(VERBS).map((k) => `<button class="pill" data-verb="${k}" aria-pressed="${k === state.verb}">${k}</button>`).join('')}<span class="muted" style="align-self:center">+ 68 more</span></div>
     <div class="seg new" role="group" aria-label="Zeitform">${tenses.map(([k, l]) => `<button data-tense="${k}" aria-pressed="${k === state.tense}">${l}</button>`).join('')}</div>
     <div class="card"><div class="card-head"><div><div class="big">${state.verb}</div><div class="gloss">${v.en}</div></div>
       <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end"><span class="case" style="background:${bg};color:${fg}">${lbl}</span><div class="tags new" style="border-radius:99px">${v.tags.map(tag).join('')}</div></div></div>
@@ -428,10 +454,10 @@ function practice() {
       <div style="padding:16px 22px" class="grid2">${d.o.map((o) => `<button class="opt ${state.picked ? (o === d.a ? 'right' : o === state.picked ? 'wrong' : '') : ''}" data-pick="${o}" ${state.picked ? 'disabled' : ''}>${o}</button>`).join('')}</div>
       ${state.picked ? `<div class="note-row" style="display:flex;justify-content:space-between;gap:10px;align-items:center"><span>${state.picked === d.a ? '✅ Richtig!' : '❌ Nicht ganz.'} ${d.why}</span><button class="btn" data-next>Weiter</button></div>` : ''}</div>`;
   } else if (state.mode === 'conj') {
-    const want = { pr: 'fährst', pt: 'fuhrst', pf: 'bist gefahren' }[state.conjTense];
-    play = `<div class="seg new">${[['pr', 'Präsens'], ['pt', 'Präteritum'], ['pf', 'Perfekt']].map(([k, l]) => `<button data-ct="${k}" aria-pressed="${k === state.conjTense}">${l}</button>`).join('')}</div>
-      <div class="card"><div class="card-head"><div><div class="muted" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase">Konjugation</div><div style="font-size:24px;font-weight:700;margin-top:6px"><span style="color:var(--faint);font-style:italic;font-weight:400">du</span> · fahren</div></div></div>
-      <form id="conjf" style="padding:16px 22px;display:flex;gap:8px"><input id="conjIn" value="${state.conjIn}" placeholder="${state.conjTense === 'pf' ? 'z.B. bist gefahren' : 'Form eingeben'}" style="flex:1;min-width:0;font:18px var(--serif);padding:10px 12px;border:1px solid var(--border);border-radius:10px" autocomplete="off"><button class="btn">Prüfen</button></form>
+    const want = { pr: 'fährst', pt: 'fuhrst', pf: 'bist gefahren', im: 'fahr' }[state.conjTense];
+    play = `<div class="seg new">${[['pr', 'Präsens'], ['pt', 'Präteritum'], ['pf', 'Perfekt'], ['im', 'Imperativ']].map(([k, l]) => `<button data-ct="${k}" aria-pressed="${k === state.conjTense}">${l}</button>`).join('')}</div>
+      <div class="card"><div class="card-head"><div><div class="muted" style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase">Konjugation</div><div style="font-size:24px;font-weight:700;margin-top:6px"><span style="color:var(--faint);font-style:italic;font-weight:400">du</span> · fahren${state.conjTense === 'im' ? ' <span class="muted" style="font-size:12px;font-weight:400">(du / ihr / Sie)</span>' : ''}</div></div></div>
+      <form id="conjf" style="padding:16px 22px;display:flex;gap:8px"><input id="conjIn" value="${state.conjIn}" placeholder="${state.conjTense === 'pf' ? 'z.B. bist gefahren' : state.conjTense === 'im' ? 'z.B. komm (mit oder ohne !)' : 'Form eingeben'}" style="flex:1;min-width:0;font:18px var(--serif);padding:10px 12px;border:1px solid var(--border);border-radius:10px" autocomplete="off"><button class="btn">Prüfen</button></form>
       ${state.conjRes ? `<div class="note-row">${state.conjRes === 'ok' ? '✅ Richtig: <b>' + want + '</b>' : '❌ Richtig wäre: <b>' + want + '</b>'}</div>` : ''}</div>`;
   } else {
     play = `<div class="card"><div style="padding:28px 22px;text-align:center"><div class="muted">This mode works as today, on the filtered deck.</div><div style="font-size:26px;font-weight:700;margin-top:10px"><span class="art-die">die</span> Ausbildung</div><div class="gloss">tap to reveal</div></div></div>`;
@@ -473,13 +499,13 @@ const NOTES = {
     `<b>Steer?</b> Book colours or plain cards? I’d keep the colours, because they match the book in your hands.`],
   lesson: ['Lesson page', `<p>Top: straight from the book’s table of contents (parts A–D, Wortfelder, Phonetik, Prüfung, Fokus). Below: everything tagged L8, grouped by word type. Every chip jumps to that word in its tool.</p><p>Try it: tap a grammar topic, a verb or a preposition.</p><p>Plan §4.1.</p>`,
     `<b>Steer?</b> Should words be grouped by the book’s parts A–E instead of by word type? The book’s vocabulary list isn’t split by part, so I’d group by word type.`],
-  verbs: ['Verbs · 3 tenses', `<ul><li>New switch: <b>Präsens · Präteritum · Perfekt</b>.</li><li>Präteritum is stored in full, with the same red/blue highlighting.</li><li>Perfekt is built from <i>haben/sein</i> + Partizip II, so it is never typed in twice.</li><li>Lesson tags at the top right.</li></ul><p>Try <b>fahren → Perfekt</b> (uses <i>sein</i>) and <b>aufmachen → Perfekt</b> (auf<b>ge</b>macht).</p>`,
+  verbs: ['Verbs · 3 tenses + Imperativ', `<ul><li>New switch: <b>Präsens · Präteritum · Perfekt · Imperativ</b> (du / ihr / Sie). Modals (and gefallen, kosten, stammen) show <i>Kein gebräuchlicher Imperativ</i>: try <b>können</b>.</li><li>Präteritum is stored in full, with the same red/blue highlighting.</li><li>Perfekt is built from <i>haben/sein</i> + Partizip II, so it is never typed in twice.</li><li>Lesson tags at the top right.</li></ul><p>Try <b>fahren → Perfekt</b> (uses <i>sein</i>) and <b>aufmachen → Perfekt</b> (auf<b>ge</b>macht).</p>`,
     `<b>Steer?</b> Show all 3 tenses side by side instead of a switch? On a phone that makes a wide table, so I’d keep the switch.`],
   preps: ['Prepositions', `<p>Each preposition carries its <b>case</b> (Dativ / Akkusativ / Wechsel) and its <b>use</b> (temporal / lokal / modal). Opening a card shows the article table for that case and examples from the book.</p><p>Try the filters: <b>Dativ + temporal</b> gives vor, seit, bei, nach, ab.</p>`,
     `<b>Plan fix found:</b> <i>als</i> (L8) takes no case. The plan only allows Dativ / Akkusativ / Wechsel, so I added <b>“ohne Fall”</b> here. The plan now includes it (§3.5).`],
   grammar: ['Grammar', `<p>Each lesson’s grammar summary becomes topics. They use 3 building blocks: <b>table</b>, <b>rule</b> and <b>examples</b>. The 5 topics here are the real ones from your L8 photo.</p><p>“Verwandt” links jump to the matching verb or preposition, so the word itself is stored only once.</p>`,
     `<b>Steer?</b> Keep English explanations (like the rest of the app), or German only like the book? I’d keep short English rules next to the German tables.`],
-  practice: ['Practice', `<ul><li>New <b>Lektion</b> filter works with every mode.</li><li>Konjugation gets a <b>tense switch</b>. Perfekt accepts the full form (“bist gefahren”).</li><li>New drill <b>Welcher Fall?</b>: pick the right article after a preposition.</li></ul><p>Try both: answer the drill, then switch to Konjugation.</p>`,
+  practice: ['Practice', `<ul><li>New <b>Lektion</b> filter works with every mode.</li><li>Konjugation gets a <b>tense switch</b>. Perfekt accepts the full form (“bist gefahren”); Imperativ accepts the form with or without “!”.</li><li>New drill <b>Welcher Fall?</b>: pick the right article after a preposition.</li></ul><p>Try both: answer the drill, then switch to Konjugation.</p>`,
     `<b>Steer?</b> The lesson filter could be a list of lessons you tick (L8 + L9 together) instead of one choice. I’d start with one choice (simpler) and add ticking later if you miss it.`],
   vocab: ['Vocab check', `<p>This happens in our chat, not in the app. You send photos, I write them to a text file, and a script sorts every word into 3 groups. <b>Nothing gets added until you say OK</b> (your choice D4).</p><p>Try the two buttons.</p>`,
     `<b>Steer?</b> Should the word list also appear in the app (e.g. a “Lernwortschatz” tab on the lesson page with ✅/❌)? I left it out of the plan. It would be handy for checking yourself, but it’s extra work.`],
@@ -498,7 +524,7 @@ function render() {
   document.getElementById('links').innerHTML = NAV.map(([k, l, n]) => `<button data-go="${k}" class="${k === s || (s === 'lesson' && k === 'lessons') ? 'active' : ''} ${n ? 'is-new' : ''}">${l}</button>`).join('');
   const f = document.getElementById('conjf');
   if (f) f.addEventListener('submit', (e) => { e.preventDefault(); const v = document.getElementById('conjIn').value.trim().toLowerCase().replace(/\s+/g, ' ');
-    const want = { pr: 'fährst', pt: 'fuhrst', pf: 'bist gefahren' }[state.conjTense]; state.conjIn = v; state.conjRes = v === want ? 'ok' : 'no'; render(); });
+    const want = { pr: 'fährst', pt: 'fuhrst', pf: 'bist gefahren', im: 'fahr' }[state.conjTense]; state.conjIn = v; state.conjRes = v.replace(/\s*!+$/, '') === want ? 'ok' : 'no'; render(); });
 }
 function go(s) { state.screen = ALIAS[s] || s; state.picked = null; render(); window.scrollTo({ top: 0 }); }
 

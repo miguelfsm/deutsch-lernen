@@ -22,7 +22,7 @@ import {
   type Session,
 } from './session'
 import { buildChoices, type Choice } from './quiz'
-import { checkArticle } from './drills'
+import { checkArticle, nextDrillable } from './drills'
 import ConjugationPlay from './ConjugationPlay'
 import type { Tense } from '../verbs/tenses'
 import { nounData, type Article } from '../nouns/data'
@@ -130,6 +130,19 @@ export default function PracticeTool() {
   // that component remounts every card (keyed on session.index) — this state
   // must survive across cards within one round.
   const [conjTense, setConjTense] = useState<Tense>('praesens')
+  // Modals etc. have no imperative. Picking Imperativ mid-round moves past an
+  // undrillable current card WITHOUT touching the deck or the tally; the index
+  // change re-keys ConjugationPlay, so the typed input resets.
+  function pickConjTense(t: Tense) {
+    setConjTense(t)
+    if (session && session.mode === 'conjugation') {
+      const index = nextDrillable(session.cards, session.index, t)
+      if (index !== session.index) {
+        setSession({ ...session, index })
+        setRevealed(false)
+      }
+    }
+  }
   const [lifetime, setLifetime] = useState<ProgressEntry>(() =>
     totals(loadProgress()),
   )
@@ -193,7 +206,10 @@ export default function PracticeTool() {
     if (!session) return
     const card = currentCard(session)
     if (card) recordAndSave(card.slug, wasKnown)
-    const next = answer(session, wasKnown)
+    let next = answer(session, wasKnown)
+    if (next.mode === 'conjugation') {
+      next = { ...next, index: nextDrillable(next.cards, next.index, conjTense) }
+    }
     setSession(next)
     setRevealed(false)
     if (isComplete(next)) setLifetime(totals(loadProgress()))
@@ -233,7 +249,7 @@ export default function PracticeTool() {
       {session !== null &&
         !isComplete(session) &&
         !isEmpty(session) &&
-        renderPlay(session, revealed, setRevealed, rate, conjTense, setConjTense)}
+        renderPlay(session, revealed, setRevealed, rate, conjTense, pickConjTense)}
 
       {session !== null && (isComplete(session) || isEmpty(session)) && (
         <DoneScreen

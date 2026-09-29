@@ -49,4 +49,19 @@ describe('GermanVerbs tense switch', () => {
     expect(cardText()).toContain('bist')
     expect(cardText()).toContain('gefahren')
   })
+
+  it('switches to Imperativ and shows du/ihr/Sie forms; deep link works', async () => {
+    const user = userEvent.setup()
+    renderAt('/verben?sel=nehmen')
+    await user.click(screen.getByRole('button', { name: 'Imperativ' }))
+    const text = document.body.textContent ?? ''
+    expect(text).toContain('nimm!')
+    expect(text).toContain('nehmt!')
+    expect(text).toContain('nehmen Sie!')
+  })
+
+  it('shows "Kein gebräuchlicher Imperativ" for a modal verb', () => {
+    renderAt('/verben?sel=koennen&tense=imperativ')
+    expect(screen.getByText(/Kein gebräuchlicher Imperativ/)).toBeInTheDocument()
+  })
 })
