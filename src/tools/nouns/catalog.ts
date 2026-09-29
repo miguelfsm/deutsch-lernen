@@ -17,6 +17,7 @@ export function nounsCatalog(): CatalogEntry[] {
       gloss: n.english,
       category: n.category,
       keywords: [n.article],
+      aliases: n.feminine ? [n.feminine] : undefined,
       kind: 'noun',
       lessons: n.lessons,
     }

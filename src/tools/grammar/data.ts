@@ -69,9 +69,14 @@ export const grammarTopics: GrammarTopic[] = [
         ],
       },
     ],
-    // No Arzt/Ärztin/Hauswart noun exists in nouns/data.ts yet — leave related
-    // empty rather than inventing catalog entries (Phase 7 scope note).
-    related: [],
+    // The male nouns carry their female form (`feminine`), so one entry each.
+    related: [
+      'nomen:berufe/mechatroniker',
+      'nomen:berufe/arzt',
+      'nomen:berufe/hausmann',
+      'nomen:berufe/pflegefachmann',
+      'nomen:berufe/hauswart',
+    ],
     lessons: ['A1.2-L08'],
   },
   {
