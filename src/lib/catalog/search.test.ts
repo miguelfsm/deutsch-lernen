@@ -25,6 +25,13 @@ describe('searchCatalog', () => {
     expect(ids).toContain('nomen:familie/bild')
   })
 
+  it('matches an alias such as a noun\'s feminine form, returning the base entry', () => {
+    const withAlias: CatalogEntry[] = [
+      { id: 'nomen:beruf/arzt', toolId: 'nomen', route: '/nomen', slug: 'beruf/arzt', term: 'Arzt', gloss: 'doctor', aliases: ['Ärztin'], kind: 'noun', lessons: ['A1.2-L08'] },
+    ]
+    expect(searchCatalog(withAlias, 'Ärztin').map((e) => e.id)).toEqual(['nomen:beruf/arzt'])
+  })
+
   it('returns [] when nothing matches', () => {
     expect(searchCatalog(entries, 'zzz')).toEqual([])
   })

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import PracticeTool from './PracticeTool'
@@ -19,9 +19,18 @@ describe('Practice lesson filter', () => {
     const select = screen.getByRole('combobox') as HTMLSelectElement
     expect(select.value).toBe('A1.2-L08')
 
-    // Only the prepositions tagged A1.2-L08 (als, bei, für, seit, vor) are in
-    // the deck today — verbs/nouns aren't per-lesson tagged yet (Phase 8+).
-    expect(screen.getByText(/^5 Karten$/)).toBeInTheDocument()
+    // The deck is narrowed to the cards tagged A1.2-L08: some, but fewer than
+    // with no lesson filter. (No exact count — it grows with every intake.)
+    const narrowed = Number(screen.getByText(/^\d+ Karten$/).textContent!.match(/\d+/)![0])
+    cleanup()
+    render(
+      <MemoryRouter initialEntries={['/uben']}>
+        <PracticeTool />
+      </MemoryRouter>,
+    )
+    const all = Number(screen.getByText(/^\d+ Karten$/).textContent!.match(/\d+/)![0])
+    expect(narrowed).toBeGreaterThan(0)
+    expect(narrowed).toBeLessThan(all)
   })
 
   it('ignores an unknown ?lektion= value and falls back to "every lesson"', () => {
@@ -44,13 +53,13 @@ describe('Practice lesson filter', () => {
     expect(select.value).toBe('')
   })
 
-  // Regression: L8 + Artikel is a real empty combination today (L8 has no
-  // nouns tagged yet, only prepositions) — Start must be disabled with an
+  // Regression: a lesson + mode with no cards (L14 has no nouns tagged yet;
+  // it is the last lesson to be taken in) — Start must be disabled with an
   // inline note, not silently create a 0-card round.
   it('disables Start and shows an inline note for a lesson + mode with no cards', async () => {
     const user = userEvent.setup()
     render(
-      <MemoryRouter initialEntries={['/uben?lektion=A1.2-L08']}>
+      <MemoryRouter initialEntries={['/uben?lektion=A1.2-L14']}>
         <PracticeTool />
       </MemoryRouter>,
     )
