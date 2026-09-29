@@ -1,0 +1,185 @@
+{
+  "_readme": "Hand-written candidate map for plans/WORD_ICONS_PLAN.md. Read by scripts/icon-coverage.ts. Shape: concepts[kind][category][German headword] = icon name. Emoji sets share Unicode (CLDR) names in kebab-case, so ONE name is checked in fluent-emoji-flat, noto, openmoji and twemoji. A leading '~' marks a WEAK hook (generic, symbolic or only loosely related); no prefix = STRONG (the picture is the word); null = deliberately no icon (abstract, grammatical, or the closest picture would mislead). Words of a category that are missing here count as 'unmapped'. lineSets holds a second, independently tiered map for Phosphor (a line-icon set), keyed by the same headwords.",
+  "sets": {
+    "fluent": { "package": "@iconify-json/fluent-emoji-flat", "version": "1.2.6", "licence": "MIT" },
+    "noto": { "package": "@iconify-json/noto", "version": "1.2.9", "licence": "Apache-2.0" },
+    "openmoji": { "package": "@iconify-json/openmoji", "version": "1.2.29", "licence": "CC-BY-SA-4.0" },
+    "twemoji": { "package": "@iconify-json/twemoji", "version": "1.2.5", "licence": "CC-BY-4.0" },
+    "ph": { "package": "@iconify-json/ph", "version": "1.2.2", "licence": "MIT" }
+  },
+  "concepts": {
+    "noun": {
+      "Familie": {
+        "Vater": "~man", "Mutter": "~woman", "Sohn": "~boy", "Tochter": "~girl",
+        "Bruder": null, "Schwester": null, "Mann": "man", "Frau": "woman", "Kind": "child",
+        "Grossvater": "~old-man", "Grossmutter": "~old-woman",
+        "Onkel": null, "Tante": null, "Cousin": null, "Cousine": null
+      },
+      "Supermarkt": {
+        "Brot": "bread", "Brötchen": "~bagel", "Milch": "glass-of-milk", "Käse": "cheese-wedge",
+        "Fleisch": "cut-of-meat", "Fisch": "fish", "Ei": "egg", "Butter": "butter",
+        "Joghurt": "~bowl-with-spoon", "Sandwich": "sandwich", "Wurst": "~hot-dog", "Würstchen": "hot-dog",
+        "Apfel": "red-apple", "Banane": "banana", "Saft": "~beverage-box", "Wasser": "~droplet",
+        "Wein": "wine-glass", "Bier": "beer-mug", "Kaffee": "hot-beverage", "Tee": "teacup-without-handle"
+      },
+      "Zuhause": {
+        "Haus": "house", "Wohnung": "~houses", "Zimmer": "~door", "Küche": "~cooking",
+        "Badezimmer": "~bathtub", "Wohnzimmer": "~couch-and-lamp", "Tisch": null, "Stuhl": "chair",
+        "Bett": "bed", "Schrank": null, "Tür": "door", "Fenster": "window", "Wand": "~brick",
+        "Treppe": null, "Schlüssel": "key", "Lampe": "light-bulb", "Sofa": "couch-and-lamp",
+        "Regal": "~books", "Fernseher": "television", "Sessel": null, "Teppich": null,
+        "Schreibtisch": null, "Dusche": "shower", "Badewanne": "bathtub", "Waschbecken": null,
+        "Toilette": "toilet", "Waschmaschine": null, "Elektrogerät": "~electric-plug"
+      },
+      "Tiere": {
+        "Hund": "dog", "Katze": "cat", "Vogel": "bird", "Pferd": "horse", "Kuh": "cow",
+        "Schwein": "pig", "Löwe": "lion", "Bär": "bear", "Maus": "mouse", "Affe": "monkey",
+        "Schlange": "snake", "Elefant": "elephant", "Ente": "duck", "Hase": "rabbit"
+      },
+      "Kleidung": {
+        "Hemd": "~t-shirt", "Hose": "jeans", "Rock": null, "Jacke": "~coat", "Mantel": "coat",
+        "Schuh": "mans-shoe", "Socke": "socks", "Mütze": "billed-cap", "Kleid": "dress",
+        "Pullover": null, "Bluse": "~womans-clothes", "T-Shirt": "t-shirt"
+      },
+      "Körper": {
+        "Kopf": "~bust-in-silhouette", "Auge": "eye", "Nase": "nose", "Mund": "mouth", "Ohr": "ear",
+        "Arm": "~flexed-biceps", "Hand": "raised-hand", "Bein": "leg", "Fuss": "foot",
+        "Finger": "~index-pointing-up", "Bauch": null, "Gesicht": "~neutral-face"
+      },
+      "Schule": {
+        "Schule": "school", "Lehrer": "teacher", "Lehrerin": "teacher", "Buch": "closed-book",
+        "Heft": "notebook", "Stift": "pen", "Tafel": null, "Rucksack": "backpack",
+        "Klasse": "~busts-in-silhouette", "Hausaufgabe": "~memo", "Prüfung": "~pencil",
+        "Note": null, "Fach": null, "Pause": null
+      },
+      "Arbeit": {
+        "Büro": "~office-building", "Beruf": "~briefcase", "Chef": "~necktie", "Kollege": "~office-worker",
+        "Kollegin": "~office-worker", "Gehalt": "~money-bag", "Besprechung": "~speech-balloon",
+        "Computer": "laptop", "Termin": "~tear-off-calendar", "Projekt": null, "Urlaub": "~beach-with-umbrella",
+        "Stelle": null, "E-Mail": "e-mail", "Vertrag": "~scroll", "Sitzungszimmer": null
+      },
+      "Freizeit": {
+        "Hobby": "~artist-palette", "Film": "clapper-board", "Kino": "cinema", "Musik": "musical-notes",
+        "Konzert": "~guitar", "Spiel": "~game-die", "Reise": "luggage", "Fahrrad": "bicycle",
+        "Fussball": "soccer-ball", "Theater": "performing-arts", "Party": "party-popper",
+        "Foto": "~camera", "Verein": null, "Museum": "~classical-building"
+      },
+      "Lebensmittel": {
+        "Aprikose": null, "Birne": "pear", "Chinakohl": "~leafy-green", "Dattel": null, "Essig": null,
+        "Feige": null, "Gurke": "cucumber", "Hackfleisch": "~cut-of-meat", "Honig": "honey-pot",
+        "Ingwer": "ginger-root", "Kiwi": "kiwi-fruit", "Knoblauch": "garlic", "Koriander": "~herb",
+        "Kartoffel": "potato", "Lachs": "~fish", "Lauch": null, "Mehl": null, "Nudel": "spaghetti",
+        "Orange": "tangerine", "Pfeffer": null, "Petersilie": "~herb", "Peperoni": "~bell-pepper",
+        "Quitte": null, "Reis": "cooked-rice", "Salat": "green-salad", "Speck": "bacon",
+        "Spinat": "~leafy-green", "Tomate": "tomato", "Udon": "~steaming-bowl", "Vollkornbrot": "~bread",
+        "Xylit": null, "Yuzu": null, "Zitrone": "lemon", "Zucker": null, "Zwiebel": "onion",
+        "Geschmack": "~tongue"
+      },
+      "Geografie": {
+        "Berg": "mountain", "Fluss": null, "Hauptstadt": "~cityscape", "Land": "~world-map",
+        "Dorf": "~houses", "Stadt": "cityscape", "See": null, "Insel": "desert-island",
+        "Wald": "~deciduous-tree", "Tal": "~national-park", "Grenze": "~passport-control",
+        "Kontinent": "~globe-showing-europe-africa", "Strasse": "~motorway", "Weg": "~footprints",
+        "Gasse": null, "Allee": null, "Sonnenaufgang": "sunrise"
+      },
+      "Alltag": { "Abkürzung": null, "Unfall": "~collision", "Bild": "framed-picture" },
+      "Mengen & Einheiten": { "Pfund": "~balance-scale", "Kilo": "~balance-scale", "Gramm": null },
+      "Zeit": {
+        "Tag": "sun", "Woche": "~spiral-calendar", "Monat": "~calendar", "Jahr": null,
+        "Stunde": "~timer-clock", "Minute": "~stopwatch", "Morgen": "~sunrise-over-mountains",
+        "Abend": "sunset", "Nacht": "night-with-stars", "Uhr": "watch", "Zeit": "~hourglass-not-done"
+      }
+    },
+    "verb": {
+      "": {
+        "sein": null, "haben": null, "werden": null, "können": null, "müssen": null,
+        "sagen": "~speech-balloon", "machen": null, "gehen": "person-walking", "kommen": null,
+        "sollen": null, "wollen": null, "wissen": null, "sehen": "eye", "lassen": null,
+        "stehen": "person-standing", "finden": null, "bleiben": null, "liegen": "~bed",
+        "heissen": "~name-badge", "denken": "thinking-face", "brauchen": null, "schreiben": "writing-hand",
+        "hören": "ear", "sprechen": "speaking-head", "möchten": null, "trinken": "tumbler-glass",
+        "suchen": "magnifying-glass-tilted-left", "schliessen": "~locked", "leben": null, "wohnen": "~house",
+        "arbeiten": "~briefcase", "studieren": "~graduation-cap", "stammen": null, "kaufen": "~shopping-bags",
+        "bezahlen": "~credit-card", "kosten": "~coin", "nehmen": null, "wählen": "~ballot-box-with-ballot",
+        "dürfen": null, "mögen": "~red-heart", "glauben": null, "halten": null, "bringen": "~package",
+        "zeigen": "~index-pointing-up", "verbinden": "~link", "ergänzen": "~plus", "antworten": "~left-speech-bubble",
+        "ordnen": "~card-index-dividers", "gefallen": "~thumbs-up", "spielen": "~game-die",
+        "anschauen": "~eyes", "aufmachen": "~unlocked", "einkaufen": "shopping-cart", "anrufen": "telephone-receiver",
+        "aufstehen": "~alarm-clock", "aufräumen": "broom", "fernsehen": "television",
+        "essen": "fork-and-knife-with-plate", "frühstücken": "~croissant", "anfangen": "~play-button",
+        "schlafen": "zzz", "abkühlen": "~snowflake", "chatten": "~mobile-phone", "kochen": "cooking",
+        "geben": "~palm-up-hand", "fahren": "~automobile", "lesen": "open-book", "fragen": "~red-question-mark",
+        "verstehen": "~light-bulb", "lernen": "~books", "helfen": "~handshake", "kennen": null,
+        "warten": "~hourglass-not-done", "holen": null, "mitbringen": null
+      }
+    },
+    "adjective": {
+      "Gegensätze": {
+        "schnell": "~rocket", "kalt": "cold-face", "neu": "new-button", "billig": "~coin", "gross": null,
+        "breit": "~left-right-arrow", "schön": "~cherry-blossom", "hell": "~sun", "gut": "thumbs-up",
+        "richtig": "check-mark-button", "lang": "~straight-ruler", "früh": "~sunrise", "leicht": "~feather"
+      },
+      "Allgemein": {
+        "erlaubt": "~ok-button", "gesamt": null, "komisch": "~face-with-raised-eyebrow",
+        "gleich": "heavy-equals-sign", "wichtig": "~red-exclamation-mark"
+      }
+    },
+    "phrase": {
+      "Ausdrücke mit haben": {
+        "Hunger haben": "~fork-and-knife", "Durst haben": "~droplet", "Zeit haben": "~hourglass-not-done",
+        "Angst haben": "fearful-face"
+      },
+      "Ort (hier/dort)": { "hier": "~round-pushpin", "dort": null, "Wo?": null },
+      "Zeitangaben (Wann?)": {
+        "am + Tag": "~calendar", "um + Uhrzeit": "~watch", "von … bis …": null, "am Wochenende": null,
+        "jetzt": null, "heute": null, "morgen": null, "gestern": null
+      },
+      "Vorlieben (gern/nicht gern)": { "gern": "~red-heart", "nicht gern": "~broken-heart" }
+    },
+    "adverb": {
+      "Adverbien (Häufigkeit & Grad)": {
+        "sehr": null, "nur": null, "immer": "~infinity", "oft": "~repeat-button", "manchmal": null,
+        "wieder": "~repeat-button", "natürlich": null
+      }
+    }
+  },
+  "lineSets": {
+    "ph": {
+      "Katze": "cat", "Hund": "dog", "Vogel": "bird", "Pferd": "horse", "Kuh": "cow", "Hase": "rabbit",
+      "Fisch": "fish", "Lachs": "~fish", "Brot": "bread", "Käse": "cheese", "Ei": "egg", "Orange": "orange",
+      "Kaffee": "coffee", "Tee": "tea-bag", "Bier": "beer-stein", "Wein": "wine", "Peperoni": "~pepper",
+      "Haus": "house", "Wohnung": "~building-apartment", "Zimmer": "~door", "Küche": "~cooking-pot",
+      "Badezimmer": "~bathtub", "Wohnzimmer": "~couch", "Bett": "bed", "Stuhl": "chair", "Sessel": "armchair",
+      "Sofa": "couch", "Tür": "door", "Schlüssel": "key", "Lampe": "lamp", "Regal": "~books",
+      "Fernseher": "television", "Teppich": "rug", "Schreibtisch": "desk", "Dusche": "shower",
+      "Badewanne": "bathtub", "Toilette": "toilet", "Waschmaschine": "washing-machine",
+      "Elektrogerät": "~plug", "Treppe": "stairs", "Schrank": "~dresser", "Wand": "~wall", "Tisch": "~table",
+      "Hemd": "~shirt-folded", "T-Shirt": "t-shirt", "Hose": "pants", "Kleid": "dress", "Socke": "sock",
+      "Schuh": "sneaker", "Mütze": "beanie", "Jacke": "~hoodie", "Pullover": "hoodie",
+      "Auge": "eye", "Ohr": "ear", "Hand": "hand", "Fuss": "~footprints", "Finger": "~hand-pointing",
+      "Schule": "~chalkboard-simple", "Lehrer": "chalkboard-teacher", "Lehrerin": "chalkboard-teacher",
+      "Buch": "book", "Heft": "notebook", "Stift": "pen", "Tafel": "chalkboard", "Rucksack": "backpack",
+      "Klasse": "~users-three", "Hausaufgabe": "~note-pencil", "Prüfung": "exam", "Pause": "~pause",
+      "Büro": "~building-office", "Beruf": "~briefcase", "Computer": "laptop", "Termin": "calendar",
+      "E-Mail": "envelope", "Urlaub": "~suitcase-rolling", "Vertrag": "~signature", "Gehalt": "~money",
+      "Besprechung": "~presentation", "Film": "film-slate", "Kino": "~film-reel", "Musik": "music-notes",
+      "Konzert": "~microphone-stage", "Spiel": "~dice-five", "Reise": "suitcase", "Fahrrad": "bicycle",
+      "Fussball": "soccer-ball", "Theater": "~mask-happy", "Party": "confetti", "Foto": "camera",
+      "Hobby": "~palette", "Berg": "mountains", "Insel": "island", "Stadt": "city", "Wald": "~tree",
+      "Weg": "~signpost", "Land": "~globe", "Kontinent": "~globe-hemisphere-east", "Sonnenaufgang": "sun-horizon",
+      "Strasse": "~road-horizon", "See": "~waves", "Tag": "sun", "Nacht": "moon-stars", "Uhr": "watch",
+      "Zeit": "~hourglass", "Minute": "~timer", "Stunde": "~clock", "Woche": "~calendar-dots", "Monat": "~calendar",
+      "Bild": "image", "Unfall": "~warning", "Gurke": null, "Knoblauch": null,
+      "gehen": "person-simple-walk", "kaufen": "~shopping-cart", "einkaufen": "shopping-cart", "lesen": "book-open",
+      "schreiben": "pen", "anrufen": "phone-call", "essen": "fork-knife", "kochen": "~cooking-pot",
+      "schlafen": "~bed", "fernsehen": "television", "fahren": "~car", "bezahlen": "~credit-card",
+      "suchen": "magnifying-glass", "hören": "~ear", "sehen": "eye", "denken": "~brain", "helfen": "~handshake",
+      "spielen": "~game-controller", "antworten": "~chat", "fragen": "~question", "sprechen": "~chat-dots",
+      "arbeiten": "~briefcase", "wohnen": "~house", "lernen": "~student", "aufräumen": "broom", "warten": "~hourglass",
+      "zeigen": "~hand-pointing", "ergänzen": "~plus", "verbinden": "~link", "wählen": "~check-square",
+      "bringen": "~package", "kalt": "thermometer-cold", "neu": "~sparkle", "gut": "thumbs-up",
+      "richtig": "check-circle", "hell": "~sun", "schnell": "~lightning", "leicht": "~feather", "gleich": "equals",
+      "wichtig": "~exclamation-mark", "schön": "~flower", "billig": "~coin", "komisch": "~smiley-meh"
+    }
+  }
+}

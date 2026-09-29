@@ -30,6 +30,9 @@ without an explicit decision recorded in the Solution Design.
 > Active build sequence lives in [`plans/IMPLEMENTATION_PLAN.md`](./plans/IMPLEMENTATION_PLAN.md).
 > Lesson-aware (A1.2+) refactor plan: [`plans/LESSONS_PLAN_A1_2.md`](./plans/LESSONS_PLAN_A1_2.md),
 > with its design & interaction target [`plans/LESSONS_PLAN_A1_2.mock.html`](./plans/LESSONS_PLAN_A1_2.mock.html) (keep both in step).
+> Word-icons (picture-as-memory-hook) plan: [`plans/WORD_ICONS_PLAN.md`](./plans/WORD_ICONS_PLAN.md),
+> with its design & interaction target [`plans/WORD_ICONS_PLAN.mock.html`](./plans/WORD_ICONS_PLAN.mock.html) (keep both in step);
+> proposed, not yet approved — do not add icon assets or dependencies before Phase 0's decision is recorded in the Solution Design.
 
 ## Engineering principles
 
