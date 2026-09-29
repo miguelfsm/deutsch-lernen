@@ -46,7 +46,7 @@ export interface Verb {
   // Imperativ, full forms as written sentence-initially, no "!" and no pronoun
   // for du/ihr ("warte", "wartet"); Sie keeps it ("warten Sie"). Separable verbs
   // carry the detached prefix ("mach auf"). Optional for exactly the verbs on
-  // VERBS_WITHOUT_IMPERATIV (modals, stative verbs) — a guard test enforces it.
+  // VERBS_WITHOUT_IMPERATIV (the 7 modals plus gefallen, kosten, stammen) — a guard test enforces it.
   imperativ?: Imperativ
   // Separable prefix (e.g. 'auf' for aufmachen) — only present when the verb
   // is actually separable.
