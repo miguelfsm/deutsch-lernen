@@ -1,7 +1,9 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import type { Noun } from '../nouns/data'
 import type { Verb } from '../verbs/data'
-import { checkArticle, checkConjugation } from './drills'
+import { verbData } from '../verbs/data'
+import type { CatalogEntry } from '../../lib/catalog/types'
+import { checkArticle, checkConjugation, withImperativ } from './drills'
 
 // PR-4 established that jsdom keeps localStorage across tests; clear it so no drill
 // test can leak progress into another (these checkers don't touch storage, but the
@@ -135,5 +137,29 @@ describe('checkConjugation', () => {
       expected: 'bist gefahren',
     })
     expect(checkConjugation(fahren, 'du', 'hast gefahren', 'perfekt').correct).toBe(false)
+  })
+})
+
+describe('checkConjugation — Imperativ', () => {
+  const v = (inf: string) => verbData.find((x) => x.infinitive === inf)!
+
+  it('grades against the stored du/ihr/Sie forms, with or without "!"', () => {
+    expect(checkConjugation(v('nehmen'), 'du', 'nimm', 'imperativ').correct).toBe(true)
+    expect(checkConjugation(v('nehmen'), 'du', '  Nimm! ', 'imperativ').correct).toBe(true)
+    expect(checkConjugation(v('nehmen'), 'du', 'nehm', 'imperativ').correct).toBe(false)
+    expect(checkConjugation(v('sein'), 'Sie', 'Seien  Sie!', 'imperativ').correct).toBe(true)
+    expect(checkConjugation(v('aufmachen'), 'ihr', 'macht auf', 'imperativ').expected).toBe('macht auf')
+  })
+
+  it('has no answer for a verb without an imperative or a non-imperative pronoun', () => {
+    expect(checkConjugation(v('können'), 'du', 'kann', 'imperativ').correct).toBe(false)
+    expect(checkConjugation(v('sein'), 'wir', 'sind', 'imperativ').correct).toBe(false)
+  })
+})
+
+describe('withImperativ', () => {
+  it('drops verb cards that have no imperative', () => {
+    const card = (term: string) => ({ term }) as CatalogEntry
+    expect(withImperativ([card('kommen'), card('können'), card('sein')]).map((c) => c.term)).toEqual(['kommen', 'sein'])
   })
 })

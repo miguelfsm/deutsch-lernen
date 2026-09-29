@@ -104,7 +104,7 @@ a `*.test.ts(x)` may show a stray red squiggle in the editor even though its own
   `src/tools/<tool>/data.ts`; the data is typed, so `npm run typecheck` catches
   shape mistakes. A new verb needs all three tenses: `conjugations` (Präsens),
   `praeteritum` (6 full forms) and `perfekt` (`{ auxiliary, partizip }` — the six
-  full Perfekt forms are derived by `verbs/tenses.ts`, never typed in). Every item requires a `lessons: LessonId[]` tag (existing
+  full Perfekt forms are derived by `verbs/tenses.ts`, never typed in). A new verb also needs `imperativ: { du, ihr, Sie }` (or must be added to `VERBS_WITHOUT_IMPERATIV` in `verbs/data.ts`; a guard test checks). Every item requires a `lessons: LessonId[]` tag (existing
   content is tagged `['A1.1']`; see
   [`plans/LESSONS_PLAN_A1_2.md`](./plans/LESSONS_PLAN_A1_2.md)). Content is
   **Swiss-spelled — no `ß`, use `ss`** (D1); a content guard test enforces this,

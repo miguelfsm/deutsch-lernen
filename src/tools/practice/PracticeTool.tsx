@@ -22,7 +22,7 @@ import {
   type Session,
 } from './session'
 import { buildChoices, type Choice } from './quiz'
-import { checkArticle } from './drills'
+import { checkArticle, withImperativ } from './drills'
 import ConjugationPlay from './ConjugationPlay'
 import type { Tense } from '../verbs/tenses'
 import { nounData, type Article } from '../nouns/data'
@@ -130,6 +130,15 @@ export default function PracticeTool() {
   // that component remounts every card (keyed on session.index) — this state
   // must survive across cards within one round.
   const [conjTense, setConjTense] = useState<Tense>('praesens')
+  // Modals etc. have no imperative, so choosing Imperativ mid-round drops the
+  // remaining cards that can't be drilled (the current card is re-evaluated too).
+  function pickConjTense(t: Tense) {
+    setConjTense(t)
+    if (t === 'imperativ' && session) {
+      const done = session.cards.slice(0, session.index)
+      setSession({ ...session, cards: [...done, ...withImperativ(session.cards.slice(session.index))] })
+    }
+  }
   const [lifetime, setLifetime] = useState<ProgressEntry>(() =>
     totals(loadProgress()),
   )
@@ -233,7 +242,7 @@ export default function PracticeTool() {
       {session !== null &&
         !isComplete(session) &&
         !isEmpty(session) &&
-        renderPlay(session, revealed, setRevealed, rate, conjTense, setConjTense)}
+        renderPlay(session, revealed, setRevealed, rate, conjTense, pickConjTense)}
 
       {session !== null && (isComplete(session) || isEmpty(session)) && (
         <DoneScreen

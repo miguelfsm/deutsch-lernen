@@ -19,6 +19,19 @@ export interface Perfekt {
   partizip: string
 }
 
+export interface Imperativ {
+  du: string
+  ihr: string
+  Sie: string
+}
+
+// Verbs with no idiomatic imperative: the modals and stative verbs. Every other
+// verb must carry `imperativ` (see data.test.ts).
+export const VERBS_WITHOUT_IMPERATIV: readonly string[] = [
+  'können', 'müssen', 'dürfen', 'sollen', 'wollen', 'mögen', 'möchten',
+  'heissen', 'brauchen', 'wohnen', 'stammen', 'kosten', 'gefallen', 'kennen',
+]
+
 export interface Verb {
   infinitive: string
   english: string
@@ -30,6 +43,11 @@ export interface Verb {
   // reliably). Backfill is complete, so every verb carries it.
   praeteritum: Conjugation[]
   perfekt: Perfekt
+  // Imperativ, full forms as written sentence-initially, no "!" and no pronoun
+  // for du/ihr ("warte", "wartet"); Sie keeps it ("warten Sie"). Separable verbs
+  // carry the detached prefix ("mach auf"). Optional for exactly the verbs on
+  // VERBS_WITHOUT_IMPERATIV (modals, stative verbs) — a guard test enforces it.
+  imperativ?: Imperativ
   // Separable prefix (e.g. 'auf' for aufmachen) — only present when the verb
   // is actually separable.
   separable?: string
@@ -46,6 +64,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "sein", english: "to be", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "sei", ihr: "seid", Sie: "seien Sie" },
     example: "Ich bin sehr müde.", translation: "I am very tired.",
     note: "Fully suppletive — every form is unpredictable. Memorise each one individually.",
     praeteritum: [
@@ -69,6 +88,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "haben", english: "to have", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "hab", ihr: "habt", Sie: "haben Sie" },
     example: "Ich habe einen Bruder.", translation: "I have a brother.",
     note: "The -b- drops in du/er forms: habe → hast / hat.",
     praeteritum: [
@@ -92,6 +112,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "werden", english: "to become / will", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "werde", ihr: "werdet", Sie: "werden Sie" },
     example: "Es wird kalt.", translation: "It is getting cold.",
     note: "Vowel change e → i in du/er forms. Also the future & passive auxiliary.",
     praeteritum: [
@@ -161,6 +182,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "sagen", english: "to say", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "sag", ihr: "sagt", Sie: "sagen Sie" },
     example: "Ich sage die Wahrheit.", translation: "I tell the truth.",
     note: "Fully regular. Pattern: stem + -e / -st / -t / -en / -t / -en.",
     praeteritum: [
@@ -184,6 +206,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "machen", english: "to make / to do", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "mach", ihr: "macht", Sie: "machen Sie" },
     example: "Ich mache meine Hausaufgaben.", translation: "I do my homework.",
     note: "Fully regular. A perfect model verb for learning the standard pattern.",
     praeteritum: [
@@ -207,6 +230,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "gehen", english: "to go", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "geh", ihr: "geht", Sie: "gehen Sie" },
     example: "Ich gehe nach Hause.", translation: "I am going home.",
     note: "Regular in Präsens. In Perfekt it takes 'sein': ich bin gegangen.",
     praeteritum: [
@@ -230,6 +254,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "kommen", english: "to come", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "komm", ihr: "kommt", Sie: "kommen Sie" },
     example: "Ich komme aus Portugal.", translation: "I come from Portugal.",
     note: "Regular in Präsens. Double -mm- stays in all forms.",
     praeteritum: [
@@ -299,6 +324,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "wissen", english: "to know (a fact)", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "wisse", ihr: "wisst", Sie: "wissen Sie" },
     example: "Ich weiss die Antwort nicht.", translation: "I don't know the answer.",
     note: "Behaves like a modal in singular: wiss → weiss, no ending for ich/er.",
     praeteritum: [
@@ -322,6 +348,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "sehen", english: "to see", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "sieh", ihr: "seht", Sie: "sehen Sie" },
     example: "Ich sehe einen Vogel.", translation: "I see a bird.",
     note: "Vowel change e → ie in du/er forms (a common pattern: lesen, geben, nehmen…).",
     praeteritum: [
@@ -345,6 +372,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "lassen", english: "to let / to leave", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "lass", ihr: "lasst", Sie: "lassen Sie" },
     example: "Ich lasse die Tür offen.", translation: "I am leaving the door open.",
     note: "Vowel change a → ä (umlaut) in du/er forms: lasse → lässt.",
     praeteritum: [
@@ -368,6 +396,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "stehen", english: "to stand", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "steh", ihr: "steht", Sie: "stehen Sie" },
     example: "Der Stuhl steht in der Küche.", translation: "The chair is in the kitchen.",
     note: "Regular in Präsens. Southern German, Austrian and Swiss usage takes sein in the Perfekt (ist gestanden), unlike standard German (hat gestanden).",
     praeteritum: [
@@ -391,6 +420,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "finden", english: "to find / to think", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "finde", ihr: "findet", Sie: "finden Sie" },
     example: "Ich finde den Film gut.", translation: "I think the film is good.",
     note: "Stem ends in -d: an -e- is inserted before -st and -t → findest, findet.",
     praeteritum: [
@@ -414,6 +444,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "bleiben", english: "to stay / to remain", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "bleib", ihr: "bleibt", Sie: "bleiben Sie" },
     example: "Ich bleibe heute zu Hause.", translation: "I am staying home today.",
     note: "Regular in Präsens. Perfekt uses 'sein': ich bin geblieben.",
     praeteritum: [
@@ -437,6 +468,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "liegen", english: "to lie / to be located", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "lieg", ihr: "liegt", Sie: "liegen Sie" },
     example: "Das Buch liegt auf dem Tisch.", translation: "The book is lying on the table.",
     note: "Regular in Präsens. Southern German, Austrian and Swiss usage takes sein in the Perfekt (ist gelegen), unlike standard German (hat gelegen).",
     praeteritum: [
@@ -483,6 +515,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "denken", english: "to think", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "denk", ihr: "denkt", Sie: "denken Sie" },
     example: "Ich denke oft an dich.", translation: "I often think of you.",
     note: "Regular in Präsens. Note: Perfekt is irregular → hat gedacht.",
     praeteritum: [
@@ -529,6 +562,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "schreiben", english: "to write", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "schreib", ihr: "schreibt", Sie: "schreiben Sie" },
     example: "Ich schreibe eine E-Mail.", translation: "I am writing an email.",
     note: "Regular in Präsens. Strong verb — vowel changes only in Präteritum/Perfekt (schrieb, geschrieben).",
     praeteritum: [
@@ -552,6 +586,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "hören", english: "to hear / to listen", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "hör", ihr: "hört", Sie: "hören Sie" },
     example: "Ich höre gern Musik.", translation: "I like listening to music.",
     note: "Fully regular. Also used in hör mal! (hey, listen!) and Ich höre Musik.",
     praeteritum: [
@@ -575,6 +610,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "sprechen", english: "to speak / to talk", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "sprich", ihr: "sprecht", Sie: "sprechen Sie" },
     example: "Ich spreche ein bisschen Deutsch.", translation: "I speak a little German.",
     note: "Vowel change e → i in du/er forms — same pattern as sehen (e→ie), lesen, geben.",
     praeteritum: [
@@ -621,6 +657,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "trinken", english: "to drink", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "trink", ihr: "trinkt", Sie: "trinken Sie" },
     example: "Ich trinke Wasser.", translation: "I am drinking water.",
     note: "Regular in Präsens. Strong verb — vowel changes only in past tenses (trank, getrunken).",
     praeteritum: [
@@ -644,6 +681,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "suchen", english: "to search / to look for", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "such", ihr: "sucht", Sie: "suchen Sie" },
     example: "Ich suche meinen Schlüssel.", translation: "I am looking for my key.",
     note: "Fully regular. Often paired with nach: Ich suche nach einer Wohnung.",
     praeteritum: [
@@ -667,6 +705,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "schliessen", english: "to close / to shut", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "schliess", ihr: "schliesst", Sie: "schliessen Sie" },
     example: "Ich schliesse das Fenster.", translation: "I am closing the window.",
     note: "Stem ends in -ss: du schliesst (not schliessst — same contraction rule as heissen).",
     praeteritum: [
@@ -692,6 +731,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "leben", english: "to live (be alive)", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "leb", ihr: "lebt", Sie: "leben Sie" },
     example: "Ich lebe in Zürich.", translation: "I live in Zürich.",
     note: "Fully regular. Use for life in general: Ich lebe in Zürich. Contrast with wohnen (to reside at an address).",
     praeteritum: [
@@ -738,6 +778,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "arbeiten", english: "to work", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "arbeite", ihr: "arbeitet", Sie: "arbeiten Sie" },
     example: "Ich arbeite im Büro.", translation: "I work in the office.",
     note: "Stem ends in -t: an -e- is inserted before -st and -t → arbeitest, arbeitet (same rule as finden).",
     praeteritum: [
@@ -761,6 +802,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "studieren", english: "to study (at university)", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "studiere", ihr: "studiert", Sie: "studieren Sie" },
     example: "Sie studiert Medizin.", translation: "She studies medicine.",
     note: "Regular. Verbs ending in -ieren never add a ge- prefix in Perfekt: hat studiert.",
     praeteritum: [
@@ -809,6 +851,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "kaufen", english: "to buy", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "kauf", ihr: "kauft", Sie: "kaufen Sie" },
     example: "Ich kaufe Brot.", translation: "I am buying bread.",
     note: "Fully regular. Opposite: verkaufen (to sell). Ich kaufe ein = I'm shopping (einkaufen).",
     praeteritum: [
@@ -832,6 +875,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "bezahlen", english: "to pay", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "bezahl", ihr: "bezahlt", Sie: "bezahlen Sie" },
     example: "Ich bezahle die Rechnung.", translation: "I am paying the bill.",
     note: "Regular. Both bezahlen and zahlen mean to pay; bezahlen is more common at a till.",
     praeteritum: [
@@ -878,6 +922,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "nehmen", english: "to take / to get", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "nimm", ihr: "nehmt", Sie: "nehmen Sie" },
     example: "Ich nehme den Bus.", translation: "I take the bus.",
     note: "Strong vowel change e → i in du/er, and -h- drops: nehme → nimmst / nimmt.",
     praeteritum: [
@@ -901,6 +946,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "wählen", english: "to choose / to select", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "wähl", ihr: "wählt", Sie: "wählen Sie" },
     example: "Du wählst das Restaurant.", translation: "You choose the restaurant.",
     note: "Fully regular. Also means to vote: Ich wähle die SPD.",
     praeteritum: [
@@ -972,6 +1018,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "glauben", english: "to believe / to think", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "glaub", ihr: "glaubt", Sie: "glauben Sie" },
     example: "Ich glaube dir.", translation: "I believe you.",
     note: "Fully regular. Used for beliefs and opinions: Ich glaube, dass… (I think that…). Very common in spoken German.",
     praeteritum: [
@@ -995,6 +1042,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "halten", english: "to hold / to stop", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "halt", ihr: "haltet", Sie: "halten Sie" },
     example: "Der Bus hält hier.", translation: "The bus stops here.",
     note: "Vowel change a → ä in du/er forms. Same umlaut pattern as lassen (a→ä).",
     praeteritum: [
@@ -1018,6 +1066,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "bringen", english: "to bring", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "bring", ihr: "bringt", Sie: "bringen Sie" },
     example: "Ich bringe dir das Buch.", translation: "I am bringing you the book.",
     note: "Regular in Präsens. A mixed verb — irregular only in past tenses: brachte, hat gebracht.",
     praeteritum: [
@@ -1041,6 +1090,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "zeigen", english: "to show", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "zeig", ihr: "zeigt", Sie: "zeigen Sie" },
     example: "Ich zeige dir mein Haus.", translation: "I am showing you my house.",
     note: "Fully regular. Very common: Kannst du mir zeigen, wo…? (Can you show me where…?)",
     praeteritum: [
@@ -1066,6 +1116,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "verbinden", english: "to connect / to link", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "verbinde", ihr: "verbindet", Sie: "verbinden Sie" },
     example: "Die Brücke verbindet zwei Städte.", translation: "The bridge connects two cities.",
     note: "Stem ends in -d → e-insertion: verbindest, verbindet. Common in exercises: Verbinden Sie die Sätze! (Connect the sentences!)",
     praeteritum: [
@@ -1089,6 +1140,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "ergänzen", english: "to complete / to fill in", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "ergänze", ihr: "ergänzt", Sie: "ergänzen Sie" },
     example: "Ich ergänze den Satz.", translation: "I complete the sentence.",
     note: "Stem ends in -z: du ergänzt (not ergänzst — same contraction rule as heissen). Used constantly in coursebooks: Ergänzen Sie die Lücken!",
     praeteritum: [
@@ -1112,6 +1164,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "antworten", english: "to answer / to reply", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "antworte", ihr: "antwortet", Sie: "antworten Sie" },
     example: "Ich antworte dir sofort.", translation: "I answer you right away.",
     note: "Stem ends in -t → e-insertion: antwortest, antwortet. Takes the dative: Ich antworte dir (not: ich antworte dich).",
     praeteritum: [
@@ -1135,6 +1188,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "ordnen", english: "to sort / to put in order", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "ordne", ihr: "ordnet", Sie: "ordnen Sie" },
     example: "Ich ordne die Wörter.", translation: "I put the words in order.",
     note: "Stem 'ordn-' ends in a consonant cluster → e-insertion: ordnest, ordnet. Used in exercises: Ordnen Sie die Wörter! (Put the words in order!)",
     praeteritum: [
@@ -1181,6 +1235,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "spielen", english: "to play", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "spiel", ihr: "spielt", Sie: "spielen Sie" },
     example: "Ich spiele Fussball.", translation: "I play football.",
     note: "Fully regular. Works for games, sports and instruments: Ich spiele Fussball / Ich spiele Gitarre.",
     praeteritum: [
@@ -1204,6 +1259,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "anschauen", english: "to watch / to look at", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "schau an", ihr: "schaut an", Sie: "schauen Sie an" },
     example: "Ich schaue den Film an.", translation: "I am watching the film.",
     customStem: "schau",
     note: "Separable verb — 'an-' detaches to the end of the clause: Ich schaue den Film an. The base verb schauen conjugates regularly; forms here show the base without the prefix.",
@@ -1229,6 +1285,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "aufmachen", english: "to open", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "mach auf", ihr: "macht auf", Sie: "machen Sie auf" },
     example: "Ich mache die Tür auf.", translation: "I am opening the door.",
     customStem: "mach",
     note: "Separable verb — 'auf-' detaches: Ich mache die Tür auf (I open the door). Base verb machen is fully regular and already in this list.",
@@ -1254,6 +1311,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "einkaufen", english: "to go shopping / to shop", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "kauf ein", ihr: "kauft ein", Sie: "kaufen Sie ein" },
     example: "Ich kaufe im Supermarkt ein.", translation: "I am shopping at the supermarket.",
     customStem: "kauf",
     note: "Separable verb — 'ein-' detaches: Ich kaufe im Supermarkt ein. Base verb kaufen is already in this list. Contrast: kaufen = to buy one thing; einkaufen = to do the shopping.",
@@ -1279,6 +1337,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "anrufen", english: "to call / to phone", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "ruf an", ihr: "ruft an", Sie: "rufen Sie an" },
     example: "Ich rufe dich später an.", translation: "I will call you later.",
     customStem: "ruf",
     note: "Separable verb — 'an-' detaches: Ich rufe dich an (I'll call you). Base verb rufen is regular. Very common in everyday German.",
@@ -1306,6 +1365,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "aufstehen", english: "to get up", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "steh auf", ihr: "steht auf", Sie: "stehen Sie auf" },
     example: "Ich stehe früh auf.", translation: "I get up early.",
     customStem: "steh",
     note: "Separable verb — 'auf-' detaches: Lara steht früh auf. Base verb stehen is fully regular and already in this list.",
@@ -1331,6 +1391,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "aufräumen", english: "to tidy up", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "räum auf", ihr: "räumt auf", Sie: "räumen Sie auf" },
     example: "Ich räume mein Zimmer auf.", translation: "I am tidying up my room.",
     customStem: "räum",
     note: "Separable verb — 'auf-' detaches: Sie räumt die Küche auf. Base verb räumen is fully regular.",
@@ -1356,6 +1417,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "fernsehen", english: "to watch TV", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "sieh fern", ihr: "seht fern", Sie: "sehen Sie fern" },
     example: "Ich sehe abends fern.", translation: "I watch TV in the evening.",
     customStem: "seh",
     note: "Separable verb — 'fern-' detaches: Er sieht fern. Base verb sehen has the same e → ie change in du/er as the standalone sehen.",
@@ -1381,6 +1443,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "essen", english: "to eat", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "iss", ihr: "esst", Sie: "essen Sie" },
     example: "Ich esse einen Apfel.", translation: "I am eating an apple.",
     note: "Vowel change e → i in du/er forms, and both collapse to the same form: isst (du) = isst (er/sie/es).",
     praeteritum: [
@@ -1404,6 +1467,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "frühstücken", english: "to have breakfast", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "frühstücke", ihr: "frühstückt", Sie: "frühstücken Sie" },
     example: "Ich frühstücke um acht Uhr.", translation: "I have breakfast at eight o'clock.",
     note: "Fully regular despite the long stem. Ich frühstücke um acht Uhr (I have breakfast at eight).",
     praeteritum: [
@@ -1429,6 +1493,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "anfangen", english: "to begin / to start", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "fang an", ihr: "fangt an", Sie: "fangen Sie an" },
     example: "Der Kurs fängt um neun an.", translation: "The class starts at nine.",
     customStem: "fang",
     note: "Separable AND stem-changing: 'an-' detaches and a → ä in du/er. Der Kurs fängt um neun an (the class starts at nine).",
@@ -1454,6 +1519,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "schlafen", english: "to sleep", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "schlaf", ihr: "schlaft", Sie: "schlafen Sie" },
     example: "Ich schlafe acht Stunden.", translation: "I sleep eight hours.",
     note: "Stem change a → ä in du/er forms: du schläfst, er schläft. Wie lange schläfst du am Wochenende?",
     praeteritum: [
@@ -1477,6 +1543,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "abkühlen", english: "to cool off / to cool down", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "kühl ab", ihr: "kühlt ab", Sie: "kühlen Sie ab" },
     example: "Die Suppe kühlt schnell ab.", translation: "The soup cools down quickly.",
     customStem: "kühl",
     note: "Separable verb — 'ab-' detaches: Die Suppe kühlt schnell ab. Base verb kühlen is regular; reflexive sich abkühlen = to cool oneself down.",
@@ -1502,6 +1569,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "chatten", english: "to chat (online)", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "chatte", ihr: "chattet", Sie: "chatten Sie" },
     example: "Ich chatte mit meinen Freunden.", translation: "I am chatting with my friends.",
     note: "Regular loanword. The stem ends in -tt, so an -e- is inserted before -st/-t: du chattest, er chattet (same rule as arbeiten).",
     praeteritum: [
@@ -1525,6 +1593,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "kochen", english: "to cook", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "koch", ihr: "kocht", Sie: "kochen Sie" },
     example: "Ich koche heute Abend.", translation: "I am cooking this evening.",
     note: "Fully regular: stem koch- + -e / -st / -t / -en. Ich koche heute Abend (I'm cooking tonight).",
     praeteritum: [
@@ -1550,6 +1619,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "geben", english: "to give", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "gib", ihr: "gebt", Sie: "geben Sie" },
     example: "Es gibt hier einen Supermarkt.", translation: "There is a supermarket here.",
     note: "Vowel change e → i in du/er: du gibst, er gibt. Most useful in es gibt = there is / there are (+ accusative).",
     praeteritum: [
@@ -1573,6 +1643,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "fahren", english: "to drive / to go (by vehicle)", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "fahr", ihr: "fahrt", Sie: "fahren Sie" },
     example: "Ich fahre mit dem Bus.", translation: "I go by bus.",
     note: "Stem change a → ä in du/er: du fährst, er fährt. Ich fahre mit dem Bus (I go by bus).",
     praeteritum: [
@@ -1596,6 +1667,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "lesen", english: "to read", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "lies", ihr: "lest", Sie: "lesen Sie" },
     example: "Ich lese ein Buch.", translation: "I am reading a book.",
     note: "Vowel change e → ie in du/er: du liest, er liest. The stem -s merges with the -st ending, so both forms are 'liest'.",
     praeteritum: [
@@ -1619,6 +1691,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "fragen", english: "to ask", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "frag", ihr: "fragt", Sie: "fragen Sie" },
     example: "Ich frage den Lehrer.", translation: "I am asking the teacher.",
     note: "Fully regular. The natural counterpart to antworten: Ich frage, du antwortest.",
     praeteritum: [
@@ -1642,6 +1715,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "verstehen", english: "to understand", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "versteh", ihr: "versteht", Sie: "verstehen Sie" },
     example: "Ich verstehe die Frage nicht.", translation: "I don't understand the question.",
     note: "Inseparable prefix ver- (never detaches); regular endings on the -steh- stem. Ich verstehe nicht = I don't understand.",
     praeteritum: [
@@ -1665,6 +1739,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "lernen", english: "to learn", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "lern", ihr: "lernt", Sie: "lernen Sie" },
     example: "Ich lerne Deutsch.", translation: "I am learning German.",
     note: "Fully regular. Ich lerne Deutsch (I'm learning German).",
     praeteritum: [
@@ -1688,6 +1763,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "helfen", english: "to help", type: "irregular",
     lessons: ["A1.1"],
+    imperativ: { du: "hilf", ihr: "helft", Sie: "helfen Sie" },
     example: "Ich helfe dir gern.", translation: "I am happy to help you.",
     note: "Stem change e → i in du/er: du hilfst, er hilft. Takes the dative: Ich helfe dir.",
     praeteritum: [
@@ -1729,6 +1805,80 @@ export const verbData: Verb[] = [
       { pronoun: "wir",      form: "kennen", stemChange: false },
       { pronoun: "ihr",      form: "kennt",  stemChange: false },
       { pronoun: "sie/Sie",  form: "kennen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "warten", english: "to wait", type: "regular",
+    lessons: ["A1.2-L09"],
+    imperativ: { du: "warte", ihr: "wartet", Sie: "warten Sie" },
+    example: "Warten Sie bitte hier.", translation: "Please wait here.",
+    note: "Regular. Stem ends in -t, so an -e- is inserted before -st and -t: du wartest, er wartet, ihr wartet (same rule as arbeiten). Imperativ: Warte! / Wartet! / Warten Sie bitte!",
+    praeteritum: [
+      { pronoun: "ich", form: "wartete", stemChange: false },
+      { pronoun: "du", form: "wartetest", stemChange: false },
+      { pronoun: "er/sie/es", form: "wartete", stemChange: false },
+      { pronoun: "wir", form: "warteten", stemChange: false },
+      { pronoun: "ihr", form: "wartetet", stemChange: false },
+      { pronoun: "sie/Sie", form: "warteten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gewartet" },
+    conjugations: [
+      { pronoun: "ich",      form: "warte",   stemChange: false },
+      { pronoun: "du",       form: "wartest", stemChange: false },
+      { pronoun: "er/sie/es",form: "wartet",  stemChange: false },
+      { pronoun: "wir",      form: "warten",  stemChange: false },
+      { pronoun: "ihr",      form: "wartet",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "warten",  stemChange: false },
+    ],
+  },
+  {
+    infinitive: "holen", english: "to fetch / to get", type: "regular",
+    lessons: ["A1.2-L11"],
+    imperativ: { du: "hol", ihr: "holt", Sie: "holen Sie" },
+    example: "Wir holen das Auto.", translation: "We are fetching the car.",
+    note: "Fully regular. holen = to go and get something: Ich hole Brot. (With a person at a station, German uses the separable abholen.)",
+    praeteritum: [
+      { pronoun: "ich", form: "holte", stemChange: false },
+      { pronoun: "du", form: "holtest", stemChange: false },
+      { pronoun: "er/sie/es", form: "holte", stemChange: false },
+      { pronoun: "wir", form: "holten", stemChange: false },
+      { pronoun: "ihr", form: "holtet", stemChange: false },
+      { pronoun: "sie/Sie", form: "holten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geholt" },
+    conjugations: [
+      { pronoun: "ich",      form: "hole",  stemChange: false },
+      { pronoun: "du",       form: "holst", stemChange: false },
+      { pronoun: "er/sie/es",form: "holt",  stemChange: false },
+      { pronoun: "wir",      form: "holen", stemChange: false },
+      { pronoun: "ihr",      form: "holt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "holen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "mitbringen", english: "to bring along", type: "irregular",
+    lessons: ["A1.2-L14"],
+    imperativ: { du: "bring mit", ihr: "bringt mit", Sie: "bringen Sie mit" },
+    example: "Ich bringe einen Kuchen mit.", translation: "I am bringing a cake along.",
+    customStem: "bring",
+    note: "Separable verb — 'mit-' detaches: Ich bringe einen Kuchen mit. Mixed verb like bringen: brachte … mit, hat mitgebracht (ge- sits inside the participle).",
+    separable: "mit",
+    praeteritum: [
+      { pronoun: "ich", form: "brachte", stemChange: true },
+      { pronoun: "du", form: "brachtest", stemChange: true },
+      { pronoun: "er/sie/es", form: "brachte", stemChange: true },
+      { pronoun: "wir", form: "brachten", stemChange: true },
+      { pronoun: "ihr", form: "brachtet", stemChange: true },
+      { pronoun: "sie/Sie", form: "brachten", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "mitgebracht" },
+    conjugations: [
+      { pronoun: "ich",      form: "bringe",  stemChange: false },
+      { pronoun: "du",       form: "bringst", stemChange: false },
+      { pronoun: "er/sie/es",form: "bringt",  stemChange: false },
+      { pronoun: "wir",      form: "bringen", stemChange: false },
+      { pronoun: "ihr",      form: "bringt",  stemChange: false },
+      { pronoun: "sie/Sie",  form: "bringen", stemChange: false },
     ],
   },
 ];
