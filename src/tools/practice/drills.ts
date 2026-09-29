@@ -59,8 +59,17 @@ function normalise(s: string): string {
   return s.trim().replace(/\s+/g, ' ').toLowerCase()
 }
 
-// Imperativ can only be drilled on verbs that have one (modals etc. don't):
-// narrow a deck of verb catalog entries to those.
-export function withImperativ(cards: readonly CatalogEntry[]): CatalogEntry[] {
-  return cards.filter((c) => verbData.find((v) => v.infinitive === c.term)?.imperativ)
+// Imperativ can only be drilled on verbs that have one. Given a deck, a start
+// index and the tense, return the first index >= from whose card is drillable
+// in that tense (cards.length if none remain). The deck itself is never changed,
+// and skipped cards are not rated. Other tenses drill every verb.
+export function nextDrillable(
+  cards: readonly CatalogEntry[],
+  from: number,
+  tense: Tense,
+): number {
+  if (tense !== 'imperativ') return from
+  let i = from
+  while (i < cards.length && !verbData.find((v) => v.infinitive === cards[i].term)?.imperativ) i++
+  return i
 }

@@ -3,7 +3,7 @@ import type { Noun } from '../nouns/data'
 import type { Verb } from '../verbs/data'
 import { verbData } from '../verbs/data'
 import type { CatalogEntry } from '../../lib/catalog/types'
-import { checkArticle, checkConjugation, withImperativ } from './drills'
+import { checkArticle, checkConjugation, nextDrillable } from './drills'
 
 // PR-4 established that jsdom keeps localStorage across tests; clear it so no drill
 // test can leak progress into another (these checkers don't touch storage, but the
@@ -157,9 +157,22 @@ describe('checkConjugation — Imperativ', () => {
   })
 })
 
-describe('withImperativ', () => {
-  it('drops verb cards that have no imperative', () => {
-    const card = (term: string) => ({ term }) as CatalogEntry
-    expect(withImperativ([card('kommen'), card('können'), card('sein')]).map((c) => c.term)).toEqual(['kommen', 'sein'])
+describe('nextDrillable', () => {
+  const card = (term: string) => ({ term }) as CatalogEntry
+  const deck = [card('kommen'), card('können'), card('gefallen'), card('sein')]
+
+  it('skips verbs without an imperative in Imperativ, without changing the deck', () => {
+    expect(nextDrillable(deck, 1, 'imperativ')).toBe(3)
+    expect(nextDrillable(deck, 0, 'imperativ')).toBe(0)
+    expect(nextDrillable(deck, 4, 'imperativ')).toBe(4)
+    expect(deck).toHaveLength(4)
+  })
+
+  it('returns to the untouched position for other tenses', () => {
+    expect(nextDrillable(deck, 1, 'praesens')).toBe(1)
+  })
+
+  it('reports the end of the deck when nothing drillable remains', () => {
+    expect(nextDrillable(deck.slice(0, 3), 1, 'imperativ')).toBe(3)
   })
 })

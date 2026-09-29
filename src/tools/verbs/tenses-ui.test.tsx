@@ -60,8 +60,8 @@ describe('GermanVerbs tense switch', () => {
     expect(text).toContain('nehmen Sie!')
   })
 
-  it('shows "Kein Imperativ" for a modal verb', () => {
+  it('shows "Kein gebräuchlicher Imperativ" for a modal verb', () => {
     renderAt('/verben?sel=koennen&tense=imperativ')
-    expect(screen.getByText(/Kein Imperativ/)).toBeInTheDocument()
+    expect(screen.getByText(/Kein gebräuchlicher Imperativ/)).toBeInTheDocument()
   })
 })

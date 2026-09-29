@@ -131,3 +131,19 @@ describe('ConjugationPlay per-tense highlight colour', () => {
     randomSpy.mockRestore()
   })
 })
+
+describe('ConjugationPlay Imperativ', () => {
+  it('asks for du/ihr/Sie and grades the stored form, accepting a trailing "!"', async () => {
+    const user = userEvent.setup()
+    const onAnswer = vi.fn()
+    vi.spyOn(Math, 'random').mockReturnValue(0) // → du
+    render(<ConjugationPlay session={session} tense="imperativ" onTense={vi.fn()} onAnswer={onAnswer} />)
+
+    expect(screen.getByText(/Imperativ – du \/ ihr \/ Sie/)).toBeInTheDocument()
+    await user.type(screen.getByLabelText('Imperativ von fahren für du'), 'Fahr!')
+    await user.click(screen.getByRole('button', { name: 'Prüfen · Check' }))
+    await user.click(screen.getByRole('button', { name: 'Weiter →' }))
+    expect(onAnswer).toHaveBeenCalledWith(true)
+    vi.restoreAllMocks()
+  })
+})

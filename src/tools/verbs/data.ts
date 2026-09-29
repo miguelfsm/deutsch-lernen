@@ -25,11 +25,11 @@ export interface Imperativ {
   Sie: string
 }
 
-// Verbs with no idiomatic imperative: the modals and stative verbs. Every other
-// verb must carry `imperativ` (see data.test.ts).
+// Verbs with no gebräuchlicher Imperativ: the modals plus gefallen, kosten,
+// stammen. Every other verb must carry `imperativ` (see data.test.ts).
 export const VERBS_WITHOUT_IMPERATIV: readonly string[] = [
   'können', 'müssen', 'dürfen', 'sollen', 'wollen', 'mögen', 'möchten',
-  'heissen', 'brauchen', 'wohnen', 'stammen', 'kosten', 'gefallen', 'kennen',
+  'gefallen', 'kosten', 'stammen',
 ]
 
 export interface Verb {
@@ -492,8 +492,9 @@ export const verbData: Verb[] = [
   {
     infinitive: "heissen", english: "to be called", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "heiss", ihr: "heisst", Sie: "heissen Sie" },
     example: "Ich heisse Miguel.", translation: "My name is Miguel.",
-    note: "Stem ends in -ss: du heisst (not heissst — -st contracts to -t after ss/s/z).",
+    note: "Stem ends in -ss: du heisst (not heissst — -st contracts to -t after ss/s/z). Imperativ is rare, mostly in willkommen heissen: Heissen Sie ihn willkommen!",
     praeteritum: [
       { pronoun: "ich", form: "hiess", stemChange: true },
       { pronoun: "du", form: "hiessest", stemChange: true },
@@ -539,8 +540,9 @@ export const verbData: Verb[] = [
   {
     infinitive: "brauchen", english: "to need", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "brauch", ihr: "braucht", Sie: "brauchen Sie" },
     example: "Ich brauche deine Hilfe.", translation: "I need your help.",
-    note: "Fully regular. Very common in everyday speech: Ich brauche Hilfe — I need help.",
+    note: "Fully regular. Very common in everyday speech: Ich brauche Hilfe — I need help. Imperativ is mostly negated: Brauch keine Angst zu haben.",
     praeteritum: [
       { pronoun: "ich", form: "brauchte", stemChange: false },
       { pronoun: "du", form: "brauchtest", stemChange: false },
@@ -755,6 +757,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "wohnen", english: "to live / to reside", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "wohn", ihr: "wohnt", Sie: "wohnen Sie" },
     example: "Ich wohne in der Stadt.", translation: "I live in the city.",
     note: "Fully regular. Use for a specific address or city: Ich wohne in Zürich, Mythenquai.",
     praeteritum: [
@@ -1064,7 +1067,7 @@ export const verbData: Verb[] = [
     ],
   },
   {
-    infinitive: "bringen", english: "to bring", type: "regular",
+    infinitive: "bringen", english: "to bring", type: "irregular",
     lessons: ["A1.1"],
     imperativ: { du: "bring", ihr: "bringt", Sie: "bringen Sie" },
     example: "Ich bringe dir das Buch.", translation: "I am bringing you the book.",
@@ -1787,6 +1790,7 @@ export const verbData: Verb[] = [
   {
     infinitive: "kennen", english: "to know (be familiar with)", type: "regular",
     lessons: ["A1.1"],
+    imperativ: { du: "kenn", ihr: "kennt", Sie: "kennen Sie" },
     example: "Ich kenne diese Stadt.", translation: "I know this city.",
     note: "Regular. kennen = to know a person/place (Ich kenne Berlin); wissen = to know a fact (Ich weiss das).",
     praeteritum: [
@@ -1812,7 +1816,7 @@ export const verbData: Verb[] = [
     lessons: ["A1.2-L09"],
     imperativ: { du: "warte", ihr: "wartet", Sie: "warten Sie" },
     example: "Warten Sie bitte hier.", translation: "Please wait here.",
-    note: "Regular. Stem ends in -t, so an -e- is inserted before -st and -t: du wartest, er wartet, ihr wartet (same rule as arbeiten). Imperativ: Warte! / Wartet! / Warten Sie bitte!",
+    note: "Regular. Stem ends in -t, so an -e- is inserted before -st and -t: du wartest, er wartet, ihr wartet (same rule as arbeiten).",
     praeteritum: [
       { pronoun: "ich", form: "wartete", stemChange: false },
       { pronoun: "du", form: "wartetest", stemChange: false },
@@ -1857,6 +1861,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "mitbringen", english: "to bring along", type: "irregular",
+    // PROVISIONAL tag: confirm via `npm run vocab:check` once the L14 list is transcribed.
     lessons: ["A1.2-L14"],
     imperativ: { du: "bring mit", ihr: "bringt mit", Sie: "bringen Sie mit" },
     example: "Ich bringe einen Kuchen mit.", translation: "I am bringing a cake along.",

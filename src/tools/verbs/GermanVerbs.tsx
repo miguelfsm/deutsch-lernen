@@ -407,7 +407,7 @@ export default function GermanVerbs() {
               fontStyle: "italic",
               fontFamily: font.sans,
             }}>
-              Kein Imperativ — {selected.infinitive} is not used as a command.
+              Kein gebräuchlicher Imperativ für {selected.infinitive}.
             </div>
           )
         ) : (

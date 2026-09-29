@@ -382,7 +382,7 @@ function verbs() {
   if (state.tense === 'im') {
     body = v.im ? `<div class="tscroll"><table><thead><tr><th>Pronoun</th><th>Imperativ</th></tr></thead><tbody>
       ${['du', 'ihr', 'Sie'].map((p, i) => `<tr><td class="pron">${p}</td><td class="form">${v.im[i]}!</td></tr>`).join('')}</tbody></table></div>`
-      : `<div class="caption" style="font-style:italic">Kein Imperativ — ${state.verb} is not used as a command.</div>`;
+      : `<div class="caption" style="font-style:italic">Kein gebräuchlicher Imperativ für ${state.verb}.</div>`;
   } else if (state.tense === 'pf') {
     body = `<div class="caption">Perfekt = <b>${v.aux}</b> (Präsens) + Partizip II <b>${fmt(v.p2).replace(/<[^>]+>/g, '')}</b> · built automatically</div>
       <div class="tscroll"><table><thead><tr><th>Pronoun</th><th>${v.aux}</th><th>Partizip II</th></tr></thead><tbody>
@@ -499,7 +499,7 @@ const NOTES = {
     `<b>Steer?</b> Book colours or plain cards? I’d keep the colours, because they match the book in your hands.`],
   lesson: ['Lesson page', `<p>Top: straight from the book’s table of contents (parts A–D, Wortfelder, Phonetik, Prüfung, Fokus). Below: everything tagged L8, grouped by word type. Every chip jumps to that word in its tool.</p><p>Try it: tap a grammar topic, a verb or a preposition.</p><p>Plan §4.1.</p>`,
     `<b>Steer?</b> Should words be grouped by the book’s parts A–E instead of by word type? The book’s vocabulary list isn’t split by part, so I’d group by word type.`],
-  verbs: ['Verbs · 3 tenses + Imperativ', `<ul><li>New switch: <b>Präsens · Präteritum · Perfekt · Imperativ</b> (du / ihr / Sie). Modals show <i>Kein Imperativ</i>: try <b>können</b>.</li><li>Präteritum is stored in full, with the same red/blue highlighting.</li><li>Perfekt is built from <i>haben/sein</i> + Partizip II, so it is never typed in twice.</li><li>Lesson tags at the top right.</li></ul><p>Try <b>fahren → Perfekt</b> (uses <i>sein</i>) and <b>aufmachen → Perfekt</b> (auf<b>ge</b>macht).</p>`,
+  verbs: ['Verbs · 3 tenses + Imperativ', `<ul><li>New switch: <b>Präsens · Präteritum · Perfekt · Imperativ</b> (du / ihr / Sie). Modals (and gefallen, kosten, stammen) show <i>Kein gebräuchlicher Imperativ</i>: try <b>können</b>.</li><li>Präteritum is stored in full, with the same red/blue highlighting.</li><li>Perfekt is built from <i>haben/sein</i> + Partizip II, so it is never typed in twice.</li><li>Lesson tags at the top right.</li></ul><p>Try <b>fahren → Perfekt</b> (uses <i>sein</i>) and <b>aufmachen → Perfekt</b> (auf<b>ge</b>macht).</p>`,
     `<b>Steer?</b> Show all 3 tenses side by side instead of a switch? On a phone that makes a wide table, so I’d keep the switch.`],
   preps: ['Prepositions', `<p>Each preposition carries its <b>case</b> (Dativ / Akkusativ / Wechsel) and its <b>use</b> (temporal / lokal / modal). Opening a card shows the article table for that case and examples from the book.</p><p>Try the filters: <b>Dativ + temporal</b> gives vor, seit, bei, nach, ab.</p>`,
     `<b>Plan fix found:</b> <i>als</i> (L8) takes no case. The plan only allows Dativ / Akkusativ / Wechsel, so I added <b>“ohne Fall”</b> here. The plan now includes it (§3.5).`],

@@ -99,6 +99,14 @@ export default function ConjugationPlay({
     : undefined
   const [input, setInput] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  // Switching tense mid-card starts the answer afresh (a typed "fährst" makes no
+  // sense once the tense is Imperativ). State-adjust-during-render, no effect.
+  const [seenTense, setSeenTense] = useState(tense)
+  if (seenTense !== tense) {
+    setSeenTense(tense)
+    setInput('')
+    setSubmitted(false)
+  }
 
   if (!card || !verb || !conj) return null
   // Deck is narrowed to verbs with an imperative when Imperativ is picked (see
@@ -188,8 +196,15 @@ export default function ConjugationPlay({
           <SpeakButton text={verb.infinitive} size={20} />
         </div>
         <span style={{ fontFamily: font.sans, fontSize: 16, color: color.muted, fontStyle: 'italic' }}>
-          {conj.pronoun} …
+          {tense === 'imperativ' ? `Imperativ – du / ihr / Sie · ${conj.pronoun} …` : `${conj.pronoun} …`}
         </span>
+        {tense === 'imperativ' && (
+          <span style={{ fontFamily: font.sans, fontSize: 12, color: color.faint }}>
+            {conj.pronoun === 'Sie' ? 'mit „Sie“' : ''}
+            {conj.pronoun === 'Sie' && verb.separable ? ' · ' : ''}
+            {verb.separable ? `trennbar: „${verb.separable}“ mitschreiben` : ''}
+          </span>
+        )}
       </div>
 
       <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -198,7 +213,7 @@ export default function ConjugationPlay({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={submitted}
-          aria-label={`Konjugation von ${verb.infinitive} für ${conj.pronoun}`}
+          aria-label={`${tense === 'imperativ' ? 'Imperativ' : 'Konjugation'} von ${verb.infinitive} für ${conj.pronoun}`}
           placeholder={
             tense === 'perfekt' ? 'z.B. bist gefahren' : tense === 'imperativ' ? 'z.B. komm' : 'Form eingeben…'
           }
