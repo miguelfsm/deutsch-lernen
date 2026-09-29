@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import SpeakButton from "../../components/SpeakButton";
 import { nounData, type Noun, type Article } from "./data.js";
 import { getPluralParts } from "./highlight.js";
+import { feminineLabel } from "./feminine";
 import { font, color } from "../../lib/theme";
 import { useDeepSelect } from "../../lib/useDeepSelect";
 import { nounSlug } from "../../lib/catalog/slug";
@@ -10,7 +11,7 @@ import { linksForCard } from "../../lib/catalog/resolver";
 import CrossLinks from "../../components/CrossLinks";
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
-const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten"];
+const CATEGORIES = ["Familie", "Supermarkt", "Zuhause", "Tiere", "Kleidung", "Körper", "Schule", "Arbeit", "Freizeit", "Lebensmittel", "Geografie", "Alltag", "Zeit", "Mengen & Einheiten", "Berufe"];
 
 // Amber for the plural-change highlight — deliberately distinct from the
 // feminine "die" red so the plural ending is obvious at a glance. Matches the
@@ -215,6 +216,25 @@ export default function GermanNouns() {
             }}>
               {selected.english}
             </div>
+            {selected.feminine && (
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 4,
+                marginTop: 6,
+                fontSize: 13,
+                color: ARTICLE_META.die.fg,
+                fontFamily: "'Arial', sans-serif",
+              }}>
+                <span><span aria-hidden="true">♀</span> {feminineLabel(selected.feminine)}</span>
+                <SpeakButton
+                  text={`die ${selected.feminine}`}
+                  label={`„die ${selected.feminine}“ vorlesen`}
+                  size={16}
+                />
+              </div>
+            )}
           </div>
           <span style={{
             padding: "4px 12px",
@@ -296,16 +316,30 @@ export default function GermanNouns() {
                 fontWeight: 600,
                 letterSpacing: "-0.3px",
               }}>
-                <span style={{
-                  color: meta.fg,
-                  fontFamily: "'Arial', sans-serif",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  marginRight: 8,
-                }}>
-                  {selected.article}
-                </span>
-                {selected.singular}
+                {selected.pluralOnly ? (
+                  <span style={{
+                    fontSize: 14,
+                    color: "#a8a29e",
+                    fontStyle: "italic",
+                    fontFamily: "'Arial', sans-serif",
+                    fontWeight: 400,
+                  }}>
+                    Nur Plural
+                  </span>
+                ) : (
+                  <>
+                    <span style={{
+                      color: meta.fg,
+                      fontFamily: "'Arial', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      marginRight: 8,
+                    }}>
+                      {selected.article}
+                    </span>
+                    {selected.singular}
+                  </>
+                )}
               </td>
             </tr>
 

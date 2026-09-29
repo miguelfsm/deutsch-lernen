@@ -163,8 +163,7 @@ export default function LessonPage() {
                     display: 'block',
                     height: '100%',
                     borderRadius: 99,
-                    // Clamped to ≤100% — a checkVocab "form" can outnumber its
-                    // source line, so tagged can exceed total (see coveragePercent).
+                    // Clamped to ≤100% as a safety net (see coveragePercent).
                     width: `${coveragePercent(coverage)}%`,
                     background: bg,
                   }}

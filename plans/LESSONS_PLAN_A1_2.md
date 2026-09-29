@@ -179,7 +179,7 @@ export interface Verb {
 - **Imperativ is stored in full**, as written sentence-initially, without "!" and
   without the pronoun for du/ihr; Sie keeps it (`warten Sie`); separable verbs
   carry the prefix (`mach auf`). It is optional for exactly the verbs on the
-  exported `VERBS_WITHOUT_IMPERATIV` list (the modals plus gefallen, kosten, stammen); a guard test
+  exported `VERBS_WITHOUT_IMPERATIV` list (the modals plus gefallen, kosten, stammen, dauern); a guard test
   enforces "complete imperativ or on the list".
 - UI: a four-way switch (Präsens · Präteritum · Perfekt · Imperativ) above the
   existing table; Imperativ shows a du/ihr/Sie table, or a "Kein gebräuchlicher Imperativ" note.
@@ -255,7 +255,16 @@ export interface GrammarTopic {
 ### 3.7 Nouns — small additions
 
 - `feminine?: string` for professions (Arzt → Ärztin, Hausmann → Hausfrau) — L8
-  Wortbildung. Shown on the noun card and searchable.
+  Wortbildung. **Built (L8 intake):** a field on the *male* noun, holding the whole
+  female word (Hausfrau, not "-in"); shown on the noun card as "♀ die Ärztin, -nen"
+  (the plural suffix is derived: …in → -nen, otherwise -en, so no
+  `femininePlural`). Searchable via `CatalogEntry.aliases?: string[]`, which the
+  nouns catalog fills from `feminine`; `searchCatalog` and `checkVocab` treat an
+  alias like a term (checkVocab: exact/case-sensitive first). There is **no
+  separate catalog entry** for the female form. Pairs that were already two
+  nouns (Kollege / Kollegin) stay as they are (progress slugs).
+- New category **Berufe** (professions); other L8 nouns went into existing
+  categories.
 - New categories as lessons require them (Beruf, Amt, Krankheiten, Stadt &
   Verkehr, Feste & Monate…). Categories stay free strings, as today.
 - `nouns/data.ts` is 1 335 lines. **Split into `nouns/data/<category>.ts` only
@@ -337,7 +346,7 @@ Order is chosen so Miguel can start sending lesson photos after **Phase 3**.
 | **5 — Verb tenses** ✅ | `praeteritum` + `perfekt` fields (required — the backfill below is complete), `perfektForms()`, tense switch UI, `&tense=` deep link, drill tense picker. Backfilled all 72 verbs (the plan's "73" included the interface's own field, not a verb). | Every verb shows 3 tenses; drill tests per tense. Matches mock: *Verben · 3 Zeiten*, *Üben → Konjugation*. |
 | **6 — Prepositions tool** ✅ | New tool + data (A1.1 ones + L8 temporal + L11 lokal + L12 temporal). Move `praep` out of Phrases with progress migration. "Welcher Fall?" drill. | Filter by case/use works; migration test keeps old progress. Matches mock: *Präpositionen*, *Üben → Welcher Fall?*. |
 | **7 — Grammar tool** ✅ | Block model, `GrammarTopicView`, first topics from the L8 summary (Appendix B). Grammar section on lesson pages — `entriesForLesson` renders it first, ahead of the word-class groups, per the mock's `lesson()` screen. | `/grammatik` shows all five L8 grammar topics, matching mock screen *Grammatik*. The *Lektion 8* page shows the same five as its first content group, each deep-linking to `/grammatik?sel=<topic>`. |
-| **8+ — Lesson intake (repeat per lesson)** | For L8 → L14: LWS check → approve → add items + tags; add that lesson's grammar topics from the "Grammatik und Kommunikation" photo. | Lesson coverage ≈ 100%. |
+| **8+ — Lesson intake (repeat per lesson)** — L8 done ✅, L9–L14 to follow | For L8 → L14: LWS check → approve → add items + tags; add that lesson's grammar topics from the "Grammatik und Kommunikation" photo. | Lesson coverage ≈ 100%. |
 
 Phases 5, 6 and 7 are independent of each other and may be reordered.
 
@@ -345,7 +354,9 @@ Phases 5, 6 and 7 are independent of each other and may be reordered.
 
 1. Photos: Lernwortschatz pages + "Grammatik und Kommunikation" page (+ any
    important lesson pages).
-2. Transcribe → `content/lws/<lesson>.txt` → `npm run vocab:check`.
+2. Transcribe → `content/lws/<lesson>.txt` → `npm run vocab:check` (a line may hold
+   several headwords separated by ` / ` or `; `; a bound stem such as `eigen-` matches
+   the hyphenated or the bare form).
 3. Show report → **OK from Miguel**.
 4. Add/tag words; new verbs come with all three tenses; new prepositions with case.
 5. Add grammar topics; link `related` items.

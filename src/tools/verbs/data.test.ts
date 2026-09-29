@@ -93,3 +93,32 @@ describe('new A1.2 verbs', () => {
     expect(byInf('mitbringen').praeteritum[0].form).toBe('brachte')
   })
 })
+
+describe('Lektion 8 verbs', () => {
+  it.each([
+    ['dauern', 'gedauert', ['dauert', 'dauerte']],
+    ['heiraten', 'geheiratet', ['heiratet', 'heiratete']],
+    ['bekommen', 'bekommen', ['bekommt', 'bekam']],
+    ['zahlen', 'gezahlt', ['zahlt', 'zahlte']],
+  ])('%s has all three tenses (Perfekt with haben)', (inf, partizip, [er, erPrae]) => {
+    const v = byInf(inf)
+    expect(v.lessons).toEqual(['A1.2-L08'])
+    expect(v.perfekt).toEqual({ auxiliary: 'haben', partizip })
+    expect(v.conjugations[2].form).toBe(er)
+    expect(v.praeteritum[2].form).toBe(erPrae)
+    expect(v.example && v.translation && v.note).toBeTruthy()
+  })
+
+  it('dauern has no imperativ; the others do; bekommen has no ge- in the Partizip', () => {
+    expect(VERBS_WITHOUT_IMPERATIV).toContain('dauern')
+    expect(byInf('heiraten').imperativ?.du).toBe('heirate')
+    expect(byInf('zahlen').imperativ?.du).toBe('zahl')
+    expect(byInf('bekommen').perfekt.partizip).not.toMatch(/^ge/)
+  })
+
+  it('studieren and zeigen keep A1.1 and gain L8', () => {
+    expect(byInf('studieren').lessons).toEqual(['A1.1', 'A1.2-L08'])
+    expect(byInf('zeigen').lessons).toEqual(['A1.1', 'A1.2-L08'])
+  })
+})
+

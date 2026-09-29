@@ -111,7 +111,13 @@ function candidateVariants(s: string): string[] {
   const noParens = collapseWhitespace(stripTrailingParens(plain))
   const noPlaceholders = collapseWhitespace(stripPlaceholders(plain))
   const noParensNoPlaceholders = collapseWhitespace(stripPlaceholders(noParens))
-  return [...new Set([plain, noParens, noPlaceholders, noParensNoPlaceholders])]
+  const variants = [plain, noParens, noPlaceholders, noParensNoPlaceholders]
+  // A bound stem printed with a trailing hyphen ("eigen-", "Senioren-") matches
+  // the catalog either hyphenated (a stored stem) or bare (the base word).
+  const bare = variants
+    .filter((v) => v.length > 1 && v.endsWith('-'))
+    .map((v) => v.slice(0, -1).trim())
+  return [...new Set([...variants, ...bare])]
 }
 
 /**
@@ -163,8 +169,10 @@ function guessKind(headword: string, hasArticle: boolean, hadSich: boolean): Gue
  * Check one lesson's transcribed vocab lines against the catalog.
  *
  * Matching rules (plan §4.3, refined in review): trim; skip blank lines and
- * `#` comments; split a line on " / " into separate headwords (each checked
- * on its own, e.g. "der Kollege, -n / die Kollegin, -nen"); strip a leading
+ * `#` comments; split a line on " / " and "; " into separate headwords (each
+ * checked on its own, e.g. "der Kollege, -n / die Kollegin, -nen" or
+ * "Senioren (Pl.); Senioren-"); a bound stem with a trailing hyphen ("eigen-")
+ * matches both the hyphenated and the bare form; strip a leading
  * article; strip plural/extra markers after the first comma; strip
  * separable-verb "·"/"|" (always — never real orthography); fold ß↔ss;
  * compare to `CatalogEntry.term` case-sensitively first (German case is
@@ -190,14 +198,19 @@ export function checkVocab(
 
     const forms = trimmedLine
       .split(' / ')
+      .flatMap((f) => f.split('; '))
       .map((f) => f.trim())
       .filter((f) => f !== '')
 
     for (const form of forms) {
       const { candidates, hasArticle, hadSich, headwordForGuess } = extractForm(form)
 
+      // A catalog entry's `aliases` (e.g. a noun's feminine form) count as
+      // extra terms, matched exactly like `term`.
+      const termsOf = (e: CatalogEntry): string[] => [e.term, ...(e.aliases ?? [])]
+
       const exact = entries.filter((e) =>
-        candidates.some((c) => foldSharpS(e.term) === foldSharpS(c)),
+        termsOf(e).some((t) => candidates.some((c) => foldSharpS(t) === foldSharpS(c))),
       )
       if (exact.length > 0) {
         const bucket = exact.some((e) => e.lessons.includes(lessonId)) ? result.tagged : result.untagged
@@ -206,7 +219,9 @@ export function checkVocab(
       }
 
       const caseInsensitive = entries.filter((e) =>
-        candidates.some((c) => foldSharpS(e.term).toLowerCase() === foldSharpS(c).toLowerCase()),
+        termsOf(e).some((t) =>
+          candidates.some((c) => foldSharpS(t).toLowerCase() === foldSharpS(c).toLowerCase()),
+        ),
       )
       if (caseInsensitive.length > 0) {
         result.maybe.push({ line: rawLine, form, entries: caseInsensitive })

@@ -92,7 +92,7 @@ function printMissing(items: VocabMiss[]): void {
   }
 }
 
-console.log(`Lernwortschatz ${lessonId}: ${entryCount} Einträge aus content/lws/${lessonId}.txt`)
+console.log(`Lernwortschatz ${lessonId}: ${entryCount} Zeilen aus content/lws/${lessonId}.txt`)
 printMatchGroup('✅ Schon da, mit Lektionen-Tag', result.tagged)
 printMatchGroup('🏷️ Schon da, aber ohne Lektionen-Tag', result.untagged)
 printMissing(result.missing)

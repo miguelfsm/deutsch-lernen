@@ -39,6 +39,12 @@ export interface CatalogEntry {
   category?: string
   /** Extra text to match on in search, e.g. a noun's article "das". */
   keywords?: string[]
+  /**
+   * Further German spellings that identify THIS entry (not separate entries),
+   * matched by search and by the vocab check. Used for a noun's feminine job
+   * form: der Arzt carries "Ärztin".
+   */
+  aliases?: string[]
   /** Word class, for grouping a lesson page by kind rather than by tool. */
   kind: EntryKind
   /** Lessons this item belongs to, copied from the item by the tool's catalog.ts. */

@@ -24,7 +24,7 @@ export function searchCatalog(
   const q = foldSs(query.trim())
   if (!q) return []
   return entries.filter((e) => {
-    const haystacks = [e.term, e.gloss, ...(e.keywords ?? [])]
+    const haystacks = [e.term, e.gloss, ...(e.keywords ?? []), ...(e.aliases ?? [])]
     return haystacks.some((h) => foldSs(h).includes(q))
   })
 }

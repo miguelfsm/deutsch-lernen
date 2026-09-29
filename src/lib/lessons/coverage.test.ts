@@ -12,8 +12,13 @@ describe('lessonCoverage', () => {
   it('counts tagged entries against every non-blank, non-comment line', () => {
     const lines = ['arbeiten', 'seit', 'der Arzt, -¨e', 'komplettFehlend']
     // arbeiten + seit → tagged for A1.2-L08; der Arzt → in the app but only
-    // tagged A1.1 (untagged); komplettFehlend → missing. 4 headwords total.
+    // tagged A1.1 (untagged); komplettFehlend → missing. 4 forms total.
     expect(lessonCoverage(lines, entries, 'A1.2-L08')).toEqual({ tagged: 2, total: 4 })
+  })
+
+  it('counts forms on both sides: a " / " line is two forms, and a missing one is not masked', () => {
+    const lines = ['arbeiten / seit / komplettFehlend']
+    expect(lessonCoverage(lines, entries, 'A1.2-L08')).toEqual({ tagged: 2, total: 3 })
   })
 
   it('ignores blank lines and # comments in the total', () => {

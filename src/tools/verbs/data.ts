@@ -26,10 +26,10 @@ export interface Imperativ {
 }
 
 // Verbs with no gebräuchlicher Imperativ: the modals plus gefallen, kosten,
-// stammen. Every other verb must carry `imperativ` (see data.test.ts).
+// stammen, dauern. Every other verb must carry `imperativ` (see data.test.ts).
 export const VERBS_WITHOUT_IMPERATIV: readonly string[] = [
   'können', 'müssen', 'dürfen', 'sollen', 'wollen', 'mögen', 'möchten',
-  'gefallen', 'kosten', 'stammen',
+  'gefallen', 'kosten', 'stammen', 'dauern',
 ]
 
 export interface Verb {
@@ -46,7 +46,7 @@ export interface Verb {
   // Imperativ, full forms as written sentence-initially, no "!" and no pronoun
   // for du/ihr ("warte", "wartet"); Sie keeps it ("warten Sie"). Separable verbs
   // carry the detached prefix ("mach auf"). Optional for exactly the verbs on
-  // VERBS_WITHOUT_IMPERATIV (the 7 modals plus gefallen, kosten, stammen) — a guard test enforces it.
+  // VERBS_WITHOUT_IMPERATIV (the 7 modals plus gefallen, kosten, stammen, dauern) — a guard test enforces it.
   imperativ?: Imperativ
   // Separable prefix (e.g. 'auf' for aufmachen) — only present when the verb
   // is actually separable.
@@ -804,7 +804,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "studieren", english: "to study (at university)", type: "regular",
-    lessons: ["A1.1"],
+    lessons: ["A1.1", "A1.2-L08"],
     imperativ: { du: "studiere", ihr: "studiert", Sie: "studieren Sie" },
     example: "Sie studiert Medizin.", translation: "She studies medicine.",
     note: "Regular. Verbs ending in -ieren never add a ge- prefix in Perfekt: hat studiert.",
@@ -1092,7 +1092,7 @@ export const verbData: Verb[] = [
   },
   {
     infinitive: "zeigen", english: "to show", type: "regular",
-    lessons: ["A1.1"],
+    lessons: ["A1.1", "A1.2-L08"],
     imperativ: { du: "zeig", ihr: "zeigt", Sie: "zeigen Sie" },
     example: "Ich zeige dir mein Haus.", translation: "I am showing you my house.",
     note: "Fully regular. Very common: Kannst du mir zeigen, wo…? (Can you show me where…?)",
@@ -1884,6 +1884,101 @@ export const verbData: Verb[] = [
       { pronoun: "wir",      form: "bringen", stemChange: false },
       { pronoun: "ihr",      form: "bringt",  stemChange: false },
       { pronoun: "sie/Sie",  form: "bringen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "dauern", english: "to last / to take (time)", type: "regular",
+    lessons: ["A1.2-L08"],
+    example: "Wie lange dauert die Ausbildung?", translation: "How long does the training take?",
+    note: "Regular, but almost only used in the 3rd person (es dauert, das dauert): Wie lange dauert das? No Imperativ. Perfekt with haben: Die Ausbildung hat drei Jahre gedauert.",
+    praeteritum: [
+      { pronoun: "ich", form: "dauerte", stemChange: false },
+      { pronoun: "du", form: "dauertest", stemChange: false },
+      { pronoun: "er/sie/es", form: "dauerte", stemChange: false },
+      { pronoun: "wir", form: "dauerten", stemChange: false },
+      { pronoun: "ihr", form: "dauertet", stemChange: false },
+      { pronoun: "sie/Sie", form: "dauerten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gedauert" },
+    conjugations: [
+      { pronoun: "ich", form: "dauere", stemChange: false },
+      { pronoun: "du", form: "dauerst", stemChange: false },
+      { pronoun: "er/sie/es", form: "dauert", stemChange: false },
+      { pronoun: "wir", form: "dauern", stemChange: false },
+      { pronoun: "ihr", form: "dauert", stemChange: false },
+      { pronoun: "sie/Sie", form: "dauern", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "heiraten", english: "to marry / to get married", type: "regular",
+    lessons: ["A1.2-L08"],
+    imperativ: { du: "heirate", ihr: "heiratet", Sie: "heiraten Sie" },
+    example: "Wann hast du geheiratet?", translation: "When did you get married?",
+    note: "Regular; the stem ends in -t, so an extra -e- is inserted: du heiratest, er heiratet, hat geheiratet. Takes a direct object without a preposition: Sie heiratet ihn. Perfekt with haben.",
+    praeteritum: [
+      { pronoun: "ich", form: "heiratete", stemChange: false },
+      { pronoun: "du", form: "heiratetest", stemChange: false },
+      { pronoun: "er/sie/es", form: "heiratete", stemChange: false },
+      { pronoun: "wir", form: "heirateten", stemChange: false },
+      { pronoun: "ihr", form: "heiratetet", stemChange: false },
+      { pronoun: "sie/Sie", form: "heirateten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "geheiratet" },
+    conjugations: [
+      { pronoun: "ich", form: "heirate", stemChange: false },
+      { pronoun: "du", form: "heiratest", stemChange: false },
+      { pronoun: "er/sie/es", form: "heiratet", stemChange: false },
+      { pronoun: "wir", form: "heiraten", stemChange: false },
+      { pronoun: "ihr", form: "heiratet", stemChange: false },
+      { pronoun: "sie/Sie", form: "heiraten", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "bekommen", english: "to get / to receive", type: "irregular",
+    lessons: ["A1.2-L08"],
+    imperativ: { du: "bekomm", ihr: "bekommt", Sie: "bekommen Sie" },
+    example: "Ich habe sofort eine Stelle bekommen.", translation: "I got a job straight away.",
+    note: "Inseparable prefix be-: the Partizip has NO ge-: hat bekommen (not gebekommen). Präteritum like kommen: bekam. False friend: bekommen means 'to get', not 'to become' (that is werden).",
+    praeteritum: [
+      { pronoun: "ich", form: "bekam", stemChange: true },
+      { pronoun: "du", form: "bekamst", stemChange: true },
+      { pronoun: "er/sie/es", form: "bekam", stemChange: true },
+      { pronoun: "wir", form: "bekamen", stemChange: true },
+      { pronoun: "ihr", form: "bekamt", stemChange: true },
+      { pronoun: "sie/Sie", form: "bekamen", stemChange: true },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "bekommen" },
+    conjugations: [
+      { pronoun: "ich", form: "bekomme", stemChange: false },
+      { pronoun: "du", form: "bekommst", stemChange: false },
+      { pronoun: "er/sie/es", form: "bekommt", stemChange: false },
+      { pronoun: "wir", form: "bekommen", stemChange: false },
+      { pronoun: "ihr", form: "bekommt", stemChange: false },
+      { pronoun: "sie/Sie", form: "bekommen", stemChange: false },
+    ],
+  },
+  {
+    infinitive: "zahlen", english: "to pay", type: "regular",
+    lessons: ["A1.2-L08"],
+    imperativ: { du: "zahl", ihr: "zahlt", Sie: "zahlen Sie" },
+    example: "Das Café zahlt im Stundenlohn.", translation: "The café pays by the hour.",
+    note: "Regular. Zahlen, bitte! is what you say to the waiter to ask for the bill. Zahlen can take an amount or a way of paying: bar zahlen (in cash), mit Karte zahlen. Perfekt with haben: hat gezahlt.",
+    praeteritum: [
+      { pronoun: "ich", form: "zahlte", stemChange: false },
+      { pronoun: "du", form: "zahltest", stemChange: false },
+      { pronoun: "er/sie/es", form: "zahlte", stemChange: false },
+      { pronoun: "wir", form: "zahlten", stemChange: false },
+      { pronoun: "ihr", form: "zahltet", stemChange: false },
+      { pronoun: "sie/Sie", form: "zahlten", stemChange: false },
+    ],
+    perfekt: { auxiliary: "haben", partizip: "gezahlt" },
+    conjugations: [
+      { pronoun: "ich", form: "zahle", stemChange: false },
+      { pronoun: "du", form: "zahlst", stemChange: false },
+      { pronoun: "er/sie/es", form: "zahlt", stemChange: false },
+      { pronoun: "wir", form: "zahlen", stemChange: false },
+      { pronoun: "ihr", form: "zahlt", stemChange: false },
+      { pronoun: "sie/Sie", form: "zahlen", stemChange: false },
     ],
   },
 ];

@@ -201,4 +201,37 @@ describe('checkVocab', () => {
     const result = checkVocab(['etwas Wichtiges'], entries, 'A1.2-L08')
     expect(result.missing).toEqual([{ line: 'etwas Wichtiges', form: 'etwas Wichtiges', kind: 'phrase' }])
   })
+
+  // ── Lektion 8 tooling ──────────────────────────────────────────────────
+
+  it('splits a line on "; " into separate headwords', () => {
+    const result = checkVocab(['Senioren (Pl.); Senioren-', 'der Traum, ¨e; Traum-'], [
+      { id: 'nomen:leute/senioren', toolId: 'nomen', route: '/nomen', slug: 'leute/senioren', term: 'Senioren', gloss: 'senior citizens', kind: 'noun', lessons: ['A1.2-L08'] },
+    ], 'A1.2-L08')
+    expect(result.tagged.map((m) => m.form)).toEqual(['Senioren (Pl.)', 'Senioren-'])
+    expect(result.missing.map((m) => m.form)).toEqual(['der Traum, ¨e', 'Traum-'])
+  })
+
+  it('matches a bound stem with a trailing hyphen against the hyphenated or the bare term', () => {
+    const stems: CatalogEntry[] = [
+      { id: 'a:eigen', toolId: 'adjektive', route: '/adjektive', slug: 'x/eigen', term: 'eigen-', gloss: 'own', kind: 'adjective', lessons: ['A1.2-L08'] },
+      { id: 'n:traum', toolId: 'nomen', route: '/nomen', slug: 'x/traum', term: 'Traum', gloss: 'dream', kind: 'noun', lessons: ['A1.2-L08'] },
+    ]
+    const result = checkVocab(['eigen-', 'Traum-'], stems, 'A1.2-L08')
+    expect(result.tagged.map((m) => m.entries[0].id)).toEqual(['a:eigen', 'n:traum'])
+    expect(result.missing).toHaveLength(0)
+  })
+
+  it('counts a catalog entry alias (a noun\'s feminine form) as present, case-sensitively', () => {
+    const withAlias: CatalogEntry[] = [
+      { id: 'nomen:beruf/arzt', toolId: 'nomen', route: '/nomen', slug: 'beruf/arzt', term: 'Arzt', gloss: 'doctor', aliases: ['Ärztin'], kind: 'noun', lessons: ['A1.2-L08'] },
+    ]
+    const found = checkVocab(['der Arzt, ¨e / die Ärztin, -nen'], withAlias, 'A1.2-L08')
+    expect(found.tagged.map((m) => m.form)).toEqual(['der Arzt, ¨e', 'die Ärztin, -nen'])
+    expect(found.tagged[1].entries.map((e) => e.id)).toEqual(['nomen:beruf/arzt'])
+    // Case is meaning: a lowercase spelling is only a "maybe".
+    const lower = checkVocab(['ärztin'], withAlias, 'A1.2-L08')
+    expect(lower.tagged).toHaveLength(0)
+    expect(lower.maybe).toHaveLength(1)
+  })
 })
