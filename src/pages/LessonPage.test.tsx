@@ -1,7 +1,23 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import LessonPage from './LessonPage'
+
+// The "not checked yet" test must not depend on which real lessons happen to
+// have a transcribed file (that changes with every intake), so the lws module
+// can be overridden per test; by default the real files are used.
+const override = vi.hoisted(() => ({ files: undefined as Record<string, string> | undefined }))
+vi.mock('../content/lws', async (importOriginal) => {
+  const real = await importOriginal<typeof import('../content/lws')>()
+  return {
+    get lwsFiles() {
+      return override.files ?? real.lwsFiles
+    },
+  }
+})
+afterEach(() => {
+  override.files = undefined
+})
 
 function renderLesson(id: string) {
   return render(
@@ -52,6 +68,23 @@ describe('LessonPage', () => {
     }
   })
 
+  it('lists verbs, nouns, adjectives, adverbs and phrases for L8 and a full Lernwortschatz coverage', () => {
+    renderLesson('A1.2-L08')
+    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)
+    for (const label of ['Grammatik', 'Verben', 'Nomen', 'Adjektive', 'Adverbien', 'Präpositionen']) {
+      expect(headings).toContain(label)
+    }
+    expect(headings.some((h) => /Redemittel|Phrasen/.test(h ?? ''))).toBe(true)
+    // Every Lernwortschatz entry of the lesson is in the app (tagged >= total:
+    // a line with two forms counts twice on the tagged side).
+    const [tagged, total] = screen.getByText(/^\d+ \/ \d+$/).textContent!.split(' / ').map(Number)
+    expect(tagged).toBeGreaterThanOrEqual(total)
+    // A profession card deep-links to its noun (and the feminine form rides along).
+    expect(
+      screen.getAllByRole('link').some((el) => el.getAttribute('href') === '/nomen?sel=berufe%2Farzt'),
+    ).toBe(true)
+  })
+
   it('shows the practice-this-lesson link with the lektion query param', () => {
     renderLesson('A1.2-L08')
     expect(screen.getByRole('link', { name: /Diese Lektion üben/ })).toHaveAttribute(
@@ -61,6 +94,8 @@ describe('LessonPage', () => {
   })
 
   it('shows "not checked yet" when no Lernwortschatz file has been transcribed', () => {
+    // No lesson has a file in this test, whatever exists on disk.
+    override.files = {}
     renderLesson('A1.2-L09')
     expect(screen.getByText('Wortschatz noch nicht geprüft')).toBeInTheDocument()
   })
