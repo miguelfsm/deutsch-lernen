@@ -61,7 +61,7 @@ describe('LessonPage', () => {
   })
 
   it('shows "not checked yet" when no Lernwortschatz file has been transcribed', () => {
-    renderLesson('A1.2-L08')
+    renderLesson('A1.2-L09')
     expect(screen.getByText('Wortschatz noch nicht geprüft')).toBeInTheDocument()
   })
 
