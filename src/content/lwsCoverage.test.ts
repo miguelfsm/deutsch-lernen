@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
+import raw from '../../content/lws/A1.2-L08.txt?raw'
 import { catalog } from '../lib/catalog'
 import { checkVocab } from '../lib/vocab/checkVocab'
 
@@ -7,7 +7,7 @@ import { checkVocab } from '../lib/vocab/checkVocab'
 // app and tagged (the report `npm run vocab:check -- A1.2-L08` stays clean).
 describe('Lernwortschatz A1.2-L08 is fully covered', () => {
   it('has nothing missing, untagged or only case-insensitive', () => {
-    const lines = readFileSync('content/lws/A1.2-L08.txt', 'utf-8').split(/\r?\n/)
+    const lines = raw.split(/\r?\n/)
     const r = checkVocab(lines, catalog, 'A1.2-L08')
     expect(r.missing).toEqual([])
     expect(r.untagged).toEqual([])

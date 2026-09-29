@@ -75,10 +75,10 @@ describe('LessonPage', () => {
       expect(headings).toContain(label)
     }
     expect(headings.some((h) => /Redemittel|Phrasen/.test(h ?? ''))).toBe(true)
-    // Every Lernwortschatz entry of the lesson is in the app (tagged >= total:
-    // a line with two forms counts twice on the tagged side).
+    // Every Lernwortschatz headword of the lesson is in the app and tagged.
     const [tagged, total] = screen.getByText(/^\d+ \/ \d+$/).textContent!.split(' / ').map(Number)
-    expect(tagged).toBeGreaterThanOrEqual(total)
+    expect(total).toBeGreaterThan(0)
+    expect(tagged).toBe(total)
     // A profession card deep-links to its noun (and the feminine form rides along).
     expect(
       screen.getAllByRole('link').some((el) => el.getAttribute('href') === '/nomen?sel=berufe%2Farzt'),

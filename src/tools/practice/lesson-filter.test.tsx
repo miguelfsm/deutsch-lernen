@@ -1,8 +1,21 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import PracticeTool from './PracticeTool'
+
+// A synthetic lesson that no content will ever be tagged with, so the empty-deck
+// regression never depends on which real lessons have content.
+vi.mock('../../content/lessons', async (importOriginal) => {
+  const real = await importOriginal<typeof import('../../content/lessons')>()
+  return {
+    ...real,
+    lessons: [
+      ...real.lessons,
+      { ...real.lessons[0], id: 'A1.2-L99', level: 'A1.2', number: 99, title: 'Leere Testlektion' },
+    ],
+  }
+})
 
 afterEach(() => localStorage.clear())
 
@@ -53,13 +66,13 @@ describe('Practice lesson filter', () => {
     expect(select.value).toBe('')
   })
 
-  // Regression: a lesson + mode with no cards (L14 has no nouns tagged yet;
-  // it is the last lesson to be taken in) — Start must be disabled with an
+  // Regression: a lesson + mode with no cards (the synthetic, never-tagged
+  // lesson above) — Start must be disabled with an
   // inline note, not silently create a 0-card round.
   it('disables Start and shows an inline note for a lesson + mode with no cards', async () => {
     const user = userEvent.setup()
     render(
-      <MemoryRouter initialEntries={['/uben?lektion=A1.2-L14']}>
+      <MemoryRouter initialEntries={['/uben?lektion=A1.2-L99']}>
         <PracticeTool />
       </MemoryRouter>,
     )

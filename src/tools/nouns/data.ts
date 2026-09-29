@@ -13,6 +13,9 @@ export interface Noun {
   // "die". Only set on the male noun when the pair is one entry; the plural is
   // derived (…in → …innen, otherwise …en — see feminine.ts).
   feminine?: string
+  // Plural-only noun (die Senioren, die Eltern): the card shows "Nur Plural"
+  // instead of a singular row.
+  pluralOnly?: boolean
   category: string
   note: string
   // A1 example sentence using the noun (with its article) + its English
@@ -1898,6 +1901,7 @@ export const nounData: Noun[] = [
   },
   {
     singular: "Senioren", english: "senior citizens (Pl.)", article: "die", plural: "Senioren",
+    pluralOnly: true,
     example: "Die Senioren essen zusammen.", translation: "The senior citizens eat together.",
     category: "Alltag",
     note: "Plural only here (the singular der Senior exists but is rare). Also a prefix: die Seniorenresidenz (retirement home).",

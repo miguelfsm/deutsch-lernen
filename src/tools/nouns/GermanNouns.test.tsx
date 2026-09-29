@@ -10,7 +10,9 @@ describe('GermanNouns feminine form', () => {
         <GermanNouns />
       </MemoryRouter>,
     )
-    expect(screen.getByText('♀ die Ärztin, -nen')).toBeInTheDocument()
+    const sign = screen.getByText('♀')
+    expect(sign).toHaveAttribute('aria-hidden', 'true')
+    expect(sign.parentElement).toHaveTextContent('♀ die Ärztin, -nen')
   })
 
   it('shows no female form on a noun without one', () => {
@@ -20,5 +22,14 @@ describe('GermanNouns feminine form', () => {
       </MemoryRouter>,
     )
     expect(screen.queryByText(/♀/)).not.toBeInTheDocument()
+  })
+
+  it('shows "Nur Plural" instead of a singular for a plural-only noun', () => {
+    render(
+      <MemoryRouter initialEntries={['/nomen?sel=alltag%2Fsenioren']}>
+        <GermanNouns />
+      </MemoryRouter>,
+    )
+    expect(screen.getByText('Nur Plural')).toBeInTheDocument()
   })
 })
